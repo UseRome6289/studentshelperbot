@@ -12,7 +12,9 @@ change_information_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Изме�
 mailing_lists_kb2 = ReplyKeyboardMarkup(resize_keyboard=True).add(
     "Изменить рассылки")  # Рассылки, в которых состоит пользователь
 admin_panel = ReplyKeyboardMarkup(resize_keyboard=True).add(
-    "Отправить рассылку")  # Отправление рассылок из админ-панели
+    "Отправить рассылку").add("Меню")  # Отправление рассылок из админ-панели
+chat_kb = ReplyKeyboardMarkup(resize_keyboard=True).add(
+    "Меню")  # Отправление рассылок из админ-панели
 # keyboards.py
 markup_request = ReplyKeyboardMarkup(resize_keyboard=True).add(
     KeyboardButton('Отправить свой контакт ☎️', request_contact=True)
