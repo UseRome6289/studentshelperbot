@@ -4,7 +4,6 @@ import re
 import KeyBoards
 
 from utils import Register
-from messages import help_message
 from aiogram import Bot, types
 from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
@@ -34,7 +33,6 @@ async def register_1(message: types.Message):
     state = dp.current_state(user=message.from_user.id)
     await state.set_state(Register.all()[1])
     await message.reply('Хорошо! Далее введите вашу группу!', reply=False)
-    #register_1
 
 
 @dp.message_handler(state=Register.REGISTER_1)
@@ -46,7 +44,7 @@ async def register_2(message: types.Message):
     conn.close()
     state = dp.current_state(user=message.from_user.id)
     await state.reset_state()
-    await message.reply('Хорошо! Добро пожаловать в меню', reply=False, reply_markup=KeyBoards.menu_kb)
+    await message.reply('Хорошо! Добро пожаловать в меню', reply=False, reply_markup=KeyBoards.menu_admin_kb)
 
 
 @dp.message_handler(commands='start')
@@ -61,12 +59,6 @@ async def process_start_command(message: types.Message):
                         '\n Это наш StudentHelperBot, здесь всегда можно узнать актуальное расписание, поставить '
                         'напоминания, подписаться на рассылки: чат группы, сообщения от преподавателей, у нас есть свои'
                         'PevCoin\'ы (валюта в разработке)\n Регаемся?)', reply_markup=KeyBoards.greet_kb)
-
-
-@dp.message_handler(commands='help')
-async def process_help_command(message: types.Message):
-    await message.reply(help_message)
-
 
 @dp.message_handler(state='*', content_types=["text"])
 async def handler_message(msg: types.Message):
@@ -137,7 +129,6 @@ async def handler_message(msg: types.Message):
 
     elif switch_text == "поддержка разработчиков":
         await msg.reply("-Раз-ра-бот-ка-", reply_markup=KeyBoards.universal_kb)
-
 
 if __name__ == "__main__":
     executor.start_polling(dp, on_shutdown=shutdown)
