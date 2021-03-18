@@ -44,7 +44,8 @@ async def register_2(message: types.Message):
     conn.close()
     state = dp.current_state(user=message.from_user.id)
     await state.reset_state()
-    await message.reply('Хорошо! Добро пожаловать в меню', reply=False, reply_markup=KeyBoards.menu_admin_kb)
+    await message.reply('Хорошо! Добро пожаловать в меню, если нужна помощь, напишите /help'
+                        , reply=False, reply_markup=KeyBoards.menu_admin_kb)
 
 
 @dp.message_handler(commands='start')
@@ -58,7 +59,15 @@ async def process_start_command(message: types.Message):
     await message.reply(f'Доброго времени суток!, {message.from_user.username}.\n'
                         '\n Это наш StudentHelperBot, здесь всегда можно узнать актуальное расписание, поставить '
                         'напоминания, подписаться на рассылки: чат группы, сообщения от преподавателей, у нас есть свои'
-                        'PevCoin\'ы (валюта в разработке)\n Регаемся?)', reply_markup=KeyBoards.greet_kb)
+                        ' PevCoin\'ы (валюта в разработке)\n Регаемся?)', reply_markup=KeyBoards.greet_kb)
+
+
+@dp.message_handler(commands='help')
+async def process_start2_command(message: types.Message):
+    await message.reply(f'Доброго времени суток!, {message.from_user.username}.\n'
+                        '\n Это наш StudentHelperBot, здесь всегда можно узнать актуальное расписание, поставить '
+                        'напоминания, подписаться на рассылки: чат группы, сообщения от преподавателей и многое другое!'
+                        , reply_markup=KeyBoards.menu_admin_kb)
 
 @dp.message_handler(state='*', content_types=["text"])
 async def handler_message(msg: types.Message):
@@ -120,9 +129,6 @@ async def handler_message(msg: types.Message):
 
     elif switch_text == "изменить имя":
         await msg.reply(":: Введите ваше имя ::", reply_markup=KeyBoards.universal_kb)
-        state = dp.current_state(user=msg.from_user.id)
-        await state.set_state(Register.all()[0])
-        await msg.reply("Введите ваше ФИО:")
 
     elif switch_text == "изменить группу":
         await msg.reply(":: Введите ваше имя ::", reply_markup=KeyBoards.universal_kb)
