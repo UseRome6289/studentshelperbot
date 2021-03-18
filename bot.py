@@ -99,7 +99,7 @@ async def handler_message(msg: types.Message):
         await msg.reply("-Раз-ра-бот-ка-", reply_markup=KeyBoards.admin_panel)
 
     elif switch_text == "меню":
-        await msg.reply(":: Вы в меню ::", reply_markup=KeyBoards.menu_kb)
+        await msg.reply(":: Вы в меню ::", reply_markup=KeyBoards.menu_admin_kb)
 
     elif switch_text == "рассылки":
         await msg.reply(":: Ваши полученные рассылки ::", reply_markup=KeyBoards.mailing_lists_kb)
@@ -111,7 +111,28 @@ async def handler_message(msg: types.Message):
         await msg.reply("-Раз-ра-бот-ка-", reply_markup=KeyBoards.chat_kb)
 
     elif switch_text == "настройки":
-        await msg.reply("-Раз-ра-бот-ка-", reply_markup=KeyBoards.setting_kb)
+        await msg.reply(":: Вы в настройках ::", reply_markup=KeyBoards.setting_kb)
+
+    elif switch_text == "запланированные мероприятия":
+        await msg.reply(":: Ваши мероприятия ::", reply_markup=KeyBoards.events_kb)
+
+    elif switch_text == "изменить информацию":
+        await msg.reply("-Раз-ра-бот-ка-", reply_markup=KeyBoards.change_information_kb)
+
+    elif switch_text == "добавить мероприятие":
+        await msg.reply("Введите ваше мероприятие:", reply_markup=KeyBoards.universal_kb)
+
+    elif switch_text == "назад":
+        await msg.reply(":: Вы в настройках ::", reply_markup=KeyBoards.setting_kb)
+
+    elif switch_text == "изменить имя":
+        await msg.reply(":: Введите ваше имя ::", reply_markup=KeyBoards.universal_kb)
+        state = dp.current_state(user=msg.from_user.id)
+        await state.set_state(Register.all()[0])
+        await msg.reply("Введите ваше ФИО:")
+
+    elif switch_text == "изменить группу":
+        await msg.reply(":: Введите ваше имя ::", reply_markup=KeyBoards.universal_kb)
 
 
 if __name__ == "__main__":
