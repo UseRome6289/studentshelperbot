@@ -34,6 +34,7 @@ async def register_1(message: types.Message):
     state = dp.current_state(user=message.from_user.id)
     await state.set_state(Register.all()[1])
     await message.reply('Хорошо! Далее введите вашу группу!', reply=False)
+    #register_1
 
 
 @dp.message_handler(state=Register.REGISTER_1)
