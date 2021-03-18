@@ -71,6 +71,7 @@ async def process_start2_command(message: types.Message):
 
 @dp.message_handler(state='*', content_types=["text"])
 async def handler_message(msg: types.Message):
+    global adding
     switch_text = msg.text.lower()
     if switch_text == "расписание":
         timetable_message = ""
@@ -86,12 +87,64 @@ async def handler_message(msg: types.Message):
             current_week = "2"
         url = 'http://edu.sfu-kras.ru/api/timetable/get?target=КИ20-17/1б (2 подгруппа)'
         response = requests.get(url).json()
+        adding = []
         for item in response["timetable"]:
             if item["week"] == current_week:
-                timetable_message += f"\n{item['day'].replace('1','<b>Понедельник</b>').replace('2', '<b>Вторник</b>').replace('3', '<b>Среда</b>').replace('4','<b>Четверг</b>').replace('5', '<b>Пятница</b>').replace('6','<b>Суббота</b>')}" \
-                                     f"\n{item['time']}\n{item['subject']}\n{item['type']}\n" \
-                                     f"{item['teacher']}\n{item['place']}\n"
+                adding.append([item['day'], item['time'], item['subject'], item['type'], item['teacher'],item['place']])
+        for i in adding:
+            print(i)
+        timetable_message += '\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<b>Понедельник</b>\n'
+        for i in adding:
+            if i[0] == '1':
+                if i[4] == '' and i[5] == '':
+                    timetable_message += f'\n{i[1]}\n{i[2]} ( {i[3]} )\n'
+                else:
+                    timetable_message += f'\n{i[1]}\n{i[2]} ( {i[3]} ) \n{i[4]}\n{i[5]}\n'
+        timetable_message += '\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<b>Вторник</b>\n'
+        for i in adding:
+            if i[0] == '2':
+                if i[4] == '' and i[5] == '':
+                    timetable_message += f'\n{i[1]}\n{i[2]} ( {i[3]} )\n'
+                else:
+                    timetable_message += f'\n{i[1]}\n{i[2]} ( {i[3]} ) \n{i[4]}\n{i[5]}\n'
+        timetable_message += '\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<b>Среда</b>\n'
+        for i in adding:
+            if i[0] == '3':
+                if i[4] == '' and i[5] == '':
+                    timetable_message += f'\n{i[1]}\n{i[2]} ( {i[3]} )\n'
+                else:
+                    timetable_message += f'\n{i[1]}\n{i[2]} ( {i[3]} ) \n{i[4]}\n{i[5]}\n'
+        timetable_message += '\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<b>Четверг</b>\n'
+        for i in adding:
+            if i[0] == '4':
+                if i[4] == '' and i[5] == '':
+                    timetable_message += f'\n{i[1]}\n{i[2]} ( {i[3]} )\n'
+                else:
+                    timetable_message += f'\n{i[1]}\n{i[2]} ( {i[3]} ) \n{i[4]}\n{i[5]}\n'
+        timetable_message += '\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<b>Пятница</b>\n'
+        for i in adding:
+            if i[0] == '5':
+                if i[4] == '' and i[5] == '':
+                    timetable_message += f'\n{i[1]}\n{i[2]} ( {i[3]} )\n'
+                else:
+                    timetable_message += f'\n{i[1]}\n{i[2]} ( {i[3]} ) \n{i[4]}\n{i[5]}\n'
+        on = 0
+        for i in adding:
+            if i[0] == '6':
+                on = 1
+        if on == 1:
+            timetable_message += '\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<b>Суббота</b>\n'
+            for i in adding:
+                if i[0] == '6':
+                    if i[4] == '' and i[5] == '':
+                        timetable_message += f'\n{i[1]}\n{i[2]} ( {i[3]} )\n'
+                    else:
+                        timetable_message += f'\n{i[1]}\n{i[2]} ( {i[3]} ) \n{i[4]}\n{i[5]}\n'
+                # timetable_message += f"\n{item['day'].replace('1','<b>Понедельник</b>').replace('2', '<b>Вторник</b>').replace('3', '<b>Среда</b>').replace('4','<b>Четверг</b>').replace('5', '<b>Пятница</b>').replace('6','<b>Суббота</b>')}" \
+                                    # f"\n{item['time']}\n{item['subject']}\n{item['type']}\n" \
+                                    # f"{item['teacher']}\n{item['place']}\n"
         await msg.reply(timetable_message, parse_mode="HTML")
+        print(timetable_message)
     elif switch_text == "регистрация":
         state = dp.current_state(user=msg.from_user.id)
         await state.set_state(Register.all()[0])
