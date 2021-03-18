@@ -135,6 +135,9 @@ async def handler_message(msg: types.Message):
     elif switch_text == "изменить группу":
         await msg.reply(":: Введите ваше имя ::", reply_markup=KeyBoards.universal_kb)
 
+    elif switch_text == "поддержка разработчиков":
+        await msg.reply("-Раз-ра-бот-ка-", reply_markup=KeyBoards.universal_kb)
+
 
 if __name__ == "__main__":
     executor.start_polling(dp, on_shutdown=shutdown)

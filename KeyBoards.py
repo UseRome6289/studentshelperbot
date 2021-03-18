@@ -6,11 +6,11 @@ greet_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Регистрация
 # Добавил запланированные мероприятия для пользователя(По просьбе Никиты)
 # Меню с админ-панелью
 menu_admin_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Расписание").add("Профиль").add("Рассылки").\
-                                        add("Запланированные мероприятия").add("Чат").add("Настройки")
+                         add("Запланированные мероприятия").add("Чат").add("Настройки").add("Поддержка разработчиков")
 
 # Меню обычного пользователя
 menu_user_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Расписание").add("Профиль").add("Рассылки").\
-              add("Запланированные мероприятия").add("Админ-панель").add("Чат").add("Настройки")
+       add("Запланированные мероприятия").add("Админ-панель").add("Чат").add("Настройки").add("Поддержка разработчиков")
 
 # Рассылки
 mailing_lists_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Меню")
