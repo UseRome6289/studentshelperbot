@@ -46,7 +46,18 @@ universal_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Меню")
 #Выбор дня недели
 day_of_the_week_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Понедельник").add("Вторник")\
                                                   .add("Среда").add("Четверг").add("Пятница").add("Суббота").add("Меню")
+#Кнопки выбора института
+institute_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("ИКИТ").add("ИУБП").add("ИФБиБТ").add("ИФиЯК").add("ВУЦ")\
+        .add("ГИ").add("ИСИ").add("ИНиГ").add("ИАиД").add("ИГДГиГ").add("ИИФиРЭ").add("ИМиФИ").add("ИППС")\
+        .add("ИФКСиТ").add("ИЦМиМ").add("ИЭиГ").add("ИГ").add("ИТиСУ").add("ИЭУиФ").add("ПИ").add("ЮИ")
 
+#Курс
+course_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("1 курс").add("2 курс").add("3 курс").add("4 курс")\
+    .add("5 курс")
+
+#Кнопки институтов
+ikit_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("КИ20-17/1б (1 подгруппа)").add("КИ20-17/1б (2 подгруппа)")
+gi_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("КИ20-02-5м")
 # Локация и контакт
 markup_request = ReplyKeyboardMarkup(resize_keyboard=True).add(
     KeyboardButton('Отправить свой контакт ☎️', request_contact=True)

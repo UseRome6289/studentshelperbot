@@ -32,11 +32,51 @@ async def register_1(message: types.Message):
     conn.close()
     state = dp.current_state(user=message.from_user.id)
     await state.set_state(Register.all()[1])
-    await message.reply('Хорошо! Далее введите вашу группу!', reply=False)
+    await message.reply('Хорошо! Далее введите ваш институт!', reply=False, reply_markup=KeyBoards.institute_kb)
 
 
 @dp.message_handler(state=Register.REGISTER_1)
 async def register_2(message: types.Message):
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
+    cursor.execute(f"UPDATE users SET school = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
+    conn.commit()
+    conn.close()
+    state = dp.current_state(user=message.from_user.id)
+    await state.set_state(Register.all()[2])
+    await message.reply('Хорошо! Далее выберите ваш курс:', reply=False, reply_markup=KeyBoards.course_kb)
+
+
+
+@dp.message_handler(state=Register.REGISTER_2)
+async def register_2(message: types.Message):
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
+    cursor.execute(f"UPDATE users SET course = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
+    conn.commit()
+    conn.close()
+    state = dp.current_state(user=message.from_user.id)
+    switch_text = message.text.lower()
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT chat_id, school FROM users")
+    result_set = cursor.fetchall()
+    for i in result_set:
+        if i[0] == message.from_user.id:
+            if i[1] == "ИКИТ":
+                await state.set_state(Register.all()[3])
+                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.ikit_kb)
+            elif i[1] == "ГИ":
+                await state.set_state(Register.all()[3])
+                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+    conn.commit()
+    conn.close()
+
+
+
+@dp.message_handler(state=Register.REGISTER_3)
+async def register_3(message: types.Message):
+
     conn = sqlite3.connect('db.db')
     cursor = conn.cursor()
     cursor.execute(f"UPDATE users SET user_group = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
@@ -46,7 +86,6 @@ async def register_2(message: types.Message):
     await state.reset_state()
     await message.reply('Хорошо! Добро пожаловать в меню, если нужна будет помощь - напишите /help'
                         , reply=False, reply_markup=KeyBoards.menu_admin_kb)
-
 
 @dp.message_handler(state=Schedule.TEST_STATE_0)
 async def schedule_1(msg: types.Message):
@@ -133,15 +172,13 @@ async def handler_message(msg: types.Message):
             if item["week"] == current_week:
                 adding.append(
                     [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
-        for i in adding:
-            print(i)
         timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Понедельник</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
         for i in adding:
             if i[0] == '1':
                 if i[4] == '' and i[5] == '':
-                    timetable_message += f'\n|{i[1]}\n|{i[2]} ({i[3]})\n'
+                    timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
                 else:
-                    timetable_message += f'\n|{i[1]}\n|{i[2]} ({i[3]}) \n|{i[4]}\n|{i[5]}\n|'
+                    timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
         await msg.reply(timetable_message, parse_mode="HTML")
         await msg.reply(":: Меню ::", reply_markup=KeyBoards.menu_admin_kb)
 
@@ -234,7 +271,8 @@ async def handler_message(msg: types.Message):
         await state.set_state(Schedule.all()[0])
 
     elif switch_text == "поддержка разработчиков":
-        await msg.reply("-Раз-ра-бот-ка-", reply_markup=KeyBoards.universal_kb)
+        await msg.reply("Разработчики программы:\n\t1.Шульц Илья\n\t2.Присяжнюк Кирилл\n\t3.Степанцов Антон"
+                        , reply_markup=KeyBoards.universal_kb)
 
 
 if __name__ == "__main__":
