@@ -6,6 +6,8 @@ class Register(Helper):
     REGISTER_0 = ListItem()
     REGISTER_1 = ListItem()
 
+
 class Schedule(Helper):
     mode = HelperMode.snake_case
     TEST_STATE_0 = ListItem()
+

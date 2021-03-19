@@ -102,32 +102,26 @@ async def handler_message(msg: types.Message):
     global group
     switch_text = msg.text.lower()
     if switch_text == "расписание":
-        timetable_message = ""
-        current_week = "0"
-        url = 'https://edu.sfu-kras.ru/timetable'
-        response = requests.get(url).text
-        match = re.search(r'Идёт\s\w{8}\sнеделя', response)
-        if match:
-            timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
-            current_week = "1"
-        else:
-            timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
-            current_week = "2"
-        conn = sqlite3.connect('db.db')
-        cursor = conn.cursor()
-        cursor.execute(f"SELECT chat_id, user_group FROM users")
-        result_set = cursor.fetchall()
-        for i in result_set:
-            if i[0] == msg.from_user.id:
-                group = i[1]
-        url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={group}')
-        response = requests.get(url).json()
-        for item in response["timetable"]:
-            if item["week"] == current_week:
-                timetable_message += f"\n{item['day'].replace('1', '<b>Понедельник</b>').replace('2', '<b>Вторник</b>').replace('3', '<b>Среда</b>').replace('4', '<b>Четверг</b>').replace('5', '<b>Пятница</b>').replace('6', '<b>Суббота</b>')}" \
-                                     f"\n{item['time']}\n{item['subject']}\n{item['type']}\n" \
-                                     f"{item['teacher']}\n{item['place']}\n"
-        await msg.reply(timetable_message, parse_mode="HTML")
+        await msg.reply(":: Выберите день недели ::", reply_markup=KeyBoards.day_of_the_week_kb)
+
+    elif switch_text == "понедельник":
+        # Здесь нужно, чтобы Кирилл вставил код для пн
+        await msg.reply(":: Меню ::", reply_markup=KeyBoards.menu_admin_kb)
+    elif switch_text == "вторник":
+        # Здесь нужно, чтобы Кирилл вставил код для вт
+        await msg.reply(":: Меню ::", reply_markup=KeyBoards.menu_admin_kb)
+    elif switch_text == "среда":
+        # Здесь нужно, чтобы Кирилл вставил код для ср
+        await msg.reply(":: Меню ::", reply_markup=KeyBoards.menu_admin_kb)
+    elif switch_text == "четверг":
+        # Здесь нужно, чтобы Кирилл вставил код для чт
+        await msg.reply(":: Меню ::", reply_markup=KeyBoards.menu_admin_kb)
+    elif switch_text == "пятница":
+        # Здесь нужно, чтобы Кирилл вставил код для пт
+        await msg.reply(":: Меню ::", reply_markup=KeyBoards.menu_admin_kb)
+    elif switch_text == "суббота":
+        # Здесь нужно, чтобы Кирилл вставил код для суб
+        await msg.reply(":: Меню ::", reply_markup=KeyBoards.menu_admin_kb)
 
     elif switch_text == "регистрация":
         state = dp.current_state(user=msg.from_user.id)

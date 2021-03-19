@@ -43,6 +43,10 @@ events_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Добавить ме
 # Универсальная кнопка(просто в меню)
 universal_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Меню")
 
+#Выбор дня недели
+day_of_the_week_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Понедельник").add("Вторник")\
+                                                  .add("Среда").add("Четверг").add("Пятница").add("Суббота").add("Меню")
+
 # Локация и контакт
 markup_request = ReplyKeyboardMarkup(resize_keyboard=True).add(
     KeyboardButton('Отправить свой контакт ☎️', request_contact=True)
