@@ -94,19 +94,57 @@ async def process_start2_command(message: types.Message):
     await message.reply(f'Доброго времени суток!, {message.from_user.username}.\n'
                         '\n Это наш StudentHelperBot, здесь всегда можно узнать актуальное расписание, поставить '
                         'напоминания, подписаться на рассылки: чат группы, сообщения от преподавателей и многое другое!'
+                        'Для управлением бота, используйте кнопки.'
                         , reply_markup=KeyBoards.menu_admin_kb)
 
 
 @dp.message_handler(state='*', content_types=["text"])
 async def handler_message(msg: types.Message):
+    global adding
     global group
     switch_text = msg.text.lower()
     if switch_text == "расписание":
         await msg.reply(":: Выберите день недели ::", reply_markup=KeyBoards.day_of_the_week_kb)
 
     elif switch_text == "понедельник":
-        # Здесь нужно, чтобы Кирилл вставил код для пн
+        timetable_message = ""
+        current_week = "0"
+        url = 'https://edu.sfu-kras.ru/timetable'
+        response = requests.get(url).text
+        match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+        if match:
+            timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
+            current_week = "1"
+        else:
+            timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
+            current_week = "2"
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT chat_id, user_group FROM users")
+        result_set = cursor.fetchall()
+        for i in result_set:
+            if i[0] == msg.from_user.id:
+                group = i[1]
+        url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={group}')
+
+        response = requests.get(url).json()
+        adding = []
+        for item in response["timetable"]:
+            if item["week"] == current_week:
+                adding.append(
+                    [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
+        for i in adding:
+            print(i)
+        timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Понедельник</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+        for i in adding:
+            if i[0] == '1':
+                if i[4] == '' and i[5] == '':
+                    timetable_message += f'\n|{i[1]}\n|{i[2]} ({i[3]})\n'
+                else:
+                    timetable_message += f'\n|{i[1]}\n|{i[2]} ({i[3]}) \n|{i[4]}\n|{i[5]}\n|'
+        await msg.reply(timetable_message, parse_mode="HTML")
         await msg.reply(":: Меню ::", reply_markup=KeyBoards.menu_admin_kb)
+
     elif switch_text == "вторник":
         # Здесь нужно, чтобы Кирилл вставил код для вт
         await msg.reply(":: Меню ::", reply_markup=KeyBoards.menu_admin_kb)
