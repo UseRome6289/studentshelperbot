@@ -621,7 +621,7 @@ async def handler_message(msg: types.Message):
             if item["week"] == current_week:
                 adding.append(
                     [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
-        timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Среда</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+        timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Четверг</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
         for i in adding:
             if i[0] == '4':
                 if i[4] == '' and i[5] == '':
@@ -656,7 +656,7 @@ async def handler_message(msg: types.Message):
             if item["week"] == current_week:
                 adding.append(
                     [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
-        timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Среда</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+        timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Пятница</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
         for i in adding:
             if i[0] == '5':
                 if i[4] == '' and i[5] == '':
@@ -691,7 +691,7 @@ async def handler_message(msg: types.Message):
             if item["week"] == current_week:
                 adding.append(
                     [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
-        timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Среда</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+        timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Суббота</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
         for i in adding:
             if i[0] == '6':
                 if i[4] == '' and i[5] == '':
