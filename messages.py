@@ -1,2 +1,4 @@
-help_message = '(Здравтствуйте, вас приветствует StudentsHelperBot!\n' \
-               ')'
+institute_message = 'Хорошо! Далее введите ваш институт!'
+end_of_registration_message = 'Хорошо! Добро пожаловать в меню, если нужна будет помощь - напишите /help'
+course_message = 'Хорошо! Далее выберите ваш курс:'
+group_message = 'Хорошо! Далее выберите вашу группу:'

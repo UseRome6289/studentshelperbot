@@ -9,6 +9,7 @@ from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
 
 import KeyBoards
+import messages
 from config import TOKEN
 from utils import Register, Schedule, Change
 
@@ -32,7 +33,7 @@ async def register_1(message: types.Message):
     conn.close()
     state = dp.current_state(user=message.from_user.id)
     await state.set_state(Register.all()[1])
-    await message.reply('Хорошо! Далее введите ваш институт!', reply=False, reply_markup=KeyBoards.institute_kb)
+    await message.reply(messages.institute_message, reply=False, reply_markup=KeyBoards.institute_kb)
 
 
 @dp.message_handler(state=Change.CHANGE_0)
@@ -44,7 +45,7 @@ async def name_change(message: types.Message):
     conn.close()
     state = dp.current_state(user=message.from_user.id)
     await state.reset_state()
-    await message.reply('Хорошо! Добро пожаловать в меню, если нужна будет помощь - напишите /help'
+    await message.reply(messages.end_of_registration_message
                         , reply=False, reply_markup=KeyBoards.menu_admin_kb)
 
 
@@ -57,7 +58,7 @@ async def register_2(message: types.Message):
     conn.close()
     state = dp.current_state(user=message.from_user.id)
     await state.set_state(Register.all()[2])
-    await message.reply('Хорошо! Далее выберите ваш курс:', reply=False, reply_markup=KeyBoards.course_kb)
+    await message.reply(messages.course_message, reply=False, reply_markup=KeyBoards.course_kb)
 
 
 @dp.message_handler(state=Register.REGISTER_2)
@@ -78,339 +79,339 @@ async def register_2(message: types.Message):
             # ИКИТ
             if i[1] == "ИКИТ" and i[2] == "1 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.ikit_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.ikit_kb)
             elif i[1] == "ИКИТ" and i[2] == "2 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.ikit_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.ikit_kb)
             elif i[1] == "ИКИТ" and i[2] == "3 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.ikit_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.ikit_kb)
             elif i[1] == "ИКИТ" and i[2] == "4 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.ikit_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.ikit_kb)
             elif i[1] == "ИКИТ" and i[2] == "5 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.ikit_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.ikit_kb)
             # ИУБП
             elif i[1] == "ИУБП" and i[2] == "1 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИУБП" and i[2] == "2 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИУБП" and i[2] == "3 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИУБП" and i[2] == "4 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИУБП" and i[2] == "5 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             # ИФБИБТ
             elif i[1] == "ИФБиБТ" and i[2] == "1 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИФБиБТ" and i[2] == "2 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИФБиБТ" and i[2] == "3 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИФБиБТ" and i[2] == "4 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИФБиБТ" and i[2] == "5 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             # ИФИЯК
             elif i[1] == "ИФиЯК" and i[2] == "1 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИФиЯК" and i[2] == "2 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИФиЯК" and i[2] == "3 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИФиЯК" and i[2] == "4 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИФиЯК" and i[2] == "5 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             # ВУЦ
             elif i[1] == "ВУЦ" and i[2] == "1 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ВУЦ" and i[2] == "2 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ВУЦ" and i[2] == "3 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ВУЦ" and i[2] == "4 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ВУЦ" and i[2] == "5 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             # ГИ
             elif i[1] == "ГИ" and i[2] == "1 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ГИ" and i[2] == "2 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ГИ" and i[2] == "3 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ГИ" and i[2] == "4 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ГИ" and i[2] == "5 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             # ИСИ
             elif i[1] == "ИСИ" and i[2] == "1 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИСИ" and i[2] == "2 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИСИ" and i[2] == "3 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИСИ" and i[2] == "4 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИСИ" and i[2] == "5 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             # ИНИГ
             elif i[1] == "ИНиГ" and i[2] == "1 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИНиГ" and i[2] == "2 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИНиГ" and i[2] == "3 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИНиГ" and i[2] == "4 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИНиГ" and i[2] == "5 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             # ИАИД
             elif i[1] == "ИАиД" and i[2] == "1 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИАиД" and i[2] == "2 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИАиД" and i[2] == "3 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИАиД" and i[2] == "4 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИАиД" and i[2] == "5 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             # ИГДГиГ
             elif i[1] == "ИГДГиГ" and i[2] == "1 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИГДГиГ" and i[2] == "2 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИГДГиГ" and i[2] == "3 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИГДГиГ" and i[2] == "4 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИГДГиГ" and i[2] == "5 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             # ИИФиРЭ
             elif i[1] == "ИИФиРЭ" and i[2] == "1 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИИФиРЭ" and i[2] == "2 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИИФиРЭ" and i[2] == "3 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИИФиРЭ" and i[2] == "4 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИИФиРЭ" and i[2] == "5 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             # ИМИФИ
             elif i[1] == "ИМиФИ" and i[2] == "1 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИМиФИ" and i[2] == "2 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИМиФИ" and i[2] == "3 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИМиФИ" and i[2] == "4 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИМиФИ" and i[2] == "5 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             # ИППС
             elif i[1] == "ИППС" and i[2] == "1 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИППС" and i[2] == "2 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИППС" and i[2] == "3 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИППС" and i[2] == "4 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИППС" and i[2] == "5 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             # ИФКСИТ
             elif i[1] == "ИФКСиТ" and i[2] == "1 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИФКСиТ" and i[2] == "2 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИФКСиТ" and i[2] == "3 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИФКСиТ" and i[2] == "4 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИФКСиТ" and i[2] == "5 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             # ИЦМИМ
             elif i[1] == "ИЦМиМ" and i[2] == "1 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИЦМиМ" and i[2] == "2 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИЦМиМ" and i[2] == "3 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИЦМиМ" and i[2] == "4 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИЦМиМ" and i[2] == "5 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             # ИЭИГ
             elif i[1] == "ИЭиГ" and i[2] == "1 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИЭиГ" and i[2] == "2 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИЭиГ" and i[2] == "3 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИЭиГ" and i[2] == "4 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИЭиГ" and i[2] == "5 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             # ИГ
             elif i[1] == "ИГ" and i[2] == "1 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИГ" and i[2] == "2 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИГ" and i[2] == "3 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИГ" and i[2] == "4 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИГ" and i[2] == "5 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             # ИТИСУ
             elif i[1] == "ИТиСУ" and i[2] == "1 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИТиСУ" and i[2] == "2 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИТиСУ" and i[2] == "3 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИТиСУ" and i[2] == "4 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИТиСУ" and i[2] == "5 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             # ИЭУИФ
             elif i[1] == "ИЭУиФ" and i[2] == "1 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИЭУиФ" and i[2] == "2 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИЭУиФ" and i[2] == "3 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИЭУиФ" and i[2] == "4 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ИЭУиФ" and i[2] == "5 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             # ПИ
             elif i[1] == "ПИ" and i[2] == "1 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ПИ" and i[2] == "2 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ПИ" and i[2] == "3 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ПИ" and i[2] == "4 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ПИ" and i[2] == "5 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             # ЮИ
             elif i[1] == "ЮИ" and i[2] == "1 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ЮИ" and i[2] == "2 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ЮИ" and i[2] == "3 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ЮИ" and i[2] == "4 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
             elif i[1] == "ЮИ" and i[2] == "5 курс":
                 await state.set_state(Register.all()[3])
-                await message.reply('Хорошо! Далее выберите вашу группу:', reply=False, reply_markup=KeyBoards.gi_kb)
+                await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
 
     conn.commit()
     conn.close()
@@ -426,7 +427,7 @@ async def register_3(message: types.Message):
     state = dp.current_state(user=message.from_user.id)
     await state.reset_state()
     # Здесь нужно раздавать права на админ панель
-    await message.reply('Хорошо! Добро пожаловать в меню, если нужна будет помощь - напишите /help'
+    await message.reply(messages.end_of_registration_message
                         , reply=False, reply_markup=KeyBoards.menu_admin_kb)
 
 
