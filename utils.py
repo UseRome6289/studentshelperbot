@@ -12,7 +12,6 @@ class Register(Helper):
 class Schedule(Helper):
     mode = HelperMode.snake_case
     TEST_STATE_0 = ListItem()
-    TEST_STATE_1 = ListItem()
 
 class Change(Helper):
     mode = HelperMode.snake_case

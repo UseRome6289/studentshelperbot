@@ -59,6 +59,7 @@ course_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("1 курс").add("2 �
 # Кнопки институтов
 ikit_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("КИ20-17/1б (1 подгруппа)").add("КИ20-17/1б (2 подгруппа)")
 gi_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("КИ20-02-5м")
+
 # Локация и контакт
 markup_request = ReplyKeyboardMarkup(resize_keyboard=True).add(
     KeyboardButton('Отправить свой контакт ☎️', request_contact=True)
