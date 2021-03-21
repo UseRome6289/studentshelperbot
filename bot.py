@@ -24,18 +24,6 @@ dp = Dispatcher(bot, storage=MemoryStorage())
 dp.middleware.setup(LoggingMiddleware())
 
 
-@dp.message_handler(state=Register.REGISTER_0)
-async def register_1(message: types.Message):
-    conn = sqlite3.connect('db.db')
-    cursor = conn.cursor()
-    cursor.execute(f"UPDATE users SET real_name = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
-    conn.commit()
-    conn.close()
-    state = dp.current_state(user=message.from_user.id)
-    await state.set_state(Register.all()[1])
-    await message.reply(messages.institute_message, reply=False, reply_markup=KeyBoards.institute_kb)
-
-
 @dp.message_handler(state=Change.CHANGE_0)
 async def name_change(message: types.Message):
     conn = sqlite3.connect('db.db')
@@ -47,6 +35,18 @@ async def name_change(message: types.Message):
     await state.reset_state()
     await message.reply(messages.end_of_registration_message
                         , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+
+
+@dp.message_handler(state=Register.REGISTER_0)
+async def register_1(message: types.Message):
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
+    cursor.execute(f"UPDATE users SET real_name = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
+    conn.commit()
+    conn.close()
+    state = dp.current_state(user=message.from_user.id)
+    await state.set_state(Register.all()[1])
+    await message.reply(messages.institute_message, reply=False, reply_markup=KeyBoards.institute_kb)
 
 
 @dp.message_handler(state=Register.REGISTER_1)
@@ -815,7 +815,7 @@ async def handler_message(msg: types.Message):
         conn.close()
         state = dp.current_state(user=msg.from_user.id)
         await state.set_state(Change.all()[0])
-        await bot.send_message(msg.from_user.id, ":: Введите ваше имя ::")
+        await bot.send_message(msg.from_user.id, ":: Введите ваше ФИО ::")
     # Изменение группы
     elif switch_text == "изменить группу":
         conn = sqlite3.connect('db.db')

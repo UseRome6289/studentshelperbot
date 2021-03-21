@@ -35,7 +35,7 @@ mailing_lists_kb2 = ReplyKeyboardMarkup(resize_keyboard=True).add("Меню")
 # Отправление рассылок из админ-панели
 admin_panel = ReplyKeyboardMarkup(resize_keyboard=True).add("Отправить рассылку").add("Меню")
 
-# Отправление рассылок из админ-панели
+# Отправление рассылок из панели
 chat_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Меню")
 
 # Запланированные мероприятия
