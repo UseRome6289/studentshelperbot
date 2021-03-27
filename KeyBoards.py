@@ -60,6 +60,10 @@ course_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("1 курс").add("2 �
 ikit_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("КИ20-17/1б (1 подгруппа)").add("КИ20-17/1б (2 подгруппа)")
 gi_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("КИ20-02-5м")
 
+# Поддержка разработчиков
+developer_support_kb = ReplyKeyboardMarkup(resize_keyboard=True).add('Узнать команду разработчиков')\
+    .add("Поддержать разработку телеграмм-бота").add("Меню")
+
 # Локация и контакт
 markup_request = ReplyKeyboardMarkup(resize_keyboard=True).add(
     KeyboardButton('Отправить свой контакт ☎️', request_contact=True)

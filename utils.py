@@ -13,6 +13,12 @@ class Schedule(Helper):
     mode = HelperMode.snake_case
     TEST_STATE_0 = ListItem()
 
+
 class Change(Helper):
     mode = HelperMode.snake_case
     CHANGE_0 = ListItem()
+
+
+class Pay(Helper):
+    mode = HelperMode.snake_case
+    PAY_0 = ListItem()
