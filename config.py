@@ -1,4 +1,4 @@
 TOKEN = "1679612593:AAFQoRRJCZlUXf5UDs2EVV7U50BLshHP3S8"
 ADMIN = "259281983"
 PAYMENTS_PROVIDER_TOKEN = '381764678:TEST:23623'
-TIME_MACHINE_IMAGE_URL = 'https://get.pxhere.com/photo/landscape-nature-wilderness-walking-mountain-sky-lake-adventure-view-river-valley-mountain-range-environment-rural-reflection-scenic-peaceful-glacier-scenery-serene-fjord-tourism-national-park-ridge-ecology-clouds-mountains-alps-backpacking-plateau-fell-cirque-loch-crater-lake-moraine-landform-tarn-mountain-pass-geographical-feature-mountainous-landforms-glacial-landform-848203.jpg'
+TIME_MACHINE_IMAGE_URL = 'https://sun9-30.userapi.com/impg/P5GcyNJoMjX7YH_Y-kCscrziVwWYlXq7XgELJg/C9qu_k5oRgA.jpg?size=2560x1707&quality=96&sign=6b0f85478b5aa08def14b2657d01474f&type=album'
