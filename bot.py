@@ -45,7 +45,7 @@ async def process_buy_command(message: types.Message):
                             '\n - Поставить напоминания 🍻'
                             '\n - Подписаться на рассылки ✉'
                             '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                            ' \n  Регестрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+                            '\n  Регестрируемся? ✨', reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
         state = dp.current_state(user=message.from_user.id)
