@@ -21,4 +21,5 @@ class Change(Helper):
 
 class Pay(Helper):
     mode = HelperMode.snake_case
-    PAY_0 = ListItem()
+    PAY_DISTRIBUTOR = ListItem()
+    PAY_DISTRIBUTOR2 = ListItem()

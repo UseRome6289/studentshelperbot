@@ -11,8 +11,8 @@ from aiogram.utils import executor
 
 import KeyBoards
 import messages
-from messages import MESSAGES
 from config import TOKEN, PAYMENTS_PROVIDER_TOKEN, TIME_MACHINE_IMAGE_URL
+from messages import MESSAGES
 from utils import Register, Schedule, Change, Pay
 
 
@@ -25,12 +25,34 @@ bot = Bot(token=TOKEN)
 dp = Dispatcher(bot, storage=MemoryStorage())
 dp.middleware.setup(LoggingMiddleware())
 
-PRICE = types.LabeledPrice(label='Поддержка разработчиков', amount=10000)
+PRICE100 = types.LabeledPrice(label='Поддержка разработчиков 100 Рублей', amount=10000)
+PRICE250 = types.LabeledPrice(label='Поддержка разработчиков 250 Рублей', amount=25000)
+PRICE500 = types.LabeledPrice(label='Поддержка разработчиков 500 Рублей', amount=50000)
+PRICE1000 = types.LabeledPrice(label='Поддержка разработчиков 1000 Рублей', amount=100000)
 
 
-@dp.message_handler(state=Pay.PAY_0)
-async def process_buy_command(message: types.Message):
+@dp.message_handler(state=Pay.PAY_DISTRIBUTOR)
+async def process_buy_command0(message: types.Message):
     switch_text = message.text.lower()
+    if message.text == '/start':
+        if message.from_user.username != None:
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Подписаться на рассылки ✉'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+        else:
+            await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Подписаться на рассылки ✉'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+    elif switch_text == "регистрация":
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state(Register.all()[0])
+        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
     if message.text == 'Меню':
         state = dp.current_state(user=message.from_user.id)
         await state.reset_state()
@@ -38,21 +60,40 @@ async def process_buy_command(message: types.Message):
     elif message.text == 'Узнать команду разработчиков':
         await message.reply('✨ Разработчики телеграм-бота:\n 1. Шульц Илья\n 2.Присяжнюк Кирилл\n 3.Степанцов Антон',
                             reply_markup=KeyBoards.developer_support_kb)
+    elif message.text == 'Поддержать разработку телеграмм-бота':
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state(Pay.all()[5])
+        await message.reply("Спасибо, что решили поддержать нашего телеграмм-бота! 🔥"
+                            , reply_markup=KeyBoards.developer_support_kb2)
 
-    elif message.text == '/start':
-        await message.reply(f'Welcome to StudentHelperBot! 🔥, {message.from_user.username}.\n'
-                            '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                            '\n - Поставить напоминания 🍻'
-                            '\n - Подписаться на рассылки ✉'
-                            '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                            '\n  Регестрируемся? ✨', reply_markup=KeyBoards.greet_kb)
 
+@dp.message_handler(state=Pay.PAY_DISTRIBUTOR2)
+async def process_buy_command01(message: types.Message):
+    switch_text = message.text.lower()
+    if message.text == '/start':
+        if message.from_user.username != None:
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Подписаться на рассылки ✉'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+        else:
+            await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Подписаться на рассылки ✉'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
     elif switch_text == "регистрация":
         state = dp.current_state(user=message.from_user.id)
         await state.set_state(Register.all()[0])
         await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
-
-    else:
+    if message.text == 'Меню':
+        state = dp.current_state(user=message.from_user.id)
+        await state.reset_state()
+        await message.reply("Вы в меню ✨", reply_markup=KeyBoards.menu_admin_kb)
+    elif switch_text == "поддержать разработчиков 100 рублей":
         if PAYMENTS_PROVIDER_TOKEN.split(':')[1] == 'TEST':
             await bot.send_message(message.chat.id, MESSAGES['pre_buy_demo_alert'])
         await bot.send_invoice(message.chat.id,
@@ -65,7 +106,58 @@ async def process_buy_command(message: types.Message):
                                photo_width=512,
                                photo_size=512,
                                is_flexible=False,  # True если конечная цена зависит от способа доставки
-                               prices=[PRICE],
+                               prices=[PRICE100],
+                               start_parameter='developer-support',
+                               payload='some-invoice-payload-for-our-internal-use'
+                               )
+    elif switch_text == "поддержать разработчиков 250 рублей":
+        if PAYMENTS_PROVIDER_TOKEN.split(':')[1] == 'TEST':
+            await bot.send_message(message.chat.id, MESSAGES['pre_buy_demo_alert'])
+        await bot.send_invoice(message.chat.id,
+                               title=MESSAGES['tm_title'],
+                               description=MESSAGES['tm_description'],
+                               provider_token=PAYMENTS_PROVIDER_TOKEN,
+                               currency='rub',
+                               photo_url=TIME_MACHINE_IMAGE_URL,
+                               photo_height=512,  # !=0/None, иначе изображение не покажется
+                               photo_width=512,
+                               photo_size=512,
+                               is_flexible=False,  # True если конечная цена зависит от способа доставки
+                               prices=[PRICE250],
+                               start_parameter='developer-support',
+                               payload='some-invoice-payload-for-our-internal-use'
+                               )
+    elif switch_text == "поддержать разработчиков 500 рублей":
+        if PAYMENTS_PROVIDER_TOKEN.split(':')[1] == 'TEST':
+            await bot.send_message(message.chat.id, MESSAGES['pre_buy_demo_alert'])
+        await bot.send_invoice(message.chat.id,
+                               title=MESSAGES['tm_title'],
+                               description=MESSAGES['tm_description'],
+                               provider_token=PAYMENTS_PROVIDER_TOKEN,
+                               currency='rub',
+                               photo_url=TIME_MACHINE_IMAGE_URL,
+                               photo_height=512,  # !=0/None, иначе изображение не покажется
+                               photo_width=512,
+                               photo_size=512,
+                               is_flexible=False,  # True если конечная цена зависит от способа доставки
+                               prices=[PRICE500],
+                               start_parameter='developer-support',
+                               payload='some-invoice-payload-for-our-internal-use'
+                               )
+    elif switch_text == "поддержать разработчиков 1000 рублей":
+        if PAYMENTS_PROVIDER_TOKEN.split(':')[1] == 'TEST':
+            await bot.send_message(message.chat.id, MESSAGES['pre_buy_demo_alert'])
+        await bot.send_invoice(message.chat.id,
+                               title=MESSAGES['tm_title'],
+                               description=MESSAGES['tm_description'],
+                               provider_token=PAYMENTS_PROVIDER_TOKEN,
+                               currency='rub',
+                               photo_url=TIME_MACHINE_IMAGE_URL,
+                               photo_height=512,  # !=0/None, иначе изображение не покажется
+                               photo_width=512,
+                               photo_size=512,
+                               is_flexible=False,  # True если конечная цена зависит от способа доставки
+                               prices=[PRICE1000],
                                start_parameter='developer-support',
                                payload='some-invoice-payload-for-our-internal-use'
                                )
@@ -95,6 +187,7 @@ async def process_successful_payment(message: types.Message):
     await state.reset_state()
     await message.reply("Вы в меню ✨", reply_markup=KeyBoards.menu_admin_kb)
 
+
 @dp.message_handler(state=Change.CHANGE_0)
 async def name_change(message: types.Message):
     conn = sqlite3.connect('db.db')
@@ -112,12 +205,20 @@ async def name_change(message: types.Message):
 async def register_1(message: types.Message):
     switch_text = message.text.lower()
     if message.text == '/start':
-        await message.reply(f'Welcome to StudentHelperBot! 🔥, {message.from_user.username}.\n'
-                            '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                            '\n - Поставить напоминания 🍻'
-                            '\n - Подписаться на рассылки ✉'
-                            '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                            ' \n  Регестрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+        if message.from_user.username != None:
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Подписаться на рассылки ✉'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+        else:
+            await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Подписаться на рассылки ✉'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
         state = dp.current_state(user=message.from_user.id)
@@ -138,12 +239,20 @@ async def register_1(message: types.Message):
 async def register_2(message: types.Message):
     switch_text = message.text.lower()
     if message.text == '/start':
-        await message.reply(f'Welcome to StudentHelperBot! 🔥, {message.from_user.username}.\n'
-                            '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                            '\n - Поставить напоминания 🍻'
-                            '\n - Подписаться на рассылки ✉'
-                            '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                            ' \n  Регестрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+        if message.from_user.username != None:
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Подписаться на рассылки ✉'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+        else:
+            await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Подписаться на рассылки ✉'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
         state = dp.current_state(user=message.from_user.id)
@@ -164,12 +273,20 @@ async def register_2(message: types.Message):
 async def register_2(message: types.Message):
     switch_text = message.text.lower()
     if message.text == '/start':
-        await message.reply(f'Welcome to StudentHelperBot! 🔥, {message.from_user.username}.\n'
-                            '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                            '\n - Поставить напоминания 🍻'
-                            '\n - Подписаться на рассылки ✉'
-                            '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                            ' \n  Регестрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+        if message.from_user.username != None:
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Подписаться на рассылки ✉'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+        else:
+            await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Подписаться на рассылки ✉'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
         state = dp.current_state(user=message.from_user.id)
@@ -534,12 +651,20 @@ async def register_2(message: types.Message):
 async def register_3(message: types.Message):
     switch_text = message.text.lower()
     if message.text == '/start':
-        await message.reply(f'Welcome to StudentHelperBot! 🔥, {message.from_user.username}.\n'
-                            '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                            '\n - Поставить напоминания 🍻'
-                            '\n - Подписаться на рассылки ✉'
-                            '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                            ' \n  Регестрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+        if message.from_user.username != None:
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Подписаться на рассылки ✉'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+        else:
+            await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Подписаться на рассылки ✉'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
         state = dp.current_state(user=message.from_user.id)
@@ -563,12 +688,20 @@ async def register_3(message: types.Message):
 async def schedule_1(msg: types.Message):
     switch_text = msg.text.lower()
     if msg.text == '/start':
-        await msg.reply(f'Welcome to StudentHelperBot! 🔥, {msg.from_user.username}.\n'
+        if msg.from_user.username != None:
+            await msg.reply(f'Welcome to StudentHelperBot, {msg.from_user.username}🔥\n'
                             '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                             '\n - Поставить напоминания 🍻'
                             '\n - Подписаться на рассылки ✉'
                             '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                            ' \n  Регестрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+                            ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+        else:
+            await msg.reply(f'Welcome to StudentHelperBot! 🔥\n'
+                            '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                            '\n - Поставить напоминания 🍻'
+                            '\n - Подписаться на рассылки ✉'
+                            '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                            ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
         state = dp.current_state(user=msg.from_user.id)
@@ -608,23 +741,39 @@ async def process_start_command(message: types.Message):
     conn.commit()
     conn.close()
 
-    await message.reply(f'Welcome to StudentHelperBot! 🔥, {message.from_user.username}.\n'
-                        '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                        '\n - Поставить напоминания 🍻'
-                        '\n - Подписаться на рассылки ✉'
-                        '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                        ' \n  Регестрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+    if message.text == '/start':
+        if message.from_user.username != None:
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Подписаться на рассылки ✉'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+        else:
+            await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Подписаться на рассылки ✉'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
 
 
 @dp.message_handler(commands='help')
 async def process_start2_command(message: types.Message):
-    await message.reply(f'Welcome to StudentHelperBot! 🔥, {message.from_user.username}.\n'
-                        '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                        '\n - Поставить напоминания 🍻'
-                        '\n - Подписаться на рассылки ✉'
-                        '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                        '\n - Для управлением бота, используйте кнопки.'
-                        , reply_markup=KeyBoards.menu_admin_kb)
+    if message.from_user.username == None:
+        await message.reply(f'Welcome to StudentHelperBot! 🔥, {message.from_user.username}.\n'
+                            '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                            '\n - Поставить напоминания 🍻'
+                            '\n - Подписаться на рассылки ✉'
+                            '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                            ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+    else:
+        await message.reply(f'Welcome to StudentHelperBot! 🔥.\n'
+                            '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                            '\n - Поставить напоминания 🍻'
+                            '\n - Подписаться на рассылки ✉'
+                            '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                            ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
 
 
 @dp.message_handler(state='*', content_types=["text"])
@@ -985,10 +1134,10 @@ async def handler_message(msg: types.Message):
 
     elif switch_text == "поддержка разработчиков":
         state = dp.current_state(user=msg.from_user.id)
-        await state.set_state(Pay.all()[0])
+        await state.set_state(Pay.all()[4])
         await msg.reply("Разработчики благодарны вам, что вы используете их телеграм-бота. Спасибо вам! 😘"
                         , reply_markup=KeyBoards.developer_support_kb)
-    
+
 
 if __name__ == "__main__":
     executor.start_polling(dp, on_shutdown=shutdown)

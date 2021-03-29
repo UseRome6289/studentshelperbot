@@ -1,4 +1,4 @@
 TOKEN = "1679612593:AAFQoRRJCZlUXf5UDs2EVV7U50BLshHP3S8"
 ADMIN = "259281983"
 PAYMENTS_PROVIDER_TOKEN = '381764678:TEST:23623'
-TIME_MACHINE_IMAGE_URL = 'https://sun9-30.userapi.com/impg/P5GcyNJoMjX7YH_Y-kCscrziVwWYlXq7XgELJg/C9qu_k5oRgA.jpg?size=2560x1707&quality=96&sign=6b0f85478b5aa08def14b2657d01474f&type=album'
+TIME_MACHINE_IMAGE_URL = 'https://img.desktopwallpapers.ru/animals/pics/wide/1920x1200/c24f98eba82666ae547b138be9933bd1.jpg'
