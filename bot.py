@@ -62,7 +62,7 @@ async def process_buy_command0(message: types.Message):
                             reply_markup=KeyBoards.developer_support_kb)
     elif message.text == 'Поддержать разработку телеграмм-бота':
         state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Pay.all()[5])
+        await state.set_state(Pay.all()[1])
         await message.reply("Спасибо, что решили поддержать нашего телеграмм-бота! 🔥"
                             , reply_markup=KeyBoards.developer_support_kb2)
 
@@ -1134,7 +1134,7 @@ async def handler_message(msg: types.Message):
 
     elif switch_text == "поддержка разработчиков":
         state = dp.current_state(user=msg.from_user.id)
-        await state.set_state(Pay.all()[4])
+        await state.set_state(Pay.all()[0])
         await msg.reply("Разработчики благодарны вам, что вы используете их телеграм-бота. Спасибо вам! 😘"
                         , reply_markup=KeyBoards.developer_support_kb)
 
