@@ -13,7 +13,7 @@ import KeyBoards
 import messages
 from config import TOKEN, PAYMENTS_PROVIDER_TOKEN, TIME_MACHINE_IMAGE_URL
 from messages import MESSAGES
-from utils import Register, Schedule, Change, Pay
+from utils import Register, Schedule, Change, Pay, AdminPanel
 
 
 async def shutdown(dispatcher: Dispatcher):
@@ -29,6 +29,72 @@ PRICE100 = types.LabeledPrice(label='Поддержка разработчико
 PRICE250 = types.LabeledPrice(label='Поддержка разработчиков 250 Рублей', amount=25000)
 PRICE500 = types.LabeledPrice(label='Поддержка разработчиков 500 Рублей', amount=50000)
 PRICE1000 = types.LabeledPrice(label='Поддержка разработчиков 1000 Рублей', amount=100000)
+
+
+@dp.message_handler(state=AdminPanel.ADMIN_0)
+async def process_admin_command0(message: types.Message):
+    switch_text = message.text.lower()
+    if switch_text == 'меню':
+        state = dp.current_state(user=message.from_user.id)
+        await state.reset_state()
+        await message.reply("Вы в меню ✨", reply_markup=KeyBoards.menu_admin_kb)
+    elif switch_text == 'отправить рассылку':
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state(AdminPanel.all()[1])
+        await message.reply("Введите сообщение для рассылки"
+                            ", чтобы вернутся - меню ✨", reply_markup=KeyBoards.return_keyboard)
+
+
+@dp.message_handler(state=AdminPanel.ADMIN_1)
+async def process_admin_command1(message: types.Message):
+    content = message.text
+    switch_text = message.text.lower()
+    if switch_text == 'меню':
+        state = dp.current_state(user=message.from_user.id)
+        await state.reset_state()
+        await message.reply("Вы в меню ✨", reply_markup=KeyBoards.menu_admin_kb)
+    else:
+        state = dp.current_state(user=message.from_user.id)
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"UPDATE admins SET last_content = '{message.text}' WHERE user_id = '{message.from_user.id}'")
+        conn.commit()
+        conn.close()
+        await state.set_state(AdminPanel.all()[2])
+        await message.reply("Вы точно хотите отправить это сообщение?", reply_markup=KeyBoards.yes_or_no_keyboard)
+
+
+@dp.message_handler(state=AdminPanel.ADMIN_2)
+async def process_admin_command1(message: types.Message):
+    switch_text = message.text.lower()
+    if switch_text == 'меню':
+        state = dp.current_state(user=message.from_user.id)
+        await state.reset_state()
+        await message.reply("Вы в меню ✨", reply_markup=KeyBoards.menu_admin_kb)
+    elif switch_text == 'да':
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT chat_id FROM users")
+        id_users = cursor.fetchall()
+        cursor.close()
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT last_content FROM admins WHERE user_id = '{message.from_user.id}'")
+        content = cursor.fetchall()
+        cursor.close()
+
+        for user in id_users:
+            await dp.bot.send_message(user[0], content[0])
+
+
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state(AdminPanel.all()[0])
+        await message.reply("Успешно!", reply_markup=KeyBoards.admin_panel)
+
+    elif switch_text == 'изменить':
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state(AdminPanel.all()[1])
+        await message.reply("Введите сообщение для рассылки ✨", reply_markup=KeyBoards.return_keyboard)
 
 
 @dp.message_handler(state=Pay.PAY_DISTRIBUTOR)
@@ -798,6 +864,7 @@ async def handler_message(msg: types.Message):
         cursor = conn.cursor()
         cursor.execute(f"SELECT chat_id, user_group FROM users")
         result_set = cursor.fetchall()
+        cursor.close()
         for i in result_set:
             if i[0] == msg.from_user.id:
                 group = i[1]
@@ -843,6 +910,7 @@ async def handler_message(msg: types.Message):
         cursor = conn.cursor()
         cursor.execute(f"SELECT chat_id, user_group FROM users")
         result_set = cursor.fetchall()
+        cursor.close()
         for i in result_set:
             if i[0] == msg.from_user.id:
                 group = i[1]
@@ -888,6 +956,7 @@ async def handler_message(msg: types.Message):
         cursor = conn.cursor()
         cursor.execute(f"SELECT chat_id, user_group FROM users")
         result_set = cursor.fetchall()
+        cursor.close()
         for i in result_set:
             if i[0] == msg.from_user.id:
                 group = i[1]
@@ -933,6 +1002,7 @@ async def handler_message(msg: types.Message):
         cursor = conn.cursor()
         cursor.execute(f"SELECT chat_id, user_group FROM users")
         result_set = cursor.fetchall()
+        cursor.close()
         for i in result_set:
             if i[0] == msg.from_user.id:
                 group = i[1]
@@ -978,6 +1048,7 @@ async def handler_message(msg: types.Message):
         cursor = conn.cursor()
         cursor.execute(f"SELECT chat_id, user_group FROM users")
         result_set = cursor.fetchall()
+        cursor.close()
         for i in result_set:
             if i[0] == msg.from_user.id:
                 group = i[1]
@@ -1023,6 +1094,7 @@ async def handler_message(msg: types.Message):
         cursor = conn.cursor()
         cursor.execute(f"SELECT chat_id, user_group FROM users")
         result_set = cursor.fetchall()
+        cursor.close()
         for i in result_set:
             if i[0] == msg.from_user.id:
                 group = i[1]
@@ -1060,7 +1132,21 @@ async def handler_message(msg: types.Message):
         await msg.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
 
     elif switch_text == "админ-панель":
-        await msg.reply("-Раз-ра-бот-ка-", reply_markup=KeyBoards.admin_panel)
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT user_id FROM admins")
+        result_set = cursor.fetchall()
+        cursor.close()
+        is_succeed = False
+        for item in result_set:
+            if item[0] == msg.from_user.id:
+                    is_succeed = True
+        if is_succeed:
+            state = dp.current_state(user=msg.from_user.id)
+            await state.set_state(AdminPanel.all()[0])
+            await msg.reply("Добро пожаловать в админ-панель!", reply_markup=KeyBoards.admin_panel)
+        else:
+            await msg.reply("Вы не являетесь админом", reply_markup=KeyBoards.menu_admin_kb)
 
     elif switch_text == "меню":
         await msg.reply("Вы в меню ✨", reply_markup=KeyBoards.menu_admin_kb)

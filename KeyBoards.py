@@ -35,9 +35,6 @@ mailing_lists_kb2 = ReplyKeyboardMarkup(resize_keyboard=True).add("Меню")
 # Отправление рассылок из админ-панели
 admin_panel = ReplyKeyboardMarkup(resize_keyboard=True).add("Отправить рассылку").add("Меню")
 
-# Отправление рассылок из панели
-chat_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Меню")
-
 # Запланированные мероприятия
 events_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Добавить мероприятие").add("Меню")
 
@@ -73,3 +70,6 @@ markup_request = ReplyKeyboardMarkup(resize_keyboard=True).add(
 ).add(
     KeyboardButton('Отправить свою локацию 🗺️', request_location=True)
 )
+return_keyboard = ReplyKeyboardMarkup(resize_keyboard=True).add("Меню")
+
+yes_or_no_keyboard = ReplyKeyboardMarkup(resize_keyboard=True).add("Да").add("Изменить").add("Меню")

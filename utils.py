@@ -23,3 +23,11 @@ class Pay(Helper):
     mode = HelperMode.snake_case
     PAY_DISTRIBUTOR = ListItem()
     PAY_DISTRIBUTOR2 = ListItem()
+
+
+class AdminPanel(Helper):
+    mode = HelperMode.snake_case
+    ADMIN_0 = ListItem()
+    ADMIN_1 = ListItem()
+    ADMIN_2 = ListItem()
+    ADMIN_3 = ListItem()
