@@ -42,7 +42,7 @@ async def process_admin_command0(message: types.Message):
         state = dp.current_state(user=message.from_user.id)
         await state.set_state(AdminPanel.all()[1])
         await message.reply("Введите сообщение для рассылки"
-                            ", чтобы вернутся - меню ✨", reply_markup=KeyBoards.return_keyboard)
+                            ", чтобы вернуться - меню ✨", reply_markup=KeyBoards.return_keyboard)
 
 
 @dp.message_handler(state=AdminPanel.ADMIN_1)
@@ -84,8 +84,10 @@ async def process_admin_command1(message: types.Message):
         cursor.close()
 
         for user in id_users:
-            await dp.bot.send_message(user[0], content[0])
-
+            try:
+                await dp.bot.send_message(user[0], content[0])
+            except:
+                pass
 
         state = dp.current_state(user=message.from_user.id)
         await state.set_state(AdminPanel.all()[0])
