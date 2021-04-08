@@ -2,7 +2,6 @@ import re
 import sqlite3
 
 import requests
-import time
 from aiogram import Bot, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.contrib.middlewares.logging import LoggingMiddleware
@@ -1240,7 +1239,7 @@ async def handler_message(msg: types.Message):
         await msg.reply("Выберите ваш институт 👇", reply_markup=KeyBoards.institute_kb)
 
     elif switch_text == "посмотреть расписание другой группы":
-        await msg.reply(":Введите группу: 🎓", reply_markup=KeyBoards.universal_kb)
+        await msg.reply("Выберите институт: 🎓", reply_markup=KeyBoards.universal_kb)
         state = dp.current_state(user=msg.from_user.id)
         await state.set_state(Schedule.all()[0])
 
