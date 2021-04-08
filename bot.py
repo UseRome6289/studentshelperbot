@@ -2,6 +2,7 @@ import re
 import sqlite3
 
 import requests
+import time
 from aiogram import Bot, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.contrib.middlewares.logging import LoggingMiddleware
@@ -34,10 +35,12 @@ PRICE1000 = types.LabeledPrice(label='Поддержка разработчик�
 @dp.message_handler(state=AdminPanel.ADMIN_0)
 async def process_admin_command0(message: types.Message):
     switch_text = message.text.lower()
+
     if switch_text == 'меню':
         state = dp.current_state(user=message.from_user.id)
         await state.reset_state()
         await message.reply("Вы в меню ✨", reply_markup=KeyBoards.menu_admin_kb)
+
     elif switch_text == 'отправить рассылку':
         state = dp.current_state(user=message.from_user.id)
         await state.set_state(AdminPanel.all()[1])
@@ -85,7 +88,7 @@ async def process_admin_command1(message: types.Message):
 
         for user in id_users:
             try:
-                await dp.bot.send_message(user[0], content[0])
+                await dp.bot.send_message(user[0], content[0][0])
             except:
                 pass
 
@@ -851,7 +854,6 @@ async def handler_message(msg: types.Message):
     switch_text = msg.text.lower()
     if switch_text == "расписание":
         await msg.reply("Выберите день недели", reply_markup=KeyBoards.day_of_the_week_kb)
-
     elif switch_text == "понедельник":
         timetable_message = ""
         current_week = "0"
