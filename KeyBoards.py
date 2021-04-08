@@ -7,13 +7,13 @@ greet_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add
 # Меню с админ-панелью
 menu_admin_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Расписание").add("Админ-панель").add("Профиль")\
     .add("Рассылки")\
-    .add("Посмотреть расписание другой группы").add("Запланированные мероприятия").add("Чат").add("Настройки")\
+    .add("Посмотреть расписание другой группы").add("Запланированные мероприятия").add("Настройки")\
     .add("Поддержка разработчиков")
 
 # Меню обычного пользователя
 menu_user_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Расписание").add("Профиль").add("Рассылки")\
     .add("Посмотреть расписание другой группы").add("Запланированные мероприятия")\
-    .add("Чат").add("Настройки").add("Поддержка разработчиков")
+    .add("Настройки").add("Поддержка разработчиков")
 
 # Рассылки
 mailing_lists_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Изменить рассылки").add("Меню")

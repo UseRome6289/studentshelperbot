@@ -85,13 +85,11 @@ async def process_admin_command1(message: types.Message):
         cursor.execute(f"SELECT last_content FROM admins WHERE user_id = '{message.from_user.id}'")
         content = cursor.fetchall()
         cursor.close()
-
         for user in id_users:
             try:
                 await dp.bot.send_message(user[0], content[0][0])
             except:
                 pass
-
         state = dp.current_state(user=message.from_user.id)
         await state.set_state(AdminPanel.all()[0])
         await message.reply("Успешно!", reply_markup=KeyBoards.admin_panel)
@@ -264,12 +262,27 @@ async def name_change(message: types.Message):
     conn = sqlite3.connect('db.db')
     cursor = conn.cursor()
     cursor.execute(f"UPDATE users SET real_name = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
-    conn.commit()
-    conn.close()
-    state = dp.current_state(user=message.from_user.id)
-    await state.reset_state()
-    await message.reply(messages.end_of_registration_message
+    cursor.execute(f"SELECT user_id FROM admins")
+    result_set = cursor.fetchall()
+    cursor.close()
+    is_succeed = False
+    for item in result_set:
+        if item[0] == message.from_user.id:
+                is_succeed = True
+    if is_succeed:
+        await message.reply(messages.end_of_registration_message
                         , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+        conn.commit()
+        conn.close()
+        state = dp.current_state(user=message.from_user.id)
+        await state.reset_state()
+    else:
+        await message.reply(messages.end_of_registration_message
+                            , reply=False, reply_markup=KeyBoards.menu_user_kb)
+        conn.commit()
+        conn.close()
+        state = dp.current_state(user=message.from_user.id)
+        await state.reset_state()
 
 
 @dp.message_handler(state=Register.REGISTER_0)
@@ -745,14 +758,27 @@ async def register_3(message: types.Message):
         conn = sqlite3.connect('db.db')
         cursor = conn.cursor()
         cursor.execute(f"UPDATE users SET user_group = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
-        conn.commit()
-        conn.close()
-        state = dp.current_state(user=message.from_user.id)
-        await state.reset_state()
-
-        # Здесь нужно раздавать права на админ панель
-        await message.reply(messages.end_of_registration_message
-                            , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+        cursor.execute(f"SELECT user_id FROM admins")
+        result_set = cursor.fetchall()
+        cursor.close()
+        is_succeed = False
+        for item in result_set:
+            if item[0] == message.from_user.id:
+                is_succeed = True
+        if is_succeed:
+            await message.reply(messages.end_of_registration_message
+                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+        else:
+            await message.reply(messages.end_of_registration_message
+                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
 
 
 @dp.message_handler(state=Schedule.TEST_STATE_0)
@@ -1151,7 +1177,6 @@ async def handler_message(msg: types.Message):
             await msg.reply("Добро пожаловать в админ-панель!", reply_markup=KeyBoards.admin_panel)
         else:
             await msg.reply("Вы не являетесь админом", reply_markup=KeyBoards.menu_admin_kb)
-
     elif switch_text == "меню":
         await msg.reply("Вы в меню ✨", reply_markup=KeyBoards.menu_admin_kb)
 
@@ -1169,9 +1194,6 @@ async def handler_message(msg: types.Message):
                                                          f"Ваша группа: {i[2]}")
         conn.commit()
         conn.close()
-    elif switch_text == "чат":
-        await msg.reply("-Раз-ра-бот-ка-", reply_markup=KeyBoards.chat_kb)
-
     elif switch_text == "настройки":
         await msg.reply("Вы в настройках ⚙", reply_markup=KeyBoards.setting_kb)
 
