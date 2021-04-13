@@ -31,14 +31,70 @@ PRICE500 = types.LabeledPrice(label='Поддержка разработчико
 PRICE1000 = types.LabeledPrice(label='Поддержка разработчиков 1000 Рублей', amount=100000)
 
 
+@dp.message_handler(state=Events.EVENTS_USER_0)
+async def process_admin_command0(message: types.Message):
+    switch_text = message.text.lower()
+
+    if switch_text == 'меню':
+        is_succeed = False
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT user_id FROM admins")
+        result_set = cursor.fetchall()
+        cursor.close()
+        for item in result_set:
+            if item[0] == message.from_user.id:
+                is_succeed = True
+        if is_succeed:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+        else:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+
+    elif switch_text == 'отправить рассылку':
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state(AdminPanel.all()[1])
+        await message.reply("Введите сообщение для рассылки"
+                            ", чтобы вернуться - меню ✨", reply_markup=KeyBoards.return_keyboard)
+
+
 @dp.message_handler(state=AdminPanel.ADMIN_0)
 async def process_admin_command0(message: types.Message):
     switch_text = message.text.lower()
 
     if switch_text == 'меню':
-        state = dp.current_state(user=message.from_user.id)
-        await state.reset_state()
-        await message.reply("Вы в меню ✨", reply_markup=KeyBoards.menu_admin_kb)
+        is_succeed = False
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT user_id FROM admins")
+        result_set = cursor.fetchall()
+        cursor.close()
+        for item in result_set:
+            if item[0] == message.from_user.id:
+                is_succeed = True
+        if is_succeed:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+        else:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
 
     elif switch_text == 'отправить рассылку':
         state = dp.current_state(user=message.from_user.id)
@@ -52,9 +108,29 @@ async def process_admin_command1(message: types.Message):
     content = message.text
     switch_text = message.text.lower()
     if switch_text == 'меню':
-        state = dp.current_state(user=message.from_user.id)
-        await state.reset_state()
-        await message.reply("Вы в меню ✨", reply_markup=KeyBoards.menu_admin_kb)
+        is_succeed = False
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT user_id FROM admins")
+        result_set = cursor.fetchall()
+        cursor.close()
+        for item in result_set:
+            if item[0] == message.from_user.id:
+                is_succeed = True
+        if is_succeed:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+        else:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
     else:
         state = dp.current_state(user=message.from_user.id)
         conn = sqlite3.connect('db.db')
@@ -70,9 +146,29 @@ async def process_admin_command1(message: types.Message):
 async def process_admin_command1(message: types.Message):
     switch_text = message.text.lower()
     if switch_text == 'меню':
-        state = dp.current_state(user=message.from_user.id)
-        await state.reset_state()
-        await message.reply("Вы в меню ✨", reply_markup=KeyBoards.menu_admin_kb)
+        is_succeed = False
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT user_id FROM admins")
+        result_set = cursor.fetchall()
+        cursor.close()
+        for item in result_set:
+            if item[0] == message.from_user.id:
+                is_succeed = True
+        if is_succeed:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+        else:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
     elif switch_text == 'да':
         conn = sqlite3.connect('db.db')
         cursor = conn.cursor()
@@ -122,9 +218,29 @@ async def process_buy_command0(message: types.Message):
         await state.set_state(Register.all()[0])
         await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
     if message.text == 'Меню':
-        state = dp.current_state(user=message.from_user.id)
-        await state.reset_state()
-        await message.reply("Вы в меню ✨", reply_markup=KeyBoards.menu_admin_kb)
+        is_succeed = False
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT user_id FROM admins")
+        result_set = cursor.fetchall()
+        cursor.close()
+        for item in result_set:
+            if item[0] == message.from_user.id:
+                is_succeed = True
+        if is_succeed:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+        else:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
     elif message.text == 'Узнать команду разработчиков':
         await message.reply('✨ Разработчики телеграм-бота:\n 1. Шульц Илья\n 2.Присяжнюк Кирилл\n 3.Степанцов Антон',
                             reply_markup=KeyBoards.developer_support_kb)
@@ -261,22 +377,24 @@ async def name_change(message: types.Message):
     conn = sqlite3.connect('db.db')
     cursor = conn.cursor()
     cursor.execute(f"UPDATE users SET real_name = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
+    is_succeed = False
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
     cursor.execute(f"SELECT user_id FROM admins")
     result_set = cursor.fetchall()
     cursor.close()
-    is_succeed = False
     for item in result_set:
         if item[0] == message.from_user.id:
-                is_succeed = True
+            is_succeed = True
     if is_succeed:
-        await message.reply(messages.end_of_registration_message
-                        , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+        await message.reply('Вы в меню! ✨'
+                            , reply=False, reply_markup=KeyBoards.menu_admin_kb)
         conn.commit()
         conn.close()
         state = dp.current_state(user=message.from_user.id)
         await state.reset_state()
     else:
-        await message.reply(messages.end_of_registration_message
+        await message.reply('Вы в меню! ✨'
                             , reply=False, reply_markup=KeyBoards.menu_user_kb)
         conn.commit()
         conn.close()
@@ -821,18 +939,18 @@ async def schedule_0(message: types.Message):
     if message.text == '/start':
         if message.from_user.username != None:
             await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
-                            '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                            '\n - Поставить напоминания 🍻'
-                            '\n - Подписаться на рассылки ✉'
-                            '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                            ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Подписаться на рассылки ✉'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
             await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
-                            '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                            '\n - Поставить напоминания 🍻'
-                            '\n - Подписаться на рассылки ✉'
-                            '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                            ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Подписаться на рассылки ✉'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
         state = dp.current_state(user=message.from_user.id)
@@ -1464,7 +1582,6 @@ async def register_3(message: types.Message):
             await state.reset_state()
 
 
-
 @dp.message_handler(commands='start')
 async def process_start_command(message: types.Message):
     conn = sqlite3.connect('db.db')
@@ -1805,7 +1922,7 @@ async def handler_message(msg: types.Message):
         is_succeed = False
         for item in result_set:
             if item[0] == msg.from_user.id:
-                    is_succeed = True
+                is_succeed = True
         if is_succeed:
             state = dp.current_state(user=msg.from_user.id)
             await state.set_state(AdminPanel.all()[0])
@@ -1813,7 +1930,27 @@ async def handler_message(msg: types.Message):
         else:
             await msg.reply("Вы не являетесь админом", reply_markup=KeyBoards.menu_admin_kb)
     elif switch_text == "меню":
-        await msg.reply("Вы в меню ✨", reply_markup=KeyBoards.menu_admin_kb)
+        is_succeed = False
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT user_id FROM admins")
+        result_set = cursor.fetchall()
+        cursor.close()
+        for item in result_set:
+            if item[0] == msg.from_user.id:
+                is_succeed = True
+        if is_succeed:
+            await msg.reply('Вы в меню! ✨'
+                            , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=msg.from_user.id)
+            await state.reset_state()
+        else:
+            await msg.reply('Вы в меню! ✨'
+                            , reply=False, reply_markup=KeyBoards.menu_user_kb)
+            conn.commit()
+            conn.close()
 
     elif switch_text == "рассылки":
         conn = sqlite3.connect('db.db')
@@ -1824,15 +1961,13 @@ async def handler_message(msg: types.Message):
         for i in result_set:
             if i[0] == msg.from_user.id:
                 group = i[1]
+        printing = ''
         if group == "КИ20-17/1б (1 подгруппа)":
             with open("ki20171b.txt", encoding="UTF-8") as file:
                 file_spl = file.read()
-                print()
-
                 file_sp = file_spl.split(' | ')
-                printing = ''
                 for i in range(len(file_sp)):
-                    printing += f'\t{i+1}. {file_sp[i]}\n'
+                    printing += f'\t{i + 1}. {file_sp[i]}\n'
         await msg.reply(f"5 ваших последних рассылок ✉:\n\n{printing}", reply_markup=KeyBoards.mailing_lists_kb)
 
     elif switch_text == "профиль":
