@@ -1816,7 +1816,24 @@ async def handler_message(msg: types.Message):
         await msg.reply("Вы в меню ✨", reply_markup=KeyBoards.menu_admin_kb)
 
     elif switch_text == "рассылки":
-        await msg.reply("Ваши полученные рассылки ✉", reply_markup=KeyBoards.mailing_lists_kb)
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT chat_id, user_group FROM users")
+        result_set = cursor.fetchall()
+        cursor.close()
+        for i in result_set:
+            if i[0] == msg.from_user.id:
+                group = i[1]
+        if group == "КИ20-17/1б (1 подгруппа)":
+            with open("ki20171b.txt", encoding="UTF-8") as file:
+                file_spl = file.read()
+                print()
+
+                file_sp = file_spl.split(' | ')
+                printing = ''
+                for i in range(len(file_sp)):
+                    printing += f'\t{i+1}. {file_sp[i]}\n'
+        await msg.reply(f"5 ваших последних рассылок ✉:\n\n{printing}", reply_markup=KeyBoards.mailing_lists_kb)
 
     elif switch_text == "профиль":
         conn = sqlite3.connect('db.db')
