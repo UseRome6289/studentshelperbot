@@ -3,7 +3,7 @@ import sqlite3
 import threading
 import time
 from threading import Thread
-
+import datetime
 import requests
 import telebot
 from aiogram import Bot, types
@@ -2190,6 +2190,7 @@ async def register_3(message: types.Message):
         else:
             timetable_message += 'В понедельник пар нет!\n Отличный повод увидеться с друзьями! 🎉'
         await message.reply(timetable_message, parse_mode="HTML")
+
         timetable_message = ""
         current_week = "0"
         url = 'https://edu.sfu-kras.ru/timetable'
@@ -2488,6 +2489,7 @@ async def handler_message(msg: types.Message):
             timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Понедельник</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
             for i in adding:
                 if i[0] == '1':
+                    a = i[1].split('-')
                     if i[4] == '' and i[5] == '':
                         timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
                     else:
@@ -2868,6 +2870,7 @@ class MyThread(Thread):
         self.stopped = event
 
     def run(self):
+        global adding
         while not self.stopped.wait(3):
             conn = sqlite3.connect('db.db')
 
@@ -2933,10 +2936,83 @@ class MyThread(Thread):
                 bot2.send_message(item[0], f'Рассылка: {item[1]} закончилась')
 
 
+class MyThread2(Thread):
+    def __init__(self, event):
+        Thread.__init__(self)
+        self.stopped = event
+
+    def run(self):
+        global adding
+        while not self.stopped.wait(60):
+            url = 'https://edu.sfu-kras.ru/timetable'
+            response = requests.get(url).text
+            match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+            if match:
+                current_week = "1"
+            else:
+                current_week = "2"
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_group FROM users")
+            result_set = cursor.fetchall()
+            cursor.close()
+            listing = []
+            for i in result_set:
+                listing.append(i)
+            listing = list(set(listing))
+            for i in listing:
+                url = f'http://edu.sfu-kras.ru/api/timetable/get?target={i[0]}'
+                response = requests.get(url).json()
+                adding = []
+                date = datetime.datetime.today()
+                date_date = date.strftime('%H:%M')
+                date_split = date_date.split(':')
+                listing_date_split = []
+                for n in date_split:
+                    n = int(n)
+                    listing_date_split.append(n)
+                listing_date_sum = listing_date_split[0]*60+listing_date_split[1]
+                for item in response["timetable"]:
+                    if item["week"] == current_week:
+                        adding.append(
+                            [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
+                date1 = datetime.datetime.today()
+                now = datetime.datetime.weekday(date1)+1
+                for j in adding:
+                    if int(j[0]) == now:
+                        a = j[1].split('-')
+                        if date_date == a[0]:
+                            conn = sqlite3.connect('db.db')
+                            cursor = conn.cursor()
+                            cursor.execute(f"SELECT chat_id FROM users WHERE user_group = '{i[0]}'")
+                            id_group = cursor.fetchall()
+                            cursor.close()
+                            for k in id_group:
+                                bot2.send_message(k, f'У вас началась {j[2]} пара')
+                        date_kur = a[0].split(':')
+                        listing_date = []
+                        for n in date_kur:
+                            n = int(n)
+                            listing_date.append(n)
+                        listing_date_sum2 = listing_date[0] * 60 + listing_date[1]
+                        if listing_date_sum == listing_date_sum2 - 5:
+                            conn = sqlite3.connect('db.db')
+                            cursor = conn.cursor()
+                            cursor.execute(f"SELECT chat_id FROM users WHERE user_group = '{i[0]}'")
+                            id_group = cursor.fetchall()
+                            cursor.close()
+                            for k in id_group:
+                                bot2.send_message(k, f'У вас через 5 минут начнется {j[2]}')
+
+
 if __name__ == "__main__":
     stopFlag = threading.Event()
     thread = MyThread(stopFlag)
     thread.start()
+    stopFlag2 = threading.Event()
+    thread2 = MyThread2(stopFlag2)
+    thread2.start()
     executor.start_polling(dp, on_shutdown=shutdown)
 
-# Нужно разобраться с 30 минут и 5 минут, Уведомление о скором наступлении пары, руссификация дат, парсинг кнопок
+
+# руссификация дат, парсинг кнопок
