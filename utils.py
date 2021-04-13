@@ -8,12 +8,6 @@ class Register(Helper):
     REGISTER_2 = ListItem()
     REGISTER_3 = ListItem()
 
-
-class Schedule(Helper):
-    mode = HelperMode.snake_case
-    TEST_STATE_0 = ListItem()
-
-
 class Change(Helper):
     mode = HelperMode.snake_case
     CHANGE_0 = ListItem()
@@ -31,3 +25,15 @@ class AdminPanel(Helper):
     ADMIN_1 = ListItem()
     ADMIN_2 = ListItem()
     ADMIN_3 = ListItem()
+
+
+class ScheduleUser(Helper):
+    mode = HelperMode.snake_case
+    SCHEDULE_USER_0 = ListItem()
+    SCHEDULE_USER_1 = ListItem()
+    SCHEDULE_USER_2 = ListItem()
+
+
+class Events(Helper):
+    mode = HelperMode.snake_case
+    EVENTS_USER_0 = ListItem()

@@ -13,7 +13,7 @@ import KeyBoards
 import messages
 from config import TOKEN, PAYMENTS_PROVIDER_TOKEN, TIME_MACHINE_IMAGE_URL
 from messages import MESSAGES
-from utils import Register, Schedule, Change, Pay, AdminPanel
+from utils import Register, Change, Pay, AdminPanel, ScheduleUser, Events
 
 
 async def shutdown(dispatcher: Dispatcher):
@@ -780,8 +780,8 @@ async def register_3(message: types.Message):
             await state.reset_state()
 
 
-@dp.message_handler(state=Schedule.TEST_STATE_0)
-async def schedule_1(msg: types.Message):
+@dp.message_handler(state=ScheduleUser.SCHEDULE_USER_0)
+async def schedule_0(msg: types.Message):
     switch_text = msg.text.lower()
     if msg.text == '/start':
         if msg.from_user.username != None:
@@ -804,29 +804,665 @@ async def schedule_1(msg: types.Message):
         await state.set_state(Register.all()[0])
         await msg.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
     else:
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"INSERT INTO user_table(chat_id) values ({msg.from_user.id})")
+        cursor.execute(f"UPDATE user_table SET school = '{msg.text}' WHERE chat_id = '{msg.from_user.id}'")
+        conn.commit()
+        conn.close()
+        state = dp.current_state(user=msg.from_user.id)
+        await state.set_state(ScheduleUser.all()[1])
+        await msg.reply('Выберите курс 👇', reply=False, reply_markup=KeyBoards.course_kb)
+
+
+@dp.message_handler(state=ScheduleUser.SCHEDULE_USER_1)
+async def schedule_0(message: types.Message):
+    switch_text = message.text.lower()
+    if message.text == '/start':
+        if message.from_user.username != None:
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
+                            '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                            '\n - Поставить напоминания 🍻'
+                            '\n - Подписаться на рассылки ✉'
+                            '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                            ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+        else:
+            await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
+                            '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                            '\n - Поставить напоминания 🍻'
+                            '\n - Подписаться на рассылки ✉'
+                            '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                            ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+
+    elif switch_text == "регистрация":
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state(Register.all()[0])
+        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
+    else:
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"UPDATE user_table SET course = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
+        conn.commit()
+        conn.close()
+        state = dp.current_state(user=message.from_user.id)
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT chat_id, school, course FROM user_table")
+        result_set = cursor.fetchall()
+        for i in result_set:
+            if i[0] == message.from_user.id:
+                # ИКИТ
+                if i[1] == "ИКИТ" and i[2] == "1 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.ikit_kb)
+                elif i[1] == "ИКИТ" and i[2] == "2 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.ikit_kb)
+                elif i[1] == "ИКИТ" and i[2] == "3 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.ikit_kb)
+                elif i[1] == "ИКИТ" and i[2] == "4 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.ikit_kb)
+                elif i[1] == "ИКИТ" and i[2] == "5 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.ikit_kb)
+                # ИУБП
+                elif i[1] == "ИУБП" and i[2] == "1 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИУБП" and i[2] == "2 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИУБП" and i[2] == "3 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИУБП" and i[2] == "4 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИУБП" and i[2] == "5 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                # ИФБИБТ
+                elif i[1] == "ИФБиБТ" and i[2] == "1 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИФБиБТ" and i[2] == "2 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИФБиБТ" and i[2] == "3 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИФБиБТ" and i[2] == "4 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИФБиБТ" and i[2] == "5 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                # ИФИЯК
+                elif i[1] == "ИФиЯК" and i[2] == "1 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИФиЯК" and i[2] == "2 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИФиЯК" and i[2] == "3 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИФиЯК" and i[2] == "4 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИФиЯК" and i[2] == "5 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                # ВУЦ
+                elif i[1] == "ВУЦ" and i[2] == "1 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ВУЦ" and i[2] == "2 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ВУЦ" and i[2] == "3 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ВУЦ" and i[2] == "4 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ВУЦ" and i[2] == "5 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                # ГИ
+                elif i[1] == "ГИ" and i[2] == "1 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ГИ" and i[2] == "2 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ГИ" and i[2] == "3 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ГИ" and i[2] == "4 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ГИ" and i[2] == "5 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                # ИСИ
+                elif i[1] == "ИСИ" and i[2] == "1 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИСИ" and i[2] == "2 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИСИ" and i[2] == "3 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИСИ" and i[2] == "4 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИСИ" and i[2] == "5 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                # ИНИГ
+                elif i[1] == "ИНиГ" and i[2] == "1 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИНиГ" and i[2] == "2 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИНиГ" and i[2] == "3 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИНиГ" and i[2] == "4 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИНиГ" and i[2] == "5 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                # ИАИД
+                elif i[1] == "ИАиД" and i[2] == "1 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИАиД" and i[2] == "2 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИАиД" and i[2] == "3 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИАиД" and i[2] == "4 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИАиД" and i[2] == "5 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                # ИГДГиГ
+                elif i[1] == "ИГДГиГ" and i[2] == "1 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИГДГиГ" and i[2] == "2 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИГДГиГ" and i[2] == "3 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИГДГиГ" and i[2] == "4 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИГДГиГ" and i[2] == "5 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                # ИИФиРЭ
+                elif i[1] == "ИИФиРЭ" and i[2] == "1 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИИФиРЭ" and i[2] == "2 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИИФиРЭ" and i[2] == "3 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИИФиРЭ" and i[2] == "4 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИИФиРЭ" and i[2] == "5 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                # ИМИФИ
+                elif i[1] == "ИМиФИ" and i[2] == "1 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИМиФИ" and i[2] == "2 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИМиФИ" and i[2] == "3 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИМиФИ" and i[2] == "4 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИМиФИ" and i[2] == "5 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                # ИППС
+                elif i[1] == "ИППС" and i[2] == "1 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИППС" and i[2] == "2 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИППС" and i[2] == "3 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИППС" and i[2] == "4 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИППС" and i[2] == "5 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                # ИФКСИТ
+                elif i[1] == "ИФКСиТ" and i[2] == "1 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИФКСиТ" and i[2] == "2 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИФКСиТ" and i[2] == "3 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИФКСиТ" and i[2] == "4 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИФКСиТ" and i[2] == "5 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                # ИЦМИМ
+                elif i[1] == "ИЦМиМ" and i[2] == "1 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИЦМиМ" and i[2] == "2 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИЦМиМ" and i[2] == "3 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИЦМиМ" and i[2] == "4 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИЦМиМ" and i[2] == "5 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                # ИЭИГ
+                elif i[1] == "ИЭиГ" and i[2] == "1 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИЭиГ" and i[2] == "2 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИЭиГ" and i[2] == "3 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИЭиГ" and i[2] == "4 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИЭиГ" and i[2] == "5 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                # ИГ
+                elif i[1] == "ИГ" and i[2] == "1 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИГ" and i[2] == "2 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИГ" and i[2] == "3 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИГ" and i[2] == "4 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИГ" and i[2] == "5 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                # ИТИСУ
+                elif i[1] == "ИТиСУ" and i[2] == "1 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИТиСУ" and i[2] == "2 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИТиСУ" and i[2] == "3 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИТиСУ" and i[2] == "4 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИТиСУ" and i[2] == "5 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                # ИЭУИФ
+                elif i[1] == "ИЭУиФ" and i[2] == "1 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИЭУиФ" and i[2] == "2 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИЭУиФ" and i[2] == "3 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИЭУиФ" and i[2] == "4 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИЭУиФ" and i[2] == "5 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                # ПИ
+                elif i[1] == "ПИ" and i[2] == "1 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ПИ" and i[2] == "2 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ПИ" and i[2] == "3 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ПИ" and i[2] == "4 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ПИ" and i[2] == "5 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                # ЮИ
+                elif i[1] == "ЮИ" and i[2] == "1 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ЮИ" and i[2] == "2 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ЮИ" and i[2] == "3 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ЮИ" and i[2] == "4 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ЮИ" and i[2] == "5 курс":
+                    await state.set_state(ScheduleUser.all()[2])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+        conn.commit()
+        conn.close()
+
+
+@dp.message_handler(state=ScheduleUser.SCHEDULE_USER_2)
+async def register_3(message: types.Message):
+    global group
+    switch_text = message.text.lower()
+    if message.text == '/start':
+        if message.from_user.username != None:
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Подписаться на рассылки ✉'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+        else:
+            await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Подписаться на рассылки ✉'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+
+    elif switch_text == "регистрация":
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state(Register.all()[0])
+        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
+    else:
+
         timetable_message = ""
         current_week = "0"
         url = 'https://edu.sfu-kras.ru/timetable'
         response = requests.get(url).text
-        if msg.text != 'Меню':
-            match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+        match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+        if match:
+            current_week = "1"
+        else:
+            current_week = "2"
+
+        url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={message.text}')
+        response = requests.get(url).json()
+        adding = []
+        for item in response["timetable"]:
+            if item["week"] == current_week:
+                adding.append(
+                    [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
+        flag = 0
+        for i in adding:
+            if i[0] == '1':
+                if i[2] != '':
+                    flag = 1
+        if flag == 1:
             if match:
                 timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
-                current_week = "1"
             else:
                 timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
-                current_week = "2"
-            url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={msg.text}')
-            response = requests.get(url).json()
-            for item in response["timetable"]:
-                if item["week"] == current_week:
-                    timetable_message += f"\n{item['day'].replace('1', '<b>Понедельник</b>').replace('2', '<b>Вторник</b>').replace('3', '<b>Среда</b>').replace('4', '<b>Четверг</b>').replace('5', '<b>Пятница</b>').replace('6', '<b>Суббота</b>')}" \
-                                         f"\n{item['time']}\n{item['subject']}\n{item['type']}\n" \
-                                         f"{item['teacher']}\n{item['place']}\n"
-            await msg.reply(timetable_message, parse_mode="HTML")
-        state = dp.current_state(user=msg.from_user.id)
-        await state.reset_state()
-        await msg.reply('Главное меню', reply=False, reply_markup=KeyBoards.menu_admin_kb)
+            timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Понедельник</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+            for i in adding:
+                if i[0] == '1':
+                    if i[4] == '' and i[5] == '':
+                        timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
+                    else:
+                        timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
+        else:
+            timetable_message += 'В понедельник пар нет!\n Отличный повод увидеться с друзьями! 🎉'
+        await message.reply(timetable_message, parse_mode="HTML")
+        timetable_message = ""
+        current_week = "0"
+        url = 'https://edu.sfu-kras.ru/timetable'
+        response = requests.get(url).text
+        match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+        if match:
+            current_week = "1"
+        else:
+            current_week = "2"
+
+        url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={message.text}')
+        response = requests.get(url).json()
+        adding = []
+        for item in response["timetable"]:
+            if item["week"] == current_week:
+                adding.append(
+                    [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
+        flag = 0
+        for i in adding:
+            if i[0] == '1':
+                if i[2] != '':
+                    flag = 1
+        if flag == 1:
+            if match:
+                timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
+            else:
+                timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
+            timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Вторник</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+            for i in adding:
+                if i[0] == '2':
+                    if i[4] == '' and i[5] == '':
+                        timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
+                    else:
+                        timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
+        else:
+            timetable_message += 'Во вторник пар нет!\n Отличный повод увидеться с друзьями! 🎉'
+        await message.reply(timetable_message, parse_mode="HTML")
+        timetable_message = ""
+        current_week = "0"
+        url = 'https://edu.sfu-kras.ru/timetable'
+        response = requests.get(url).text
+        match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+        if match:
+            current_week = "1"
+        else:
+            current_week = "2"
+
+        url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={message.text}')
+        response = requests.get(url).json()
+        adding = []
+        for item in response["timetable"]:
+            if item["week"] == current_week:
+                adding.append(
+                    [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
+        flag = 0
+        for i in adding:
+            if i[0] == '1':
+                if i[2] != '':
+                    flag = 1
+        if flag == 1:
+            if match:
+                timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
+            else:
+                timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
+            timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Среда</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+            for i in adding:
+                if i[0] == '3':
+                    if i[4] == '' and i[5] == '':
+                        timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
+                    else:
+                        timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
+        else:
+            timetable_message += 'В среду пар нет!\n Отличный повод увидеться с друзьями! 🎉'
+        await message.reply(timetable_message, parse_mode="HTML")
+        timetable_message = ""
+        current_week = "0"
+        url = 'https://edu.sfu-kras.ru/timetable'
+        response = requests.get(url).text
+        match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+        if match:
+            current_week = "1"
+        else:
+            current_week = "2"
+
+        url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={message.text}')
+        response = requests.get(url).json()
+        adding = []
+        for item in response["timetable"]:
+            if item["week"] == current_week:
+                adding.append(
+                    [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
+        flag = 0
+        for i in adding:
+            if i[0] == '1':
+                if i[2] != '':
+                    flag = 1
+        if flag == 1:
+            if match:
+                timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
+            else:
+                timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
+            timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Четверг</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+            for i in adding:
+                if i[0] == '4':
+                    if i[4] == '' and i[5] == '':
+                        timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
+                    else:
+                        timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
+        else:
+            timetable_message += 'В четверг пар нет!\n Отличный повод увидеться с друзьями! 🎉'
+        await message.reply(timetable_message, parse_mode="HTML")
+        timetable_message = ""
+        current_week = "0"
+        url = 'https://edu.sfu-kras.ru/timetable'
+        response = requests.get(url).text
+        match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+        if match:
+            current_week = "1"
+        else:
+            current_week = "2"
+
+        url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={message.text}')
+        response = requests.get(url).json()
+        adding = []
+        for item in response["timetable"]:
+            if item["week"] == current_week:
+                adding.append(
+                    [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
+        flag = 0
+        for i in adding:
+            if i[0] == '1':
+                if i[2] != '':
+                    flag = 1
+        if flag == 1:
+            if match:
+                timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
+            else:
+                timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
+            timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Пятница</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+            for i in adding:
+                if i[0] == '5':
+                    if i[4] == '' and i[5] == '':
+                        timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
+                    else:
+                        timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
+        else:
+            timetable_message += 'В пятницу пар нет!\n Отличный повод увидеться с друзьями! 🎉'
+        await message.reply(timetable_message, parse_mode="HTML")
+        timetable_message = ""
+        current_week = "0"
+        url = 'https://edu.sfu-kras.ru/timetable'
+        response = requests.get(url).text
+        match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+        if match:
+            current_week = "1"
+        else:
+            current_week = "2"
+
+        url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={message.text}')
+        response = requests.get(url).json()
+        adding = []
+        for item in response["timetable"]:
+            if item["week"] == current_week:
+                adding.append(
+                    [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
+        flag = 0
+        for i in adding:
+            if i[0] == '1':
+                if i[2] != '':
+                    flag = 1
+        if flag == 1:
+            if match:
+                timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
+            else:
+                timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
+            timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Суббота</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+            for i in adding:
+                if i[0] == '6':
+                    if i[4] == '' and i[5] == '':
+                        timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
+                    else:
+                        timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
+        else:
+            timetable_message += 'В субботу пар нет!\n Отличный повод увидеться с друзьями! 🎉'
+        await message.reply(timetable_message, parse_mode="HTML")
+        is_succeed = False
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT user_id FROM admins")
+        result_set = cursor.fetchall()
+        cursor.close()
+        for item in result_set:
+            if item[0] == message.from_user.id:
+                is_succeed = True
+        if is_succeed:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+        else:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+
 
 
 @dp.message_handler(commands='start')
@@ -1203,6 +1839,8 @@ async def handler_message(msg: types.Message):
         await msg.reply("Выберите, что хотите изменить 👇", reply_markup=KeyBoards.change_information_kb)
 
     elif switch_text == "добавить мероприятие":
+        state = dp.current_state(user=msg.from_user.id)
+        await state.set_state(Events.all()[0])
         await msg.reply("Введите ваше мероприятие 🍻", reply_markup=KeyBoards.universal_kb)
 
     elif switch_text == "назад":
@@ -1239,9 +1877,9 @@ async def handler_message(msg: types.Message):
         await msg.reply("Выберите ваш институт 👇", reply_markup=KeyBoards.institute_kb)
 
     elif switch_text == "посмотреть расписание другой группы":
-        await msg.reply("Выберите институт: 🎓", reply_markup=KeyBoards.universal_kb)
+        await msg.reply("Выберите институт: 🎓", reply_markup=KeyBoards.institute_kb)
         state = dp.current_state(user=msg.from_user.id)
-        await state.set_state(Schedule.all()[0])
+        await state.set_state(ScheduleUser.all()[0])
 
     elif switch_text == "поддержка разработчиков":
         state = dp.current_state(user=msg.from_user.id)
