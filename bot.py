@@ -1273,7 +1273,7 @@ async def register_3(message: types.Message):
                     [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
         flag = 0
         for i in adding:
-            if i[0] == '1':
+            if i[0] == '2':
                 if i[2] != '':
                     flag = 1
         if flag == 1:
@@ -1310,7 +1310,7 @@ async def register_3(message: types.Message):
                     [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
         flag = 0
         for i in adding:
-            if i[0] == '1':
+            if i[0] == '3':
                 if i[2] != '':
                     flag = 1
         if flag == 1:
@@ -1347,7 +1347,7 @@ async def register_3(message: types.Message):
                     [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
         flag = 0
         for i in adding:
-            if i[0] == '1':
+            if i[0] == '4':
                 if i[2] != '':
                     flag = 1
         if flag == 1:
@@ -1384,7 +1384,7 @@ async def register_3(message: types.Message):
                     [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
         flag = 0
         for i in adding:
-            if i[0] == '1':
+            if i[0] == '5':
                 if i[2] != '':
                     flag = 1
         if flag == 1:
@@ -1421,7 +1421,7 @@ async def register_3(message: types.Message):
                     [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
         flag = 0
         for i in adding:
-            if i[0] == '1':
+            if i[0] == '6':
                 if i[2] != '':
                     flag = 1
         if flag == 1:
