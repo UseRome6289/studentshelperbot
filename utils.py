@@ -37,3 +37,4 @@ class ScheduleUser(Helper):
 class Events(Helper):
     mode = HelperMode.snake_case
     EVENTS_USER_0 = ListItem()
+    EVENTS_USER_1 = ListItem()

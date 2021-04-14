@@ -1,6 +1,9 @@
+import asyncio
 import re
 import sqlite3
-
+import threading
+import time
+from threading import Thread
 import requests
 from aiogram import Bot, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
@@ -8,7 +11,7 @@ from aiogram.contrib.middlewares.logging import LoggingMiddleware
 from aiogram.dispatcher import Dispatcher
 from aiogram.types import ContentType
 from aiogram.utils import executor
-
+import telebot
 import KeyBoards
 import messages
 from config import TOKEN, PAYMENTS_PROVIDER_TOKEN, TIME_MACHINE_IMAGE_URL
@@ -20,7 +23,8 @@ async def shutdown(dispatcher: Dispatcher):
     await dispatcher.storage.close()
     await dispatcher.storage.wait_closed()
 
-
+bot2 = telebot.TeleBot(__name__)
+bot2.config['api_key'] = TOKEN
 bot = Bot(token=TOKEN)
 dp = Dispatcher(bot, storage=MemoryStorage())
 dp.middleware.setup(LoggingMiddleware())
@@ -30,9 +34,11 @@ PRICE250 = types.LabeledPrice(label='Поддержка разработчико
 PRICE500 = types.LabeledPrice(label='Поддержка разработчиков 500 Рублей', amount=50000)
 PRICE1000 = types.LabeledPrice(label='Поддержка разработчиков 1000 Рублей', amount=100000)
 
+incoming_events = {}
+
 
 @dp.message_handler(state=Events.EVENTS_USER_0)
-async def process_admin_command0(message: types.Message):
+async def process_command0(message: types.Message):
     switch_text = message.text.lower()
     if message.text == '/start':
         if message.from_user.username != None:
@@ -79,15 +85,102 @@ async def process_admin_command0(message: types.Message):
             state = dp.current_state(user=message.from_user.id)
             await state.reset_state()
 
-    elif switch_text == 'отправить рассылку':
+    else:
         state = dp.current_state(user=message.from_user.id)
-        await state.set_state(AdminPanel.all()[1])
-        await message.reply("Введите сообщение для рассылки"
-                            ", чтобы вернуться - меню ✨", reply_markup=KeyBoards.return_keyboard)
+        await state.set_state(Events.all()[1])
+        incoming_events[message.from_user.id] = message.text
+        await message.reply("Мероприятие успешно добавлено!\nПоставьте таймер:"
+                            , reply_markup=KeyBoards.time_kb)
+
+
+@dp.message_handler(state=Events.EVENTS_USER_1)
+async def process_command1(message: types.Message):
+    global timing
+    switch_text = message.text.lower()
+    if message.text == '/start':
+        if message.from_user.username != None:
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Подписаться на рассылки ✉'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+        else:
+            await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Подписаться на рассылки ✉'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+
+    elif switch_text == "регистрация":
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state(Register.all()[0])
+        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
+    if switch_text == 'меню':
+        is_succeed = False
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT user_id FROM admins")
+        result_set = cursor.fetchall()
+        cursor.close()
+        for item in result_set:
+            if item[0] == message.from_user.id:
+                is_succeed = True
+        if is_succeed:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+        else:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+    else:
+        m = {'1 час': 60 * 60, "2 часа": 60 * 60 * 2, "6 часов": 60 * 60 * 6, "12 часов": 60 * 60 * 12,
+             "24 часа": 60 * 60 * 24,
+             "2 дня": 60 * 60 * 48, "Неделя": 60 * 60 * 24 * 7}
+        if m[message.text]:
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(
+                f"INSERT INTO times(`chat_id`, `event1`, `time`) values ({message.from_user.id}, '{incoming_events[message.from_user.id]}', {round(time.time() + m[message.text])})")
+            incoming_events.pop(message.from_user.id)
+            conn.commit()
+            conn.close()
+
+            is_succeed = False
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_id FROM admins")
+            result_set = cursor.fetchall()
+            cursor.close()
+            for item in result_set:
+                if item[0] == message.from_user.id:
+                    is_succeed = True
+            if is_succeed:
+                await message.reply('Успешно! ✨'
+                                    , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+            else:
+                await message.reply('Успешно! ✨'
+                                    , reply=False, reply_markup=KeyBoards.menu_user_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
 
 
 @dp.message_handler(state=AdminPanel.ADMIN_0)
-async def process_admin_command0(message: types.Message):
+async def process_admin_command2(message: types.Message):
     switch_text = message.text.lower()
     if message.text == '/start':
         if message.from_user.username != None:
@@ -443,7 +536,6 @@ async def process_successful_payment(message: types.Message):
         MESSAGES['successful_payment'].format(
             total_amount=message.successful_payment.total_amount // 100,
             currency=message.successful_payment.currency
-
         )
     )
     state = dp.current_state(user=message.from_user.id)
@@ -2086,7 +2178,15 @@ async def handler_message(msg: types.Message):
         await msg.reply("Вы в настройках ⚙", reply_markup=KeyBoards.setting_kb)
 
     elif switch_text == "запланированные мероприятия":
-        await msg.reply("Ваши мероприятия 🎂 ", reply_markup=KeyBoards.events_kb)
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT * FROM times")
+        result_set = cursor.fetchall()
+        a = "Ваши мероприятия: \n"
+        for item in result_set:
+            local_time = time.ctime(item[2])
+            a = a + item[1] + '\n' + 'Это мероприятие заканчивается: ' + local_time + '\n'
+        await msg.reply(a, reply_markup=KeyBoards.events_kb)
 
     elif switch_text == "изменить информацию":
         await msg.reply("Выберите, что хотите изменить 👇", reply_markup=KeyBoards.change_information_kb)
@@ -2141,5 +2241,26 @@ async def handler_message(msg: types.Message):
                         , reply_markup=KeyBoards.developer_support_kb)
 
 
+class MyThread(Thread):
+    def __init__(self, event):
+        Thread.__init__(self)
+        self.stopped = event
+
+    def run(self):
+        while not self.stopped.wait(3):
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT * FROM `times` WHERE `time` <  strftime('%s', 'now');")
+            result_set = cursor.fetchall()
+            cursor.execute(f"DELETE FROM `times` WHERE `time` <  strftime('%s', 'now');")
+            conn.commit()
+            conn.close()
+            for item in result_set:
+                bot2.send_message(item[0], f'Ваше мероприятие: {item[1]} окончено')
+
+
 if __name__ == "__main__":
+    stopFlag = threading.Event()
+    thread = MyThread(stopFlag)
+    thread.start()
     executor.start_polling(dp, on_shutdown=shutdown)
