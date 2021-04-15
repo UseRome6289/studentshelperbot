@@ -38,6 +38,7 @@ PRICE1000 = types.LabeledPrice(label='Поддержка разработчик�
 
 incoming_events = {}
 
+
 @dp.message_handler(state=Events.EVENTS_USER_0)
 async def process_command0(message: types.Message):
     switch_text = message.text.lower()
@@ -810,7 +811,6 @@ async def process_admin_command4(message: types.Message):
         await message.reply('Выберите таймер:', reply=False, reply_markup=KeyBoards.time_kb)
 
 
-
 @dp.message_handler(state=AdminPanel.ADMIN_5)
 async def process_admin_command4(message: types.Message):
     switch_text = message.text.lower()
@@ -871,7 +871,8 @@ async def process_admin_command4(message: types.Message):
             conn.close()
             conn = sqlite3.connect('db.db')
             cursor = conn.cursor()
-            cursor.execute(f"UPDATE admins SET `time` = '{round(time.time() + m[message.text])}' WHERE user_id = '{message.from_user.id}'")
+            cursor.execute(
+                f"UPDATE admins SET `time` = '{round(time.time() + m[message.text])}' WHERE user_id = '{message.from_user.id}'")
             conn.commit()
             conn.close()
             state = dp.current_state(user=message.from_user.id)
@@ -954,13 +955,14 @@ async def process_admin_command1(message: types.Message):
                     conn = sqlite3.connect('db.db')
                     cursor = conn.cursor()
                     cursor.execute(
-                      f"INSERT INTO mail(`chat_id`, `event1`, `time`) values ({user[0]}, '{content[0][0]}', {time2[0][0]})")
+                        f"INSERT INTO mail(`chat_id`, `event1`, `time`) values ({user[0]}, '{content[0][0]}', {time2[0][0]})")
 
                     conn.commit()
                     conn.close()
                 except:
                     pass
-        await dp.bot.send_message(message.from_user.id, f'Ваша рассылка: {content[0][0]}\nУспешно отпралена группе {group[0][0]}')
+        await dp.bot.send_message(message.from_user.id,
+                                  f'Ваша рассылка: {content[0][0]}\nУспешно отправлена группе {group[0][0]}')
         state = dp.current_state(user=message.from_user.id)
         await state.set_state(AdminPanel.all()[3])
         is_succeed = False
@@ -2775,13 +2777,13 @@ async def handler_message(msg: types.Message):
         cursor = conn.cursor()
         cursor.execute(f"SELECT * FROM mail")
         result_set = cursor.fetchall()
-        a = "Ваши рассылки: \n"
+        a = ""
         cursor.close()
         for item in result_set:
             if item[0] == msg.from_user.id:
                 local_time = time.ctime(item[2])
                 a = a + item[1] + '\n' + 'Эта рассылка заканчивается: ' + local_time + '\n'
-        await msg.reply(f"Ваши последние рассылок ✉:\n\n{a}", reply_markup=KeyBoards.mailing_lists_kb)
+        await msg.reply(f"Ваши последние рассылки ✉:\n\n{a}", reply_markup=KeyBoards.mailing_lists_kb)
 
     elif switch_text == "профиль":
         conn = sqlite3.connect('db.db')
@@ -2879,6 +2881,7 @@ class MyThread(Thread):
             for item in result_set:
                 bot2.send_message(item[0], f'Ваше мероприятие: {item[1]} окончено')
 
+
 class MyThread2(Thread):
     def __init__(self, mailing_lists):
         Thread.__init__(self)
@@ -2901,7 +2904,10 @@ if __name__ == "__main__":
     stopFlag = threading.Event()
     thread = MyThread(stopFlag)
     thread.start()
-
+    stopFlag2 = threading.Event()
+    thread = MyThread2(stopFlag2)
+    thread.start()
     executor.start_polling(dp, on_shutdown=shutdown)
 
-# Н#Нужно реализовать рассылки, уведомление о скором наступлении пары
+# Уведомление о скором наступлении пары, руссификация дат, парсинг кнопок,
+# уведомление за 30 минут до конца рассылки и мероприятия.
