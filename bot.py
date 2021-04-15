@@ -2873,30 +2873,39 @@ class MyThread(Thread):
         while not self.stopped.wait(3):
             conn = sqlite3.connect('db.db')
             cursor = conn.cursor()
-            cursor.execute(f"SELECT * FROM `times` WHERE `time` <  strftime('%s', 'now');")
-            result_set = cursor.fetchall()
-            cursor.execute(f"DELETE FROM `times` WHERE `time` <  strftime('%s', 'now');")
-            conn.commit()
-            conn.close()
-            for item in result_set:
-                bot2.send_message(item[0], f'Ваше мероприятие: {item[1]} окончено')
-
-
-class MyThread2(Thread):
-    def __init__(self, mailing_lists):
-        Thread.__init__(self)
-        self.stopped = mailing_lists
-
-    def run(self):
-        while not self.stopped.wait(3):
-            conn = sqlite3.connect('db.db')
+            cursor.execute(f"SELECT * FROM `times` WHERE `time` <=  strftime('%s', 'now') + 1800;")
+            result_set30 = cursor.fetchall()
+            for item in result_set30:
+                bot2.send_message(item[0], f'Мероприятие: {item[1]} состоится через пол часа')
             cursor = conn.cursor()
-            cursor.execute(f"SELECT * FROM `mail` WHERE `time` <  strftime('%s', 'now');")
+            cursor.execute(f"SELECT * FROM `times` WHERE `time` <=  strftime('%s', 'now') + 300;")
+            result_set5 = cursor.fetchall()
+            for item in result_set5:
+                bot2.send_message(item[0], f'Мероприятие: {item[1]} состоится через пять минут')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT * FROM `times` WHERE `time` <=  strftime('%s', 'now');")
             result_set = cursor.fetchall()
-            cursor.execute(f"DELETE FROM `mail` WHERE `time` <  strftime('%s', 'now');")
+            cursor.execute(f"DELETE FROM `times` WHERE `time` <=  strftime('%s', 'now');")
+            conn.commit()
+            for item in result_set:
+                bot2.send_message(item[0], f'Ваше мероприятие: {item[1]}\nокончено')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT * FROM `mail` WHERE `time` <=  strftime('%s', 'now') + 1800;")
+            result_set30 = cursor.fetchall()
+            for item in result_set30:
+                bot2.send_message(item[0], f'Рассылка: {item[1]} состоится через пол часа')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT * FROM `mail` WHERE `time` <=  strftime('%s', 'now') + 300;")
+            result_set5 = cursor.fetchall()
+            for item in result_set5:
+                bot2.send_message(item[0], f'Рассылка: {item[1]} состоится через пять минут')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT * FROM `mail` WHERE `time` <=  strftime('%s', 'now');")
+            result_set_del = cursor.fetchall()
+            cursor.execute(f"DELETE FROM `mail` WHERE `time` <=  strftime('%s', 'now');")
             conn.commit()
             conn.close()
-            for item in result_set:
+            for item in result_set_del:
                 bot2.send_message(item[0], f'Рассылка: {item[1]} закончилась')
 
 
@@ -2904,10 +2913,6 @@ if __name__ == "__main__":
     stopFlag = threading.Event()
     thread = MyThread(stopFlag)
     thread.start()
-    stopFlag2 = threading.Event()
-    thread = MyThread2(stopFlag2)
-    thread.start()
     executor.start_polling(dp, on_shutdown=shutdown)
 
-# Уведомление о скором наступлении пары, руссификация дат, парсинг кнопок,
-# уведомление за 30 минут до конца рассылки и мероприятия.
+# Уведомление о скором наступлении пары, руссификация дат, парсинг кнопок
