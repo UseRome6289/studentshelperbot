@@ -940,14 +940,17 @@ async def process_admin_command1(message: types.Message):
         content = cursor.fetchall()
         cursor.execute(f"SELECT `group` FROM admins WHERE user_id = '{message.from_user.id}'")
         group = cursor.fetchall()
-        cursor.execute(f"SELECT `user_group` FROM users WHERE chat_id = '{message.from_user.id}'")
-        group_users = cursor.fetchall()
         cursor.execute(f"SELECT `real_name` FROM users WHERE chat_id = '{message.from_user.id}'")
         name = cursor.fetchall()
         cursor.execute(f"SELECT `time` FROM admins WHERE user_id = '{message.from_user.id}'")
         time2 = cursor.fetchall()
         cursor.close()
         for user in id_users:
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT `user_group` FROM users WHERE chat_id = '{user[0]}'")
+            group_users = cursor.fetchall()
+            cursor.close()
             if group_users == group:
                 try:
                     a = f'Рассылка от пользователя: {name[0][0]}\n' + f'{content[0][0]}'
@@ -962,7 +965,8 @@ async def process_admin_command1(message: types.Message):
                 except:
                     pass
         await dp.bot.send_message(message.from_user.id,
-                                  f'Ваша рассылка: {content[0][0]}\nУспешно отправлена группе {group[0][0]}')
+                                  f'Ваша рассылка: <b>{content[0][0]}</b>\nУспешно отправлена группе '
+                                  f'<b>{group[0][0]}</b>', parse_mode='HTML')
         state = dp.current_state(user=message.from_user.id)
         await state.set_state(AdminPanel.all()[3])
         is_succeed = False
@@ -2875,14 +2879,18 @@ class MyThread(Thread):
             cursor = conn.cursor()
             cursor.execute(f"SELECT * FROM `times` WHERE `time` <=  strftime('%s', 'now') + 1800;")
             result_set30 = cursor.fetchall()
+            conn.commit()
             for item in result_set30:
                 bot2.send_message(item[0], f'Мероприятие: {item[1]} состоится через пол часа')
             cursor = conn.cursor()
+
             cursor.execute(f"SELECT * FROM `times` WHERE `time` <=  strftime('%s', 'now') + 300;")
             result_set5 = cursor.fetchall()
+            conn.commit()
             for item in result_set5:
                 bot2.send_message(item[0], f'Мероприятие: {item[1]} состоится через пять минут')
             cursor = conn.cursor()
+
             cursor.execute(f"SELECT * FROM `times` WHERE `time` <=  strftime('%s', 'now');")
             result_set = cursor.fetchall()
             cursor.execute(f"DELETE FROM `times` WHERE `time` <=  strftime('%s', 'now');")
@@ -2890,15 +2898,20 @@ class MyThread(Thread):
             for item in result_set:
                 bot2.send_message(item[0], f'Ваше мероприятие: {item[1]}\nокончено')
             cursor = conn.cursor()
+
             cursor.execute(f"SELECT * FROM `mail` WHERE `time` <=  strftime('%s', 'now') + 1800;")
             result_set30 = cursor.fetchall()
+
             for item in result_set30:
                 bot2.send_message(item[0], f'Рассылка: {item[1]} состоится через пол часа')
             cursor = conn.cursor()
+
             cursor.execute(f"SELECT * FROM `mail` WHERE `time` <=  strftime('%s', 'now') + 300;")
+            conn.commit()
             result_set5 = cursor.fetchall()
             for item in result_set5:
                 bot2.send_message(item[0], f'Рассылка: {item[1]} состоится через пять минут')
+
             cursor = conn.cursor()
             cursor.execute(f"SELECT * FROM `mail` WHERE `time` <=  strftime('%s', 'now');")
             result_set_del = cursor.fetchall()
@@ -2907,6 +2920,7 @@ class MyThread(Thread):
             conn.close()
             for item in result_set_del:
                 bot2.send_message(item[0], f'Рассылка: {item[1]} закончилась')
+
 
 
 if __name__ == "__main__":
