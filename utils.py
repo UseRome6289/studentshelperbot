@@ -25,6 +25,9 @@ class AdminPanel(Helper):
     ADMIN_1 = ListItem()
     ADMIN_2 = ListItem()
     ADMIN_3 = ListItem()
+    ADMIN_4 = ListItem()
+    ADMIN_5 = ListItem()
+    ADMIN_6 = ListItem()
 
 
 class ScheduleUser(Helper):

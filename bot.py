@@ -1,17 +1,18 @@
-import asyncio
 import re
 import sqlite3
 import threading
 import time
 from threading import Thread
+
 import requests
+import telebot
 from aiogram import Bot, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.contrib.middlewares.logging import LoggingMiddleware
 from aiogram.dispatcher import Dispatcher
 from aiogram.types import ContentType
 from aiogram.utils import executor
-import telebot
+
 import KeyBoards
 import messages
 from config import TOKEN, PAYMENTS_PROVIDER_TOKEN, TIME_MACHINE_IMAGE_URL
@@ -22,6 +23,7 @@ from utils import Register, Change, Pay, AdminPanel, ScheduleUser, Events
 async def shutdown(dispatcher: Dispatcher):
     await dispatcher.storage.close()
     await dispatcher.storage.wait_closed()
+
 
 bot2 = telebot.TeleBot(__name__)
 bot2.config['api_key'] = TOKEN
@@ -258,7 +260,6 @@ async def process_admin_command1(message: types.Message):
         state = dp.current_state(user=message.from_user.id)
         await state.set_state(Register.all()[0])
         await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
-    content = message.text
     if switch_text == 'меню':
         is_succeed = False
         conn = sqlite3.connect('db.db')
@@ -283,18 +284,604 @@ async def process_admin_command1(message: types.Message):
             conn.close()
             state = dp.current_state(user=message.from_user.id)
             await state.reset_state()
-    elif message.text != '/start' and switch_text != "регистрация":
-        state = dp.current_state(user=message.from_user.id)
+    else:
         conn = sqlite3.connect('db.db')
         cursor = conn.cursor()
         cursor.execute(f"UPDATE admins SET last_content = '{message.text}' WHERE user_id = '{message.from_user.id}'")
         conn.commit()
         conn.close()
+        state = dp.current_state(user=message.from_user.id)
         await state.set_state(AdminPanel.all()[2])
-        await message.reply("Вы точно хотите отправить это сообщение?", reply_markup=KeyBoards.yes_or_no_keyboard)
+        await message.reply("Кому отправить данную расслыку? Выберите инстиут", reply_markup=KeyBoards.institute_kb)
 
 
 @dp.message_handler(state=AdminPanel.ADMIN_2)
+async def process_admin_command4(message: types.Message):
+    switch_text = message.text.lower()
+    if message.text == '/start':
+        if message.from_user.username != None:
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Подписаться на рассылки ✉'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+        else:
+            await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Подписаться на рассылки ✉'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+
+    elif switch_text == "регистрация":
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state(Register.all()[0])
+        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
+    if switch_text == 'меню':
+        is_succeed = False
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT user_id FROM admins")
+        result_set = cursor.fetchall()
+        cursor.close()
+        for item in result_set:
+            if item[0] == message.from_user.id:
+                is_succeed = True
+        if is_succeed:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+        else:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+    else:
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"UPDATE admins SET inst = '{message.text}' WHERE user_id = '{message.from_user.id}'")
+        conn.commit()
+        conn.close()
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state(AdminPanel.all()[3])
+        await message.reply("Выберите курс", reply_markup=KeyBoards.course_kb)
+
+
+@dp.message_handler(state=AdminPanel.ADMIN_3)
+async def process_admin_command4(message: types.Message):
+    switch_text = message.text.lower()
+    if message.text == '/start':
+        if message.from_user.username != None:
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Подписаться на рассылки ✉'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+        else:
+            await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Подписаться на рассылки ✉'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+
+    elif switch_text == "регистрация":
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state(Register.all()[0])
+        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
+    if switch_text == 'меню':
+        is_succeed = False
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT user_id FROM admins")
+        result_set = cursor.fetchall()
+        cursor.close()
+        for item in result_set:
+            if item[0] == message.from_user.id:
+                is_succeed = True
+        if is_succeed:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+        else:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+    else:
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"UPDATE admins SET course = '{message.text}' WHERE user_id = '{message.from_user.id}'")
+        conn.commit()
+        conn.close()
+        state = dp.current_state(user=message.from_user.id)
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT user_id, inst, course FROM admins")
+        result_set = cursor.fetchall()
+        for i in result_set:
+            if i[0] == message.from_user.id:
+                # ИКИТ
+                if i[1] == "ИКИТ" and i[2] == "1 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.ikit_kb)
+                elif i[1] == "ИКИТ" and i[2] == "2 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.ikit_kb)
+                elif i[1] == "ИКИТ" and i[2] == "3 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.ikit_kb)
+                elif i[1] == "ИКИТ" and i[2] == "4 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.ikit_kb)
+                elif i[1] == "ИКИТ" and i[2] == "5 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.ikit_kb)
+                # ИУБП
+                elif i[1] == "ИУБП" and i[2] == "1 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИУБП" and i[2] == "2 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИУБП" and i[2] == "3 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИУБП" and i[2] == "4 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИУБП" and i[2] == "5 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                # ИФБИБТ
+                elif i[1] == "ИФБиБТ" and i[2] == "1 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИФБиБТ" and i[2] == "2 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИФБиБТ" and i[2] == "3 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИФБиБТ" and i[2] == "4 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИФБиБТ" and i[2] == "5 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                # ИФИЯК
+                elif i[1] == "ИФиЯК" and i[2] == "1 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИФиЯК" and i[2] == "2 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИФиЯК" and i[2] == "3 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИФиЯК" and i[2] == "4 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИФиЯК" and i[2] == "5 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                # ВУЦ
+                elif i[1] == "ВУЦ" and i[2] == "1 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ВУЦ" and i[2] == "2 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ВУЦ" and i[2] == "3 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ВУЦ" and i[2] == "4 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ВУЦ" and i[2] == "5 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                # ГИ
+                elif i[1] == "ГИ" and i[2] == "1 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ГИ" and i[2] == "2 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ГИ" and i[2] == "3 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ГИ" and i[2] == "4 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ГИ" and i[2] == "5 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                # ИСИ
+                elif i[1] == "ИСИ" and i[2] == "1 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИСИ" and i[2] == "2 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИСИ" and i[2] == "3 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИСИ" and i[2] == "4 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИСИ" and i[2] == "5 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                # ИНИГ
+                elif i[1] == "ИНиГ" and i[2] == "1 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИНиГ" and i[2] == "2 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИНиГ" and i[2] == "3 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИНиГ" and i[2] == "4 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИНиГ" and i[2] == "5 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                # ИАИД
+                elif i[1] == "ИАиД" and i[2] == "1 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИАиД" and i[2] == "2 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИАиД" and i[2] == "3 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИАиД" and i[2] == "4 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИАиД" and i[2] == "5 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                # ИГДГиГ
+                elif i[1] == "ИГДГиГ" and i[2] == "1 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИГДГиГ" and i[2] == "2 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИГДГиГ" and i[2] == "3 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИГДГиГ" and i[2] == "4 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИГДГиГ" and i[2] == "5 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                # ИИФиРЭ
+                elif i[1] == "ИИФиРЭ" and i[2] == "1 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИИФиРЭ" and i[2] == "2 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИИФиРЭ" and i[2] == "3 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИИФиРЭ" and i[2] == "4 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИИФиРЭ" and i[2] == "5 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                # ИМИФИ
+                elif i[1] == "ИМиФИ" and i[2] == "1 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИМиФИ" and i[2] == "2 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИМиФИ" and i[2] == "3 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИМиФИ" and i[2] == "4 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИМиФИ" and i[2] == "5 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                # ИППС
+                elif i[1] == "ИППС" and i[2] == "1 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИППС" and i[2] == "2 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИППС" and i[2] == "3 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИППС" and i[2] == "4 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИППС" and i[2] == "5 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                # ИФКСИТ
+                elif i[1] == "ИФКСиТ" and i[2] == "1 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИФКСиТ" and i[2] == "2 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИФКСиТ" and i[2] == "3 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИФКСиТ" and i[2] == "4 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИФКСиТ" and i[2] == "5 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                # ИЦМИМ
+                elif i[1] == "ИЦМиМ" and i[2] == "1 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИЦМиМ" and i[2] == "2 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИЦМиМ" and i[2] == "3 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИЦМиМ" and i[2] == "4 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИЦМиМ" and i[2] == "5 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                # ИЭИГ
+                elif i[1] == "ИЭиГ" and i[2] == "1 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИЭиГ" and i[2] == "2 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИЭиГ" and i[2] == "3 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИЭиГ" and i[2] == "4 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИЭиГ" and i[2] == "5 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                # ИГ
+                elif i[1] == "ИГ" and i[2] == "1 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИГ" and i[2] == "2 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИГ" and i[2] == "3 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИГ" and i[2] == "4 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИГ" and i[2] == "5 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                # ИТИСУ
+                elif i[1] == "ИТиСУ" and i[2] == "1 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИТиСУ" and i[2] == "2 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИТиСУ" and i[2] == "3 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИТиСУ" and i[2] == "4 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИТиСУ" and i[2] == "5 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                # ИЭУИФ
+                elif i[1] == "ИЭУиФ" and i[2] == "1 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИЭУиФ" and i[2] == "2 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИЭУиФ" and i[2] == "3 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИЭУиФ" and i[2] == "4 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ИЭУиФ" and i[2] == "5 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                # ПИ
+                elif i[1] == "ПИ" and i[2] == "1 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ПИ" and i[2] == "2 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ПИ" and i[2] == "3 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ПИ" and i[2] == "4 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ПИ" and i[2] == "5 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                # ЮИ
+                elif i[1] == "ЮИ" and i[2] == "1 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ЮИ" and i[2] == "2 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ЮИ" and i[2] == "3 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ЮИ" and i[2] == "4 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+                elif i[1] == "ЮИ" and i[2] == "5 курс":
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
+        conn.commit()
+        conn.close()
+
+
+@dp.message_handler(state=AdminPanel.ADMIN_4)
+async def process_admin_command4(message: types.Message):
+    switch_text = message.text.lower()
+    if message.text == '/start':
+        if message.from_user.username != None:
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Подписаться на рассылки ✉'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+        else:
+            await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Подписаться на рассылки ✉'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+
+    elif switch_text == "регистрация":
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state(Register.all()[0])
+        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
+    if switch_text == 'меню':
+        is_succeed = False
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT user_id FROM admins")
+        result_set = cursor.fetchall()
+        cursor.close()
+        for item in result_set:
+            if item[0] == message.from_user.id:
+                is_succeed = True
+        if is_succeed:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+        else:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+    else:
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"UPDATE admins SET `group` = '{message.text}' WHERE user_id = '{message.from_user.id}'")
+        conn.commit()
+        conn.close()
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state(AdminPanel.all()[5])
+        await message.reply('Выберите таймер:', reply=False, reply_markup=KeyBoards.time_kb)
+
+
+
+@dp.message_handler(state=AdminPanel.ADMIN_5)
+async def process_admin_command4(message: types.Message):
+    switch_text = message.text.lower()
+    if message.text == '/start':
+        if message.from_user.username != None:
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Подписаться на рассылки ✉'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+        else:
+            await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Подписаться на рассылки ✉'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+
+    elif switch_text == "регистрация":
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state(Register.all()[0])
+        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
+    if switch_text == 'меню':
+        is_succeed = False
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT user_id FROM admins")
+        result_set = cursor.fetchall()
+        cursor.close()
+        for item in result_set:
+            if item[0] == message.from_user.id:
+                is_succeed = True
+        if is_succeed:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+        else:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+    else:
+        m = {'1 час': 60 * 60, "2 часа": 60 * 60 * 2, "6 часов": 60 * 60 * 6, "12 часов": 60 * 60 * 12,
+             "24 часа": 60 * 60 * 24,
+             "2 дня": 60 * 60 * 48, "Неделя": 60 * 60 * 24 * 7}
+        if m[message.text]:
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(
+                f"INSERT INTO mail(`time`) values ({round(time.time() + m[message.text])})")
+            conn.commit()
+            conn.close()
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"UPDATE admins SET `time` = '{round(time.time() + m[message.text])}' WHERE user_id = '{message.from_user.id}'")
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.set_state(AdminPanel.all()[6])
+            await message.reply('Вы точно хотите отправить рассылку?', reply=False, reply_markup=KeyBoards.
+                                yes_or_no_keyboard)
+
+
+@dp.message_handler(state=AdminPanel.ADMIN_6)
 async def process_admin_command1(message: types.Message):
     switch_text = message.text.lower()
     if message.text == '/start':
@@ -351,15 +938,46 @@ async def process_admin_command1(message: types.Message):
         cursor = conn.cursor()
         cursor.execute(f"SELECT last_content FROM admins WHERE user_id = '{message.from_user.id}'")
         content = cursor.fetchall()
+        cursor.execute(f"SELECT `group` FROM admins WHERE user_id = '{message.from_user.id}'")
+        group = cursor.fetchall()
+        cursor.execute(f"SELECT `user_group` FROM users WHERE chat_id = '{message.from_user.id}'")
+        group_users = cursor.fetchall()
+        cursor.execute(f"SELECT `real_name` FROM users WHERE chat_id = '{message.from_user.id}'")
+        name = cursor.fetchall()
         cursor.close()
         for user in id_users:
-            try:
-                await dp.bot.send_message(user[0], content[0][0])
-            except:
-                pass
+            if group_users == group:
+                try:
+                    a = f'Рассылка от пользователя: {name}\n' + f'{content[0][0]}'
+                    await dp.bot.send_message(user[0], a)
+                except:
+                    pass
+        await dp.bot.send_message(message.from_user.id, f'Ваша рассылка: {content}\nУспешно отпралена группе {group}')
         state = dp.current_state(user=message.from_user.id)
-        await state.set_state(AdminPanel.all()[0])
-        await message.reply("Успешно!", reply_markup=KeyBoards.admin_panel)
+        await state.set_state(AdminPanel.all()[3])
+        is_succeed = False
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT user_id FROM admins")
+        result_set = cursor.fetchall()
+        cursor.close()
+        for item in result_set:
+            if item[0] == message.from_user.id:
+                is_succeed = True
+        if is_succeed:
+            await message.reply('Успешно! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+        else:
+            await message.reply('Успешно! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
 
     elif switch_text == 'изменить':
         state = dp.current_state(user=message.from_user.id)
@@ -693,7 +1311,6 @@ async def register_2(message: types.Message):
         conn.commit()
         conn.close()
         state = dp.current_state(user=message.from_user.id)
-        switch_text = message.text.lower()
         conn = sqlite3.connect('db.db')
         cursor = conn.cursor()
         cursor.execute(f"SELECT chat_id, school, course FROM users")
@@ -2258,9 +2875,29 @@ class MyThread(Thread):
             for item in result_set:
                 bot2.send_message(item[0], f'Ваше мероприятие: {item[1]} окончено')
 
+class MyThread2(Thread):
+    def __init__(self, mailing_lists):
+        Thread.__init__(self)
+        self.stopped = mailing_lists
+
+    def run(self):
+        while not self.stopped.wait(3):
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT * FROM `times` WHERE `time` <  strftime('%s', 'now');")
+            result_set = cursor.fetchall()
+            cursor.execute(f"DELETE FROM `times` WHERE `time` <  strftime('%s', 'now');")
+            conn.commit()
+            conn.close()
+            for item in result_set:
+                bot2.send_message(item[0], f'Рассылка: {item[1]} закончилась')
+
 
 if __name__ == "__main__":
     stopFlag = threading.Event()
     thread = MyThread(stopFlag)
     thread.start()
+
     executor.start_polling(dp, on_shutdown=shutdown)
+
+# Н#Нужно реализовать рассылки, уведомление о скором наступлении пары
