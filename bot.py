@@ -38,7 +38,6 @@ PRICE1000 = types.LabeledPrice(label='Поддержка разработчик�
 
 incoming_events = {}
 
-
 @dp.message_handler(state=Events.EVENTS_USER_0)
 async def process_command0(message: types.Message):
     switch_text = message.text.lower()
@@ -944,15 +943,24 @@ async def process_admin_command1(message: types.Message):
         group_users = cursor.fetchall()
         cursor.execute(f"SELECT `real_name` FROM users WHERE chat_id = '{message.from_user.id}'")
         name = cursor.fetchall()
+        cursor.execute(f"SELECT `time` FROM admins WHERE user_id = '{message.from_user.id}'")
+        time2 = cursor.fetchall()
         cursor.close()
         for user in id_users:
             if group_users == group:
                 try:
-                    a = f'Рассылка от пользователя: {name}\n' + f'{content[0][0]}'
+                    a = f'Рассылка от пользователя: {name[0][0]}\n' + f'{content[0][0]}'
                     await dp.bot.send_message(user[0], a)
+                    conn = sqlite3.connect('db.db')
+                    cursor = conn.cursor()
+                    cursor.execute(
+                      f"INSERT INTO mail(`chat_id`, `event1`, `time`) values ({user[0]}, '{content[0][0]}', {time2[0][0]})")
+
+                    conn.commit()
+                    conn.close()
                 except:
                     pass
-        await dp.bot.send_message(message.from_user.id, f'Ваша рассылка: {content}\nУспешно отпралена группе {group}')
+        await dp.bot.send_message(message.from_user.id, f'Ваша рассылка: {content[0][0]}\nУспешно отпралена группе {group[0][0]}')
         state = dp.current_state(user=message.from_user.id)
         await state.set_state(AdminPanel.all()[3])
         is_succeed = False
@@ -2765,20 +2773,15 @@ async def handler_message(msg: types.Message):
     elif switch_text == "рассылки":
         conn = sqlite3.connect('db.db')
         cursor = conn.cursor()
-        cursor.execute(f"SELECT chat_id, user_group FROM users")
+        cursor.execute(f"SELECT * FROM mail")
         result_set = cursor.fetchall()
+        a = "Ваши рассылки: \n"
         cursor.close()
-        for i in result_set:
-            if i[0] == msg.from_user.id:
-                group = i[1]
-        printing = ''
-        if group == "КИ20-17/1б (1 подгруппа)":
-            with open("ki20171b.txt", encoding="UTF-8") as file:
-                file_spl = file.read()
-                file_sp = file_spl.split(' | ')
-                for i in range(len(file_sp)):
-                    printing += f'\t{i + 1}. {file_sp[i]}\n'
-        await msg.reply(f"5 ваших последних рассылок ✉:\n\n{printing}", reply_markup=KeyBoards.mailing_lists_kb)
+        for item in result_set:
+            if item[0] == msg.from_user.id:
+                local_time = time.ctime(item[2])
+                a = a + item[1] + '\n' + 'Эта рассылка заканчивается: ' + local_time + '\n'
+        await msg.reply(f"Ваши последние рассылок ✉:\n\n{a}", reply_markup=KeyBoards.mailing_lists_kb)
 
     elif switch_text == "профиль":
         conn = sqlite3.connect('db.db')
@@ -2801,8 +2804,9 @@ async def handler_message(msg: types.Message):
         result_set = cursor.fetchall()
         a = "Ваши мероприятия: \n"
         for item in result_set:
-            local_time = time.ctime(item[2])
-            a = a + item[1] + '\n' + 'Это мероприятие заканчивается: ' + local_time + '\n'
+            if item[0] == msg.from_user.id:
+                local_time = time.ctime(item[2])
+                a = a + item[1] + '\n' + 'Это мероприятие заканчивается: ' + local_time + '\n'
         await msg.reply(a, reply_markup=KeyBoards.events_kb)
 
     elif switch_text == "изменить информацию":
@@ -2884,9 +2888,9 @@ class MyThread2(Thread):
         while not self.stopped.wait(3):
             conn = sqlite3.connect('db.db')
             cursor = conn.cursor()
-            cursor.execute(f"SELECT * FROM `times` WHERE `time` <  strftime('%s', 'now');")
+            cursor.execute(f"SELECT * FROM `mail` WHERE `time` <  strftime('%s', 'now');")
             result_set = cursor.fetchall()
-            cursor.execute(f"DELETE FROM `times` WHERE `time` <  strftime('%s', 'now');")
+            cursor.execute(f"DELETE FROM `mail` WHERE `time` <  strftime('%s', 'now');")
             conn.commit()
             conn.close()
             for item in result_set:
