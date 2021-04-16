@@ -151,7 +151,7 @@ async def process_command1(message: types.Message):
             conn = sqlite3.connect('db.db')
             cursor = conn.cursor()
             cursor.execute(
-                f"INSERT INTO times(`chat_id`, `event1`, `time`) values ({message.from_user.id}, '{incoming_events[message.from_user.id]}', {round(time.time() + m[message.text])})")
+                f"INSERT INTO times(`chat_id`, `event1`, `time`, `30min`, `5min`) values ({message.from_user.id}, '{incoming_events[message.from_user.id]}', {round(time.time() + m[message.text])}, {1}, {1})")
             incoming_events.pop(message.from_user.id)
             conn.commit()
             conn.close()
@@ -866,12 +866,6 @@ async def process_admin_command4(message: types.Message):
             conn = sqlite3.connect('db.db')
             cursor = conn.cursor()
             cursor.execute(
-                f"INSERT INTO mail(`time`) values ({round(time.time() + m[message.text])})")
-            conn.commit()
-            conn.close()
-            conn = sqlite3.connect('db.db')
-            cursor = conn.cursor()
-            cursor.execute(
                 f"UPDATE admins SET `time` = '{round(time.time() + m[message.text])}' WHERE user_id = '{message.from_user.id}'")
             conn.commit()
             conn.close()
@@ -954,14 +948,14 @@ async def process_admin_command1(message: types.Message):
             if group_users == group:
                 try:
                     a = f'Рассылка от пользователя: {name[0][0]}\n' + f'{content[0][0]}'
-                    await dp.bot.send_message(user[0], a)
                     conn = sqlite3.connect('db.db')
                     cursor = conn.cursor()
                     cursor.execute(
-                        f"INSERT INTO mail(`chat_id`, `event1`, `time`) values ({user[0]}, '{content[0][0]}', {time2[0][0]})")
+                        f"INSERT INTO mail(`chat_id`, `event1`, `time`, `30min`, `5min`) values ({user[0]}, '{content[0][0]}', {time2[0][0]}, {1}, {1})")
 
                     conn.commit()
                     conn.close()
+                    await dp.bot.send_message(user[0], a)
                 except:
                     pass
         await dp.bot.send_message(message.from_user.id,
@@ -2876,41 +2870,58 @@ class MyThread(Thread):
     def run(self):
         while not self.stopped.wait(3):
             conn = sqlite3.connect('db.db')
+
             cursor = conn.cursor()
             cursor.execute(f"SELECT * FROM `times` WHERE `time` <=  strftime('%s', 'now') + 1800;")
             result_set30 = cursor.fetchall()
-            conn.commit()
             for item in result_set30:
-                bot2.send_message(item[0], f'Мероприятие: {item[1]} состоится через пол часа')
-            cursor = conn.cursor()
+                cursor.execute(f"SELECT `30min` FROM `times` WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
+                state = cursor.fetchall()
+                if state[0][0] == 1:
+                    cursor.execute(
+                        f"UPDATE `times` SET `30min`= {0} WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
+                    bot2.send_message(item[0], f'Мероприятие: {item[1]} состоится через пол часа')
 
+            cursor = conn.cursor()
             cursor.execute(f"SELECT * FROM `times` WHERE `time` <=  strftime('%s', 'now') + 300;")
             result_set5 = cursor.fetchall()
-            conn.commit()
             for item in result_set5:
-                bot2.send_message(item[0], f'Мероприятие: {item[1]} состоится через пять минут')
-            cursor = conn.cursor()
+                cursor.execute(f"SELECT `5min` FROM `times` WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
+                state = cursor.fetchall()
+                if state[0][0] == 1:
+                    cursor.execute(
+                        f"UPDATE `times` SET `5min`= {0} WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
+                    bot2.send_message(item[0], f'Мероприятие: {item[1]} состоится через пять минут')
 
+            cursor = conn.cursor()
             cursor.execute(f"SELECT * FROM `times` WHERE `time` <=  strftime('%s', 'now');")
             result_set = cursor.fetchall()
             cursor.execute(f"DELETE FROM `times` WHERE `time` <=  strftime('%s', 'now');")
             conn.commit()
             for item in result_set:
                 bot2.send_message(item[0], f'Ваше мероприятие: {item[1]}\nокончено')
-            cursor = conn.cursor()
 
+            cursor = conn.cursor()
             cursor.execute(f"SELECT * FROM `mail` WHERE `time` <=  strftime('%s', 'now') + 1800;")
             result_set30 = cursor.fetchall()
-
             for item in result_set30:
-                bot2.send_message(item[0], f'Рассылка: {item[1]} состоится через пол часа')
-            cursor = conn.cursor()
+                cursor.execute(f"SELECT `30min` FROM `mail` WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
+                state = cursor.fetchall()
+                if state[0][0] == 1:
+                    cursor.execute(
+                        f"UPDATE `mail` SET `30min`= {0} WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
+                    bot2.send_message(item[0], f'Рассылка: {item[1]} состоится через пол часа')
 
+            cursor = conn.cursor()
             cursor.execute(f"SELECT * FROM `mail` WHERE `time` <=  strftime('%s', 'now') + 300;")
-            conn.commit()
             result_set5 = cursor.fetchall()
             for item in result_set5:
-                bot2.send_message(item[0], f'Рассылка: {item[1]} состоится через пять минут')
+                cursor.execute(f"SELECT `5min` FROM `mail` WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
+                state = cursor.fetchall()
+                if state[0][0] == 1:
+                    cursor.execute(
+                        f"UPDATE `mail` SET `5min`= {0} WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
+                    bot2.send_message(item[0], f'Рассылка: {item[1]} состоится через пять минут')
 
             cursor = conn.cursor()
             cursor.execute(f"SELECT * FROM `mail` WHERE `time` <=  strftime('%s', 'now');")
@@ -2920,7 +2931,6 @@ class MyThread(Thread):
             conn.close()
             for item in result_set_del:
                 bot2.send_message(item[0], f'Рассылка: {item[1]} закончилась')
-
 
 
 if __name__ == "__main__":
