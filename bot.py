@@ -12,7 +12,6 @@ from aiogram.contrib.middlewares.logging import LoggingMiddleware
 from aiogram.dispatcher import Dispatcher
 from aiogram.types import ContentType
 from aiogram.utils import executor
-
 import KeyBoards
 import messages
 from config import TOKEN, PAYMENTS_PROVIDER_TOKEN, TIME_MACHINE_IMAGE_URL
@@ -235,6 +234,245 @@ async def process_admin_command2(message: types.Message):
         await state.set_state(AdminPanel.all()[1])
         await message.reply("Введите сообщение для рассылки"
                             ", чтобы вернуться - меню ✨", reply_markup=KeyBoards.return_keyboard)
+    elif switch_text == 'отправить рассылку всем пользователям':
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state(AdminPanel.all()[7])
+        await message.reply("Введите сообщение для рассылки"
+                            ", чтобы вернуться - меню ✨", reply_markup=KeyBoards.return_keyboard)
+
+
+@dp.message_handler(state=AdminPanel.ADMIN_7)
+async def process_admin_command1(message: types.Message):
+    switch_text = message.text.lower()
+    if message.text == '/start':
+        if message.from_user.username != None:
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Подписаться на рассылки ✉'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+        else:
+            await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Подписаться на рассылки ✉'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+
+    elif switch_text == "регистрация":
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state(Register.all()[0])
+        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
+    if switch_text == 'меню':
+        is_succeed = False
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT user_id FROM admins")
+        result_set = cursor.fetchall()
+        cursor.close()
+        for item in result_set:
+            if item[0] == message.from_user.id:
+                is_succeed = True
+        if is_succeed:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+        else:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+    else:
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"UPDATE admins SET last_content = '{message.text}' WHERE user_id = '{message.from_user.id}'")
+        conn.commit()
+        conn.close()
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state(AdminPanel.all()[8])
+        await message.reply("Выберите таймер:", reply_markup=KeyBoards.time_kb)
+
+
+@dp.message_handler(state=AdminPanel.ADMIN_8)
+async def process_admin_command4(message: types.Message):
+    switch_text = message.text.lower()
+    if message.text == '/start':
+        if message.from_user.username != None:
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Подписаться на рассылки ✉'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+        else:
+            await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Подписаться на рассылки ✉'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+
+    elif switch_text == "регистрация":
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state(Register.all()[0])
+        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
+    if switch_text == 'меню':
+        is_succeed = False
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT user_id FROM admins")
+        result_set = cursor.fetchall()
+        cursor.close()
+        for item in result_set:
+            if item[0] == message.from_user.id:
+                is_succeed = True
+        if is_succeed:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+        else:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+    else:
+        m = {'1 час': 60 * 60, "2 часа": 60 * 60 * 2, "6 часов": 60 * 60 * 6, "12 часов": 60 * 60 * 12,
+             "24 часа": 60 * 60 * 24,
+             "2 дня": 60 * 60 * 48, "Неделя": 60 * 60 * 24 * 7}
+        if m[message.text]:
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(
+                f"UPDATE admins SET `time` = '{round(time.time() + m[message.text])}' WHERE user_id = '{message.from_user.id}'")
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.set_state(AdminPanel.all()[9])
+            await message.reply('Вы точно хотите отправить рассылку?', reply=False, reply_markup=KeyBoards.
+                                yes_or_no_keyboard)
+
+
+@dp.message_handler(state=AdminPanel.ADMIN_9)
+async def process_admin_command1(message: types.Message):
+    switch_text = message.text.lower()
+    if message.text == '/start':
+        if message.from_user.username != None:
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Подписаться на рассылки ✉'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+        else:
+            await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Подписаться на рассылки ✉'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+
+    elif switch_text == "регистрация":
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state(Register.all()[0])
+        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
+    if switch_text == 'меню':
+        is_succeed = False
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT user_id FROM admins")
+        result_set = cursor.fetchall()
+        cursor.close()
+        for item in result_set:
+            if item[0] == message.from_user.id:
+                is_succeed = True
+        if is_succeed:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+        else:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+    elif switch_text == 'да':
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT chat_id FROM users")
+        id_users = cursor.fetchall()
+        cursor.close()
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT last_content FROM admins WHERE user_id = '{message.from_user.id}'")
+        content = cursor.fetchall()
+        cursor.execute(f"SELECT `real_name` FROM users WHERE chat_id = '{message.from_user.id}'")
+        name = cursor.fetchall()
+        cursor.execute(f"SELECT `time` FROM admins WHERE user_id = '{message.from_user.id}'")
+        time2 = cursor.fetchall()
+        cursor.close()
+        for user in id_users:
+            try:
+                a = f'Рассылка от пользователя: {name[0][0]}\n' + f'{content[0][0]}'
+                conn = sqlite3.connect('db.db')
+                cursor = conn.cursor()
+                cursor.execute(
+                    f"INSERT INTO mail(`chat_id`, `event1`, `time`, `30min`, `5min`) values ({user[0]}, "
+                    f"'{content[0][0]}', {time2[0][0]}, {1}, {1})")
+
+                conn.commit()
+                conn.close()
+                await dp.bot.send_message(user[0], a)
+            except:
+                pass
+
+        await dp.bot.send_message(message.from_user.id,
+                                  f'Ваша рассылка: <b>{content[0][0]}</b>\nУспешно отправлена всем!'
+                                  , parse_mode='HTML')
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state(AdminPanel.all()[3])
+        is_succeed = False
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT user_id FROM admins")
+        result_set = cursor.fetchall()
+        cursor.close()
+        for item in result_set:
+            if item[0] == message.from_user.id:
+                is_succeed = True
+        if is_succeed:
+            await message.reply('Успешно! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+        else:
+            await message.reply('Успешно! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+
+    elif switch_text == 'изменить':
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state(AdminPanel.all()[0])
+        await message.reply("Выберите действие ✨", reply_markup=KeyBoards.admin_panel)
 
 
 @dp.message_handler(state=AdminPanel.ADMIN_1)
@@ -989,8 +1227,8 @@ async def process_admin_command1(message: types.Message):
 
     elif switch_text == 'изменить':
         state = dp.current_state(user=message.from_user.id)
-        await state.set_state(AdminPanel.all()[1])
-        await message.reply("Введите сообщение для рассылки ✨", reply_markup=KeyBoards.return_keyboard)
+        await state.set_state(AdminPanel.all()[0])
+        await message.reply("Выберите действие ✨", reply_markup=KeyBoards.admin_panel)
 
 
 @dp.message_handler(state=Pay.PAY_DISTRIBUTOR)
@@ -2152,230 +2390,41 @@ async def register_3(message: types.Message):
         await state.set_state(Register.all()[0])
         await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
     else:
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"UPDATE user_table SET user_group = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
+        conn.commit()
+        conn.close()
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state(ScheduleUser.all()[3])
+        await message.reply('Выберите день недели', reply=False, reply_markup=KeyBoards.day_of_the_week_kb)
 
-        timetable_message = ""
-        current_week = "0"
-        url = 'https://edu.sfu-kras.ru/timetable'
-        response = requests.get(url).text
-        match = re.search(r'Идёт\s\w{8}\sнеделя', response)
-        if match:
-            current_week = "1"
-        else:
-            current_week = "2"
 
-        url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={message.text}')
-        response = requests.get(url).json()
-        adding = []
-        for item in response["timetable"]:
-            if item["week"] == current_week:
-                adding.append(
-                    [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
-        flag = 0
-        for i in adding:
-            if i[0] == '1':
-                if i[2] != '':
-                    flag = 1
-        if flag == 1:
-            if match:
-                timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
-            else:
-                timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
-            timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Понедельник</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
-            for i in adding:
-                if i[0] == '1':
-                    if i[4] == '' and i[5] == '':
-                        timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
-                    else:
-                        timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
+@dp.message_handler(state=ScheduleUser.SCHEDULE_USER_3)
+async def register_3(message: types.Message):
+    global group
+    switch_text = message.text.lower()
+    if message.text == '/start':
+        if message.from_user.username != None:
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Подписаться на рассылки ✉'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            timetable_message += 'В понедельник пар нет!\n Отличный повод увидеться с друзьями! 🎉'
-        await message.reply(timetable_message, parse_mode="HTML")
+            await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Подписаться на рассылки ✉'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
 
-        timetable_message = ""
-        current_week = "0"
-        url = 'https://edu.sfu-kras.ru/timetable'
-        response = requests.get(url).text
-        match = re.search(r'Идёт\s\w{8}\sнеделя', response)
-        if match:
-            current_week = "1"
-        else:
-            current_week = "2"
-
-        url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={message.text}')
-        response = requests.get(url).json()
-        adding = []
-        for item in response["timetable"]:
-            if item["week"] == current_week:
-                adding.append(
-                    [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
-        flag = 0
-        for i in adding:
-            if i[0] == '2':
-                if i[2] != '':
-                    flag = 1
-        if flag == 1:
-            if match:
-                timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
-            else:
-                timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
-            timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Вторник</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
-            for i in adding:
-                if i[0] == '2':
-                    if i[4] == '' and i[5] == '':
-                        timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
-                    else:
-                        timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
-        else:
-            timetable_message += 'Во вторник пар нет!\n Отличный повод увидеться с друзьями! 🎉'
-        await message.reply(timetable_message, parse_mode="HTML")
-        timetable_message = ""
-        current_week = "0"
-        url = 'https://edu.sfu-kras.ru/timetable'
-        response = requests.get(url).text
-        match = re.search(r'Идёт\s\w{8}\sнеделя', response)
-        if match:
-            current_week = "1"
-        else:
-            current_week = "2"
-
-        url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={message.text}')
-        response = requests.get(url).json()
-        adding = []
-        for item in response["timetable"]:
-            if item["week"] == current_week:
-                adding.append(
-                    [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
-        flag = 0
-        for i in adding:
-            if i[0] == '3':
-                if i[2] != '':
-                    flag = 1
-        if flag == 1:
-            if match:
-                timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
-            else:
-                timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
-            timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Среда</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
-            for i in adding:
-                if i[0] == '3':
-                    if i[4] == '' and i[5] == '':
-                        timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
-                    else:
-                        timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
-        else:
-            timetable_message += 'В среду пар нет!\n Отличный повод увидеться с друзьями! 🎉'
-        await message.reply(timetable_message, parse_mode="HTML")
-        timetable_message = ""
-        current_week = "0"
-        url = 'https://edu.sfu-kras.ru/timetable'
-        response = requests.get(url).text
-        match = re.search(r'Идёт\s\w{8}\sнеделя', response)
-        if match:
-            current_week = "1"
-        else:
-            current_week = "2"
-
-        url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={message.text}')
-        response = requests.get(url).json()
-        adding = []
-        for item in response["timetable"]:
-            if item["week"] == current_week:
-                adding.append(
-                    [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
-        flag = 0
-        for i in adding:
-            if i[0] == '4':
-                if i[2] != '':
-                    flag = 1
-        if flag == 1:
-            if match:
-                timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
-            else:
-                timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
-            timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Четверг</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
-            for i in adding:
-                if i[0] == '4':
-                    if i[4] == '' and i[5] == '':
-                        timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
-                    else:
-                        timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
-        else:
-            timetable_message += 'В четверг пар нет!\n Отличный повод увидеться с друзьями! 🎉'
-        await message.reply(timetable_message, parse_mode="HTML")
-        timetable_message = ""
-        current_week = "0"
-        url = 'https://edu.sfu-kras.ru/timetable'
-        response = requests.get(url).text
-        match = re.search(r'Идёт\s\w{8}\sнеделя', response)
-        if match:
-            current_week = "1"
-        else:
-            current_week = "2"
-
-        url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={message.text}')
-        response = requests.get(url).json()
-        adding = []
-        for item in response["timetable"]:
-            if item["week"] == current_week:
-                adding.append(
-                    [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
-        flag = 0
-        for i in adding:
-            if i[0] == '5':
-                if i[2] != '':
-                    flag = 1
-        if flag == 1:
-            if match:
-                timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
-            else:
-                timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
-            timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Пятница</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
-            for i in adding:
-                if i[0] == '5':
-                    if i[4] == '' and i[5] == '':
-                        timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
-                    else:
-                        timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
-        else:
-            timetable_message += 'В пятницу пар нет!\n Отличный повод увидеться с друзьями! 🎉'
-        await message.reply(timetable_message, parse_mode="HTML")
-        timetable_message = ""
-        current_week = "0"
-        url = 'https://edu.sfu-kras.ru/timetable'
-        response = requests.get(url).text
-        match = re.search(r'Идёт\s\w{8}\sнеделя', response)
-        if match:
-            current_week = "1"
-        else:
-            current_week = "2"
-
-        url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={message.text}')
-        response = requests.get(url).json()
-        adding = []
-        for item in response["timetable"]:
-            if item["week"] == current_week:
-                adding.append(
-                    [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
-        flag = 0
-        for i in adding:
-            if i[0] == '6':
-                if i[2] != '':
-                    flag = 1
-        if flag == 1:
-            if match:
-                timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
-            else:
-                timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
-            timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Суббота</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
-            for i in adding:
-                if i[0] == '6':
-                    if i[4] == '' and i[5] == '':
-                        timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
-                    else:
-                        timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
-        else:
-            timetable_message += 'В субботу пар нет!\n Отличный повод увидеться с друзьями! 🎉'
-        await message.reply(timetable_message, parse_mode="HTML")
+    elif switch_text == "регистрация":
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state(Register.all()[0])
+        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
+    elif switch_text == 'меню':
         is_succeed = False
         conn = sqlite3.connect('db.db')
         cursor = conn.cursor()
@@ -2399,6 +2448,270 @@ async def register_3(message: types.Message):
             conn.close()
             state = dp.current_state(user=message.from_user.id)
             await state.reset_state()
+    else:
+        if switch_text == 'понедельник':
+            timetable_message = ""
+            current_week = "0"
+            url = 'https://edu.sfu-kras.ru/timetable'
+            response = requests.get(url).text
+            match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+            if match:
+                current_week = "1"
+            else:
+                current_week = "2"
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_group FROM user_table WHERE chat_id = '{message.from_user.id}'")
+            result_set1 = cursor.fetchall()
+            conn.commit()
+            conn.close()
+            url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={result_set1[0][0]}')
+            response = requests.get(url).json()
+            adding = []
+            for item in response["timetable"]:
+                if item["week"] == current_week:
+                    adding.append(
+                        [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
+            flag = 0
+            for i in adding:
+                if i[0] == '1':
+                    if i[2] != '':
+                        flag = 1
+            if flag == 1:
+                if match:
+                    timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
+                else:
+                    timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
+                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Понедельник</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                for i in adding:
+                    if i[0] == '1':
+                        if i[4] == '' and i[5] == '':
+                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
+                        else:
+                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
+            else:
+                timetable_message += 'В понедельник пар нет!\n Отличный повод увидеться с друзьями! 🎉'
+            await message.reply(timetable_message, parse_mode="HTML")
+
+        if switch_text == 'вторник':
+            timetable_message = ""
+            current_week = "0"
+            url = 'https://edu.sfu-kras.ru/timetable'
+            response = requests.get(url).text
+            match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+            if match:
+                current_week = "1"
+            else:
+                current_week = "2"
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_group FROM user_table WHERE chat_id = '{message.from_user.id}'")
+            result_set1 = cursor.fetchall()
+            conn.commit()
+            conn.close()
+            url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={result_set1[0][0]}')
+            response = requests.get(url).json()
+            adding = []
+            for item in response["timetable"]:
+                if item["week"] == current_week:
+                    adding.append(
+                        [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
+            flag = 0
+            for i in adding:
+                if i[0] == '2':
+                    if i[2] != '':
+                        flag = 1
+            if flag == 1:
+                if match:
+                    timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
+                else:
+                    timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
+                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Вторник</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                for i in adding:
+                    if i[0] == '2':
+                        if i[4] == '' and i[5] == '':
+                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
+                        else:
+                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
+            else:
+                timetable_message += 'Во вторник пар нет!\n Отличный повод увидеться с друзьями! 🎉'
+            await message.reply(timetable_message, parse_mode="HTML")
+
+        if switch_text == 'среда':
+            timetable_message = ""
+            current_week = "0"
+            url = 'https://edu.sfu-kras.ru/timetable'
+            response = requests.get(url).text
+            match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+            if match:
+                current_week = "1"
+            else:
+                current_week = "2"
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_group FROM user_table WHERE chat_id = '{message.from_user.id}'")
+            result_set1 = cursor.fetchall()
+            conn.commit()
+            conn.close()
+            url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={result_set1[0][0]}')
+            response = requests.get(url).json()
+            adding = []
+            for item in response["timetable"]:
+                if item["week"] == current_week:
+                    adding.append(
+                        [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
+            flag = 0
+            for i in adding:
+                if i[0] == '3':
+                    if i[2] != '':
+                        flag = 1
+            if flag == 1:
+                if match:
+                    timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
+                else:
+                    timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
+                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Среда</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                for i in adding:
+                    if i[0] == '3':
+                        if i[4] == '' and i[5] == '':
+                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
+                        else:
+                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
+            else:
+                timetable_message += 'В среду пар нет!\n Отличный повод увидеться с друзьями! 🎉'
+            await message.reply(timetable_message, parse_mode="HTML")
+
+        if switch_text == 'четверг':
+            timetable_message = ""
+            current_week = "0"
+            url = 'https://edu.sfu-kras.ru/timetable'
+            response = requests.get(url).text
+            match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+            if match:
+                current_week = "1"
+            else:
+                current_week = "2"
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_group FROM user_table WHERE chat_id = '{message.from_user.id}'")
+            result_set1 = cursor.fetchall()
+            conn.commit()
+            conn.close()
+            url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={result_set1[0][0]}')
+            response = requests.get(url).json()
+            adding = []
+            for item in response["timetable"]:
+                if item["week"] == current_week:
+                    adding.append(
+                        [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
+            flag = 0
+            for i in adding:
+                if i[0] == '4':
+                    if i[2] != '':
+                        flag = 1
+            if flag == 1:
+                if match:
+                    timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
+                else:
+                    timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
+                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Четверг</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                for i in adding:
+                    if i[0] == '4':
+                        if i[4] == '' and i[5] == '':
+                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
+                        else:
+                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
+            else:
+                timetable_message += 'В четверг пар нет!\n Отличный повод увидеться с друзьями! 🎉'
+            await message.reply(timetable_message, parse_mode="HTML")
+
+        if switch_text == 'пятница':
+            timetable_message = ""
+            current_week = "0"
+            url = 'https://edu.sfu-kras.ru/timetable'
+            response = requests.get(url).text
+            match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+            if match:
+                current_week = "1"
+            else:
+                current_week = "2"
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_group FROM user_table WHERE chat_id = '{message.from_user.id}'")
+            result_set1 = cursor.fetchall()
+            conn.commit()
+            conn.close()
+            url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={result_set1[0][0]}')
+            response = requests.get(url).json()
+            adding = []
+            for item in response["timetable"]:
+                if item["week"] == current_week:
+                    adding.append(
+                        [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
+            flag = 0
+            for i in adding:
+                if i[0] == '5':
+                    if i[2] != '':
+                        flag = 1
+            if flag == 1:
+                if match:
+                    timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
+                else:
+                    timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
+                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Пятница</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                for i in adding:
+                    if i[0] == '5':
+                        if i[4] == '' and i[5] == '':
+                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
+                        else:
+                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
+            else:
+                timetable_message += 'В пятницу пар нет!\n Отличный повод увидеться с друзьями! 🎉'
+            await message.reply(timetable_message, parse_mode="HTML")
+
+        if switch_text == 'суббота':
+            timetable_message = ""
+            current_week = "0"
+            url = 'https://edu.sfu-kras.ru/timetable'
+            response = requests.get(url).text
+            match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+            if match:
+                current_week = "1"
+            else:
+                current_week = "2"
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_group FROM user_table WHERE chat_id = '{message.from_user.id}'")
+            result_set1 = cursor.fetchall()
+            conn.commit()
+            conn.close()
+            url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={result_set1[0][0]}')
+            response = requests.get(url).json()
+            adding = []
+            for item in response["timetable"]:
+                if item["week"] == current_week:
+                    adding.append(
+                        [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
+            flag = 0
+            for i in adding:
+                if i[0] == '6':
+                    if i[2] != '':
+                        flag = 1
+            if flag == 1:
+                if match:
+                    timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
+                else:
+                    timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
+                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Суббота</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                for i in adding:
+                    if i[0] == '6':
+                        if i[4] == '' and i[5] == '':
+                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
+                        else:
+                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
+            else:
+                timetable_message += 'В субботу пар нет!\n Отличный повод увидеться с друзьями! 🎉'
+            await message.reply(timetable_message, parse_mode="HTML")
 
 
 @dp.message_handler(commands='start')
@@ -2453,7 +2766,7 @@ async def handler_message(msg: types.Message):
         await msg.reply("Выберите день недели", reply_markup=KeyBoards.day_of_the_week_kb)
     elif switch_text == "понедельник":
         timetable_message = ""
-        current_week = "0"
+
         url = 'https://edu.sfu-kras.ru/timetable'
         response = requests.get(url).text
         match = re.search(r'Идёт\s\w{8}\sнеделя', response)
@@ -2489,7 +2802,6 @@ async def handler_message(msg: types.Message):
             timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Понедельник</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
             for i in adding:
                 if i[0] == '1':
-                    a = i[1].split('-')
                     if i[4] == '' and i[5] == '':
                         timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
                     else:
@@ -2500,7 +2812,7 @@ async def handler_message(msg: types.Message):
 
     elif switch_text == "вторник":
         timetable_message = ""
-        current_week = "0"
+
         url = 'https://edu.sfu-kras.ru/timetable'
         response = requests.get(url).text
         match = re.search(r'Идёт\s\w{8}\sнеделя', response)
@@ -2546,7 +2858,7 @@ async def handler_message(msg: types.Message):
 
     elif switch_text == "среда":
         timetable_message = ""
-        current_week = "0"
+
         url = 'https://edu.sfu-kras.ru/timetable'
         response = requests.get(url).text
         match = re.search(r'Идёт\s\w{8}\sнеделя', response)
@@ -2592,7 +2904,7 @@ async def handler_message(msg: types.Message):
 
     elif switch_text == "четверг":
         timetable_message = ""
-        current_week = "0"
+
         url = 'https://edu.sfu-kras.ru/timetable'
         response = requests.get(url).text
         match = re.search(r'Идёт\s\w{8}\sнеделя', response)
@@ -2638,7 +2950,7 @@ async def handler_message(msg: types.Message):
 
     elif switch_text == "пятница":
         timetable_message = ""
-        current_week = "0"
+
         url = 'https://edu.sfu-kras.ru/timetable'
         response = requests.get(url).text
         match = re.search(r'Идёт\s\w{8}\sнеделя', response)
@@ -2684,7 +2996,7 @@ async def handler_message(msg: types.Message):
 
     elif switch_text == "суббота":
         timetable_message = ""
-        current_week = "0"
+
         url = 'https://edu.sfu-kras.ru/timetable'
         response = requests.get(url).text
         match = re.search(r'Идёт\s\w{8}\sнеделя', response)
@@ -2988,7 +3300,7 @@ class MyThread2(Thread):
                             id_group = cursor.fetchall()
                             cursor.close()
                             for k in id_group:
-                                bot2.send_message(k, f'У вас началась {j[2]} пара')
+                                bot2.send_message(k, f'У вас началась {j[2]}')
                         date_kur = a[0].split(':')
                         listing_date = []
                         for n in date_kur:

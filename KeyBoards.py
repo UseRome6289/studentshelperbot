@@ -33,7 +33,8 @@ change_information_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keybo
 mailing_lists_kb2 = ReplyKeyboardMarkup(resize_keyboard=True).add("Меню")
 
 # Отправление рассылок из админ-панели
-admin_panel = ReplyKeyboardMarkup(resize_keyboard=True).add("Отправить рассылку").add("Меню")
+admin_panel = ReplyKeyboardMarkup(resize_keyboard=True).add("Отправить рассылку")\
+    .add('Отправить рассылку всем пользователям').add("Меню")
 
 # Запланированные мероприятия
 events_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Добавить мероприятие").add("Меню")
@@ -60,6 +61,7 @@ gi_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("КИ20-02-5м")
 # Поддержка разработчиков
 developer_support_kb = ReplyKeyboardMarkup(resize_keyboard=True).add('Узнать команду разработчиков')\
     .add("Поддержать разработку телеграмм-бота").add("Меню")
+
 developer_support_kb2 = ReplyKeyboardMarkup(resize_keyboard=True).add('Поддержать разработчиков 100 рублей')\
     .add("Поддержать разработчиков 250 рублей").add("Поддержать разработчиков 500 рублей")\
     .add("Поддержать разработчиков 1000 рублей").add('Меню')
