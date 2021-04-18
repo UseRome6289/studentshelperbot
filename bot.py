@@ -3860,7 +3860,7 @@ class MyThread2(Thread):
 
     def run(self):
         global adding
-        while not self.stopped.wait(2):
+        while not self.stopped.wait(60):
             url = 'https://edu.sfu-kras.ru/timetable'
             response = requests.get(url).text
             match = re.search(r'Идёт\s\w{8}\sнеделя', response)
@@ -3932,4 +3932,4 @@ if __name__ == "__main__":
     executor.start_polling(dp, on_shutdown=shutdown)
 
 
-# руссификация дат, парсинг кнопок, удаление мероприятий и удаление рассылок, сделать на след неделю расписание
+# руссификация дат, парсинг кнопок, удаление мероприятий и удаление рассылок
