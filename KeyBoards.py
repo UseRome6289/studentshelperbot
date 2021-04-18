@@ -44,7 +44,11 @@ universal_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Меню")
 
 # Выбор дня недели
 day_of_the_week_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Понедельник").add("Вторник")\
-                                                  .add("Среда").add("Четверг").add("Пятница").add("Суббота").add("Меню")
+                                                  .add("Среда").add("Четверг").add("Пятница").add("Суббота")\
+    .add('Посмотреть расписание на след. неделю').add("Меню")
+day_of_the_week_kb2 = ReplyKeyboardMarkup(resize_keyboard=True).add("Понедельник").add("Вторник")\
+                                                  .add("Среда").add("Четверг").add("Пятница").add("Суббота")\
+    .add("Меню")
 # Кнопки выбора института
 institute_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("ИКИТ").add("ИУБП").add("ИФБиБТ").add("ИФиЯК").add("ВУЦ")\
         .add("ГИ").add("ИСИ").add("ИНиГ").add("ИАиД").add("ИГДГиГ").add("ИИФиРЭ").add("ИМиФИ").add("ИППС")\

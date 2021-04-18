@@ -40,6 +40,12 @@ class ScheduleUser(Helper):
     SCHEDULE_USER_1 = ListItem()
     SCHEDULE_USER_2 = ListItem()
     SCHEDULE_USER_3 = ListItem()
+    SCHEDULE_USER_4 = ListItem()
+
+
+class Schedule(Helper):
+    mode = HelperMode.snake_case
+    SCHEDULE_0 = ListItem()
 
 
 class Events(Helper):
