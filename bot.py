@@ -3929,7 +3929,7 @@ if __name__ == "__main__":
     stopFlag2 = threading.Event()
     thread2 = MyThread2(stopFlag2)
     thread2.start()
-    executor.start_polling(dp, on_shutdown=shutdown)
+    executor.start_polling(dp, on_shutdown=shutdown, skip_updates=shutdown)
 
 
-# руссификация дат, парсинг кнопок, удаление мероприятий и удаление рассылок
+# руссификация дат, парсинг кнопок, удаление мероприятий и удаление рассылок.
