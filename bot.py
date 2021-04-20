@@ -3901,11 +3901,14 @@ class MyThread2(Thread):
                         if date_date == a[0]:
                             conn = sqlite3.connect('db.db')
                             cursor = conn.cursor()
-                            cursor.execute(f"SELECT chat_id FROM users WHERE user_group = '{i[0]}'")
+                            cursor.execute(f"SELECT chat_id, real_name FROM users WHERE user_group = '{i[0]}'")
                             id_group = cursor.fetchall()
                             cursor.close()
                             for k in id_group:
-                                bot2.send_message(k, f'У вас началась {j[2]}')
+                                if j[5] == "":
+                                    bot2.send_message(k[0], f'{k[1]} у вас начался {j[2]}')
+                                else:
+                                    bot2.send_message(k[0], f'{k[1]} у вас начался {j[2]} в {j[5]}')
                         date_kur = a[0].split(':')
                         listing_date = []
                         for n in date_kur:
@@ -3915,11 +3918,14 @@ class MyThread2(Thread):
                         if listing_date_sum == listing_date_sum2 - 5:
                             conn = sqlite3.connect('db.db')
                             cursor = conn.cursor()
-                            cursor.execute(f"SELECT chat_id FROM users WHERE user_group = '{i[0]}'")
+                            cursor.execute(f"SELECT chat_id, real_name FROM users WHERE user_group = '{i[0]}'")
                             id_group = cursor.fetchall()
                             cursor.close()
                             for k in id_group:
-                                bot2.send_message(k, f'У вас через 5 минут начнется {j[2]}')
+                                if j[5] == "":
+                                    bot2.send_message(k[0], f'{k[1]} у вас через 5 минут начнется {j[2]}')
+                                else:
+                                    bot2.send_message(k[0], f'{k[1]} у вас начнется {j[2]} через 5 минут в {j[5]}')
 
 
 if __name__ == "__main__":
