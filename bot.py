@@ -43,18 +43,50 @@ async def process_command0(message: types.Message):
     switch_text = message.text.lower()
     if message.text == '/start':
         if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
@@ -100,18 +132,50 @@ async def process_command1(message: types.Message):
     switch_text = message.text.lower()
     if message.text == '/start':
         if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
@@ -185,18 +249,50 @@ async def process_admin_command2(message: types.Message):
     switch_text = message.text.lower()
     if message.text == '/start':
         if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
@@ -246,18 +342,50 @@ async def process_admin_command1(message: types.Message):
     switch_text = message.text.lower()
     if message.text == '/start':
         if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
@@ -304,18 +432,50 @@ async def process_admin_command4(message: types.Message):
     switch_text = message.text.lower()
     if message.text == '/start':
         if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
@@ -368,18 +528,50 @@ async def process_admin_command1(message: types.Message):
     switch_text = message.text.lower()
     if message.text == '/start':
         if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
@@ -480,18 +672,50 @@ async def process_admin_command1(message: types.Message):
     switch_text = message.text.lower()
     if message.text == '/start':
         if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
@@ -538,18 +762,50 @@ async def process_admin_command4(message: types.Message):
     switch_text = message.text.lower()
     if message.text == '/start':
         if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
@@ -596,18 +852,50 @@ async def process_admin_command4(message: types.Message):
     switch_text = message.text.lower()
     if message.text == '/start':
         if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
@@ -996,18 +1284,50 @@ async def process_admin_command4(message: types.Message):
     switch_text = message.text.lower()
     if message.text == '/start':
         if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
@@ -1054,18 +1374,50 @@ async def process_admin_command4(message: types.Message):
     switch_text = message.text.lower()
     if message.text == '/start':
         if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
@@ -1118,18 +1470,50 @@ async def process_admin_command1(message: types.Message):
     switch_text = message.text.lower()
     if message.text == '/start':
         if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
@@ -1236,19 +1620,52 @@ async def process_buy_command0(message: types.Message):
     switch_text = message.text.lower()
     if message.text == '/start':
         if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+
     elif switch_text == "регистрация":
         state = dp.current_state(user=message.from_user.id)
         await state.set_state(Register.all()[0])
@@ -1292,19 +1709,52 @@ async def process_buy_command01(message: types.Message):
     switch_text = message.text.lower()
     if message.text == '/start':
         if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+
     elif switch_text == "регистрация":
         state = dp.current_state(user=message.from_user.id)
         await state.set_state(Register.all()[0])
@@ -1412,18 +1862,50 @@ async def name_change(message: types.Message):
     switch_text = message.text.lower()
     if message.text == '/start':
         if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
@@ -1464,18 +1946,50 @@ async def register_1(message: types.Message):
     switch_text = message.text.lower()
     if message.text == '/start':
         if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
@@ -1498,18 +2012,50 @@ async def register_2(message: types.Message):
     switch_text = message.text.lower()
     if message.text == '/start':
         if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
@@ -1532,18 +2078,50 @@ async def register_2(message: types.Message):
     switch_text = message.text.lower()
     if message.text == '/start':
         if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
@@ -1909,20 +2487,51 @@ async def register_3(message: types.Message):
     switch_text = message.text.lower()
     if message.text == '/start':
         if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-
     elif switch_text == "регистрация":
         state = dp.current_state(user=message.from_user.id)
         await state.set_state(Register.all()[0])
@@ -1959,19 +2568,51 @@ async def schedule_0(msg: types.Message):
     switch_text = msg.text.lower()
     if msg.text == '/start':
         if msg.from_user.username != None:
-            await msg.reply(f'Welcome to StudentHelperBot, {msg.from_user.username}🔥\n'
-                            '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                            '\n - Поставить напоминания 🍻'
-                            '\n - Подписаться на рассылки ✉'
-                            '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                            ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+            await msg.reply(f'Welcome to StudentHelperBot, {msg.from_user.username}!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot, {msg.from_user.username}!🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await msg.reply(f'Welcome to StudentHelperBot! 🔥\n'
-                            '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                            '\n - Поставить напоминания 🍻'
-                            '\n - Подписаться на рассылки ✉'
-                            '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                            ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+            await msg.reply(f'Welcome to StudentHelperBot!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot!🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
         state = dp.current_state(user=msg.from_user.id)
@@ -1994,18 +2635,50 @@ async def schedule_0(message: types.Message):
     switch_text = message.text.lower()
     if message.text == '/start':
         if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
@@ -2371,19 +3044,52 @@ async def register_3(message: types.Message):
     switch_text = message.text.lower()
     if message.text == '/start':
         if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+
 
     elif switch_text == "регистрация":
         state = dp.current_state(user=message.from_user.id)
@@ -2406,18 +3112,50 @@ async def register_3(message: types.Message):
     switch_text = message.text.lower()
     if message.text == '/start':
         if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
@@ -2726,18 +3464,50 @@ async def register_3(message: types.Message):
     switch_text = message.text.lower()
     if message.text == '/start':
         if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
@@ -3022,18 +3792,50 @@ async def register_3(message: types.Message):
     switch_text = message.text.lower()
     if message.text == '/start':
         if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
@@ -3322,36 +4124,100 @@ async def process_start_command(message: types.Message):
 
     if message.text == '/start':
         if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot! 🔥\n'
+            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot!🔥\n'
                                 '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                                 '\n - Поставить напоминания 🍻'
-                                '\n - Подписаться на рассылки ✉'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
 
 
 @dp.message_handler(commands='help')
 async def process_start2_command(message: types.Message):
-    if message.from_user.username == None:
-        await message.reply(f'Welcome to StudentHelperBot! 🔥, {message.from_user.username}.\n'
+    if message.from_user.username != None:
+        await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
+                            '\n - Here you can always find the current schedule 🎓'
+                            '\n - Set reminders 🍻'
+                            '\n - Mailing lists from teachers ✉'
+                            '\n - View the current schedule of another group ✌'
+                            '\n - Support developers 👌'
+                            '\n - We have our own PevCoin (currency in development) 💵'
+                            '\n'
+                            '\n  Registering? ✨'
+                            '\n'
+                            '\n ➖➖➖➖➖➖'
+                            '\n'
+                            '\n'
+                            f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
                             '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                             '\n - Поставить напоминания 🍻'
-                            '\n - Подписаться на рассылки ✉'
+                            '\n - Рассылки от преподавателей ✉'
+                            '\n - Посмотреть актуальное расписание другой группы ✌'
+                            '\n - Поддержать разработчиков 👌'
                             '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                            '\n'
                             ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
     else:
-        await message.reply(f'Welcome to StudentHelperBot! 🔥.\n'
+        await message.reply(f'Welcome to StudentHelperBot!🔥\n'
+                            '\n - Here you can always find the current schedule 🎓'
+                            '\n - Set reminders 🍻'
+                            '\n - Mailing lists from teachers ✉'
+                            '\n - View the current schedule of another group ✌'
+                            '\n - Support developers 👌'
+                            '\n - We have our own PevCoin (currency in development) 💵'
+                            '\n'
+                            '\n  Registering? ✨'
+                            '\n'
+                            '\n ➖➖➖➖➖➖'
+                            '\n'
+                            '\n'
+                            f'Добро пожаловать в StudentHelperBot!🔥\n'
                             '\n - Здесь всегда можно узнать актуальное расписание 🎓'
                             '\n - Поставить напоминания 🍻'
-                            '\n - Подписаться на рассылки ✉'
+                            '\n - Рассылки от преподавателей ✉'
+                            '\n - Посмотреть актуальное расписание другой группы ✌'
+                            '\n - Поддержать разработчиков 👌'
                             '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                            '\n'
                             ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
 
 
@@ -3795,23 +4661,27 @@ class MyThread(Thread):
             cursor.execute(f"SELECT * FROM `times` WHERE `time` <=  strftime('%s', 'now') + 1800;")
             result_set30 = cursor.fetchall()
             for item in result_set30:
+                cursor.execute(f"SELECT `real_name` FROM `users` WHERE `chat_id` = {item[0]}")
+                real_name = cursor.fetchall()
                 cursor.execute(f"SELECT `30min` FROM `times` WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
                 state = cursor.fetchall()
                 if state[0][0] == 1:
                     cursor.execute(
                         f"UPDATE `times` SET `30min`= {0} WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
-                    bot2.send_message(item[0], f'Мероприятие: {item[1]} состоится через пол часа')
+                    bot2.send_message(item[0], f'{real_name[0][0]}! Мероприятие: {item[1]} состоится через пол часа')
 
             cursor = conn.cursor()
             cursor.execute(f"SELECT * FROM `times` WHERE `time` <=  strftime('%s', 'now') + 300;")
             result_set5 = cursor.fetchall()
             for item in result_set5:
+                cursor.execute(f"SELECT `real_name` FROM `users` WHERE `chat_id` = {item[0]}")
+                real_name = cursor.fetchall()
                 cursor.execute(f"SELECT `5min` FROM `times` WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
                 state = cursor.fetchall()
                 if state[0][0] == 1:
                     cursor.execute(
                         f"UPDATE `times` SET `5min`= {0} WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
-                    bot2.send_message(item[0], f'Мероприятие: {item[1]} состоится через пять минут')
+                    bot2.send_message(item[0], f'{real_name[0][0]}! Мероприятие: {item[1]} состоится через пять минут')
 
             cursor = conn.cursor()
             cursor.execute(f"SELECT * FROM `times` WHERE `time` <=  strftime('%s', 'now');")
@@ -3819,29 +4689,35 @@ class MyThread(Thread):
             cursor.execute(f"DELETE FROM `times` WHERE `time` <=  strftime('%s', 'now');")
             conn.commit()
             for item in result_set:
-                bot2.send_message(item[0], f'Ваше мероприятие: {item[1]}\nокончено')
+                cursor.execute(f"SELECT `real_name` FROM `users` WHERE `chat_id` = {item[0]}")
+                real_name = cursor.fetchall()
+                bot2.send_message(item[0], f'{real_name[0][0]}! Ваше мероприятие: {item[1]}\nокончено')
 
             cursor = conn.cursor()
             cursor.execute(f"SELECT * FROM `mail` WHERE `time` <=  strftime('%s', 'now') + 1800;")
             result_set30 = cursor.fetchall()
             for item in result_set30:
+                cursor.execute(f"SELECT `real_name` FROM `users` WHERE `chat_id` = {item[0]}")
+                real_name = cursor.fetchall()
                 cursor.execute(f"SELECT `30min` FROM `mail` WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
                 state = cursor.fetchall()
                 if state[0][0] == 1:
                     cursor.execute(
                         f"UPDATE `mail` SET `30min`= {0} WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
-                    bot2.send_message(item[0], f'Рассылка: {item[1]} состоится через пол часа')
+                    bot2.send_message(item[0], f'{real_name[0][0]}! Рассылка: {item[1]} состоится через пол часа')
 
             cursor = conn.cursor()
             cursor.execute(f"SELECT * FROM `mail` WHERE `time` <=  strftime('%s', 'now') + 300;")
             result_set5 = cursor.fetchall()
             for item in result_set5:
+                cursor.execute(f"SELECT `real_name` FROM `users` WHERE `chat_id` = {item[0]}")
+                real_name = cursor.fetchall()
                 cursor.execute(f"SELECT `5min` FROM `mail` WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
                 state = cursor.fetchall()
                 if state[0][0] == 1:
                     cursor.execute(
                         f"UPDATE `mail` SET `5min`= {0} WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
-                    bot2.send_message(item[0], f'Рассылка: {item[1]} состоится через пять минут')
+                    bot2.send_message(item[0], f'{real_name[0][0]}! Рассылка: {item[1]} состоится через пять минут')
 
             cursor = conn.cursor()
             cursor.execute(f"SELECT * FROM `mail` WHERE `time` <=  strftime('%s', 'now');")
@@ -3850,7 +4726,9 @@ class MyThread(Thread):
             conn.commit()
             conn.close()
             for item in result_set_del:
-                bot2.send_message(item[0], f'Рассылка: {item[1]} закончилась')
+                cursor.execute(f"SELECT `real_name` FROM `users` WHERE `chat_id` = {item[0]}")
+                real_name = cursor.fetchall()
+                bot2.send_message(item[0], f'{real_name[0][0]}! Рассылка: {item[1]} закончилась')
 
 
 class MyThread2(Thread):
@@ -3906,9 +4784,9 @@ class MyThread2(Thread):
                             cursor.close()
                             for k in id_group:
                                 if j[5] == "":
-                                    bot2.send_message(k[0], f'{k[1]} у вас начался {j[2]}')
+                                    bot2.send_message(k[0], f'{k[1]}, у вас начался {j[2]}')
                                 else:
-                                    bot2.send_message(k[0], f'{k[1]} у вас начался {j[2]} в {j[5]}')
+                                    bot2.send_message(k[0], f'{k[1]}, у вас начался {j[2]} в {j[5]}')
                         date_kur = a[0].split(':')
                         listing_date = []
                         for n in date_kur:
@@ -3923,9 +4801,9 @@ class MyThread2(Thread):
                             cursor.close()
                             for k in id_group:
                                 if j[5] == "":
-                                    bot2.send_message(k[0], f'{k[1]} у вас через 5 минут начнется {j[2]}')
+                                    bot2.send_message(k[0], f'{k[1]}, у вас через 5 минут начнется {j[2]}')
                                 else:
-                                    bot2.send_message(k[0], f'{k[1]} у вас начнется {j[2]} через 5 минут в {j[5]}')
+                                    bot2.send_message(k[0], f'{k[1]}, у вас начнется {j[2]} через 5 минут в {j[5]}')
 
 
 if __name__ == "__main__":
@@ -3938,4 +4816,4 @@ if __name__ == "__main__":
     executor.start_polling(dp, on_shutdown=shutdown, skip_updates=shutdown)
 
 
-# руссификация дат, парсинг кнопок, удаление мероприятий и удаление рассылок.
+# руссификация дат, парсинг кнопок, удаление мероприятий и удаление рассылок, тестовый платеж убрать, визуализация
