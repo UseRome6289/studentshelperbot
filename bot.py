@@ -1695,7 +1695,10 @@ async def process_buy_command0(message: types.Message):
             state = dp.current_state(user=message.from_user.id)
             await state.reset_state()
     elif message.text == 'Узнать команду разработчиков':
-        await message.reply('✨ Разработчики телеграм-бота:\n 1. Шульц Илья\n 2.Присяжнюк Кирилл\n 3.Степанцов Антон',
+        await message.reply('✨ <i>Разработчики телеграм-бота:</i>\n '
+                            '<b><i>1.</i></b> <b>Шульц Илья 🤩 </b>\n '
+                            '<b><i>2.</i></b> <b>Присяжнюк Кирилл</b> 😜\n '
+                            '<b><i>3.</i></b> <b>Степанцов Антон</b> 😇', parse_mode="HTML",
                             reply_markup=KeyBoards.developer_support_kb)
     elif message.text == 'Поддержать разработку телеграмм-бота':
         state = dp.current_state(user=message.from_user.id)
@@ -4574,8 +4577,8 @@ async def handler_message(msg: types.Message):
         result_set = cursor.fetchall()
         for i in result_set:
             if i[0] == msg.from_user.id:
-                await bot.send_message(msg.from_user.id, f"Ваше ФИО: {i[1]}\n"
-                                                         f"Ваша группа: {i[2]}")
+                await bot.send_message(msg.from_user.id, f"Ваше ФИО: <b>{i[1]}</b>\n"
+                                                         f"Ваша группа: <i><b>{i[2]}</b></i> 🎓", parse_mode="HTML")
         conn.commit()
         conn.close()
     elif switch_text == "настройки":
