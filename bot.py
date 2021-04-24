@@ -4729,8 +4729,12 @@ class MyThread(Thread):
             conn.commit()
             conn.close()
             for item in result_set_del:
+                conn = sqlite3.connect('db.db')
+                cursor = conn.cursor()
                 cursor.execute(f"SELECT `real_name` FROM `users` WHERE `chat_id` = {item[0]}")
                 real_name = cursor.fetchall()
+                conn.commit()
+                conn.close()
                 bot2.send_message(item[0], f'{real_name[0][0]}! Рассылка: {item[1]} закончилась')
 
 
