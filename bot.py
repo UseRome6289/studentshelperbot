@@ -619,7 +619,7 @@ async def process_admin_command1(message: types.Message):
         cursor.close()
         for user in id_users:
             try:
-                a = f'Рассылка от пользователя: <b>{name[0][0]}</b>\n' + f'<i>{content[0][0]}</i>'
+                a = f'Рассылка от пользователя: <b>{name[0][0]}</b>\n' + '\n ➖➖➖➖➖➖ \n\n' + f'<i>{content[0][0]}</i>'
                 conn = sqlite3.connect('db.db')
                 cursor = conn.cursor()
                 cursor.execute(
