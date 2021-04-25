@@ -11,7 +11,7 @@ from aiogram import Bot, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.contrib.middlewares.logging import LoggingMiddleware
 from aiogram.dispatcher import Dispatcher
-from aiogram.types import ContentType
+from aiogram.types import ContentType, ReplyKeyboardMarkup
 from aiogram.utils import executor
 import KeyBoards
 import messages
@@ -2216,626 +2216,78 @@ async def name_change(message: types.Message):
 
 #region registerHandler
 
+# start
 @dp.message_handler(state=Register.REGISTER_0)
 async def register_1(message: types.Message):
     switch_text = message.text.lower()
-    if message.text == '/start':
-        if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-        else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-
-    elif switch_text == "регистрация":
-        state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
-        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
-    else:
-        conn = sqlite3.connect('db.db')
-        cursor = conn.cursor()
-        cursor.execute(f"UPDATE users SET real_name = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
-        conn.commit()
-        conn.close()
+    if switch_text == "регистрация":
         state = dp.current_state(user=message.from_user.id)
         await state.set_state(Register.all()[1])
-        await message.reply(messages.institute_message, reply=False, reply_markup=KeyBoards.institute_kb)
+        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
 
 
+# name
 @dp.message_handler(state=Register.REGISTER_1)
 async def register_2(message: types.Message):
-    switch_text = message.text.lower()
-    if message.text == '/start':
-        if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-        else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-
-    elif switch_text == "регистрация":
-        state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
-        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
-    else:
-        conn = sqlite3.connect('db.db')
-        cursor = conn.cursor()
-        cursor.execute(f"UPDATE users SET school = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
-        conn.commit()
-        conn.close()
-        state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[2])
-        await message.reply(messages.course_message, reply=False, reply_markup=KeyBoards.course_kb)
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
+    cursor.execute(f"UPDATE users SET real_name = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
+    conn.commit()
+    conn.close()
+    state = dp.current_state(user=message.from_user.id)
+    await state.set_state(Register.all()[2])
+    await message.reply(messages.institute_message, reply=False, reply_markup=KeyBoards.institute_kb)
 
 
+# inst
 @dp.message_handler(state=Register.REGISTER_2)
 async def register_2(message: types.Message):
-    switch_text = message.text.lower()
-    if message.text == '/start':
-        if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-        else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-
-    elif switch_text == "регистрация":
-        state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
-        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
-    else:
         conn = sqlite3.connect('db.db')
         cursor = conn.cursor()
-        cursor.execute(f"UPDATE users SET course = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
+        cursor.execute(f"UPDATE users SET school = '{messages.institutes[message.text]}' WHERE chat_id = '{message.from_user.id}'")
         conn.commit()
-        conn.close()
+        cursor.execute(f"SELECT school FROM users WHERE chat_id = '{message.from_user.id}'")
+        inst = cursor.fetchall()[0][0]
+        keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
+        url = 'https://edu.sfu-kras.ru/api/timetable/groups'
+        response = requests.get(url).json()
+        for item in response:
+            if item['institute'] == inst:
+                keyboard.add(item['name'])
+        await message.reply(messages.group_message, reply_markup=keyboard)
         state = dp.current_state(user=message.from_user.id)
-        conn = sqlite3.connect('db.db')
-        cursor = conn.cursor()
-        cursor.execute(f"SELECT chat_id, school, course FROM users")
-        result_set = cursor.fetchall()
-        for i in result_set:
-            if i[0] == message.from_user.id:
-                # ИКИТ
-                if i[1] == "ИКИТ" and i[2] == "1 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.ikit_kb)
-                elif i[1] == "ИКИТ" and i[2] == "2 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.ikit_kb)
-                elif i[1] == "ИКИТ" and i[2] == "3 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.ikit_kb)
-                elif i[1] == "ИКИТ" and i[2] == "4 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.ikit_kb)
-                elif i[1] == "ИКИТ" and i[2] == "5 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.ikit_kb)
-                # ИУБП
-                elif i[1] == "ИУБП" and i[2] == "1 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИУБП" and i[2] == "2 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИУБП" and i[2] == "3 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИУБП" and i[2] == "4 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИУБП" and i[2] == "5 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                # ИФБИБТ
-                elif i[1] == "ИФБиБТ" and i[2] == "1 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИФБиБТ" and i[2] == "2 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИФБиБТ" and i[2] == "3 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИФБиБТ" and i[2] == "4 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИФБиБТ" and i[2] == "5 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                # ИФИЯК
-                elif i[1] == "ИФиЯК" and i[2] == "1 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИФиЯК" and i[2] == "2 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИФиЯК" and i[2] == "3 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИФиЯК" and i[2] == "4 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИФиЯК" and i[2] == "5 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                # ВУЦ
-                elif i[1] == "ВУЦ" and i[2] == "1 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ВУЦ" and i[2] == "2 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ВУЦ" and i[2] == "3 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ВУЦ" and i[2] == "4 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ВУЦ" and i[2] == "5 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                # ГИ
-                elif i[1] == "ГИ" and i[2] == "1 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ГИ" and i[2] == "2 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ГИ" and i[2] == "3 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ГИ" and i[2] == "4 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ГИ" and i[2] == "5 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                # ИСИ
-                elif i[1] == "ИСИ" and i[2] == "1 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИСИ" and i[2] == "2 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИСИ" and i[2] == "3 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИСИ" and i[2] == "4 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИСИ" and i[2] == "5 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                # ИНИГ
-                elif i[1] == "ИНиГ" and i[2] == "1 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИНиГ" and i[2] == "2 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИНиГ" and i[2] == "3 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИНиГ" and i[2] == "4 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИНиГ" and i[2] == "5 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                # ИАИД
-                elif i[1] == "ИАиД" and i[2] == "1 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИАиД" and i[2] == "2 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИАиД" and i[2] == "3 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИАиД" and i[2] == "4 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИАиД" and i[2] == "5 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                # ИГДГиГ
-                elif i[1] == "ИГДГиГ" and i[2] == "1 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИГДГиГ" and i[2] == "2 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИГДГиГ" and i[2] == "3 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИГДГиГ" and i[2] == "4 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИГДГиГ" and i[2] == "5 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                # ИИФиРЭ
-                elif i[1] == "ИИФиРЭ" and i[2] == "1 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИИФиРЭ" and i[2] == "2 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИИФиРЭ" and i[2] == "3 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИИФиРЭ" and i[2] == "4 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИИФиРЭ" and i[2] == "5 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                # ИМИФИ
-                elif i[1] == "ИМиФИ" and i[2] == "1 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИМиФИ" and i[2] == "2 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИМиФИ" and i[2] == "3 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИМиФИ" and i[2] == "4 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИМиФИ" and i[2] == "5 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                # ИППС
-                elif i[1] == "ИППС" and i[2] == "1 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИППС" and i[2] == "2 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИППС" and i[2] == "3 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИППС" and i[2] == "4 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИППС" and i[2] == "5 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                # ИФКСИТ
-                elif i[1] == "ИФКСиТ" and i[2] == "1 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИФКСиТ" and i[2] == "2 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИФКСиТ" and i[2] == "3 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИФКСиТ" and i[2] == "4 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИФКСиТ" and i[2] == "5 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                # ИЦМИМ
-                elif i[1] == "ИЦМиМ" and i[2] == "1 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИЦМиМ" and i[2] == "2 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИЦМиМ" and i[2] == "3 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИЦМиМ" and i[2] == "4 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИЦМиМ" and i[2] == "5 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                # ИЭИГ
-                elif i[1] == "ИЭиГ" and i[2] == "1 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИЭиГ" and i[2] == "2 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИЭиГ" and i[2] == "3 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИЭиГ" and i[2] == "4 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИЭиГ" and i[2] == "5 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                # ИГ
-                elif i[1] == "ИГ" and i[2] == "1 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИГ" and i[2] == "2 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИГ" and i[2] == "3 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИГ" and i[2] == "4 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИГ" and i[2] == "5 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                # ИТИСУ
-                elif i[1] == "ИТиСУ" and i[2] == "1 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИТиСУ" and i[2] == "2 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИТиСУ" and i[2] == "3 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИТиСУ" and i[2] == "4 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИТиСУ" and i[2] == "5 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                # ИЭУИФ
-                elif i[1] == "ИЭУиФ" and i[2] == "1 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИЭУиФ" and i[2] == "2 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИЭУиФ" and i[2] == "3 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИЭУиФ" and i[2] == "4 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИЭУиФ" and i[2] == "5 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                # ПИ
-                elif i[1] == "ПИ" and i[2] == "1 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ПИ" and i[2] == "2 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ПИ" and i[2] == "3 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ПИ" and i[2] == "4 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ПИ" and i[2] == "5 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                # ЮИ
-                elif i[1] == "ЮИ" and i[2] == "1 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ЮИ" and i[2] == "2 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ЮИ" and i[2] == "3 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ЮИ" and i[2] == "4 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ЮИ" and i[2] == "5 курс":
-                    await state.set_state(Register.all()[3])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-
-        conn.commit()
-        conn.close()
+        await state.set_state(Register.all()[3])
 
 
+# group
 @dp.message_handler(state=Register.REGISTER_3)
 async def register_3(message: types.Message):
-    switch_text = message.text.lower()
-    if message.text == '/start':
-        if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-        else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-    elif switch_text == "регистрация":
+
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
+    cursor.execute(f"UPDATE users SET user_group = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
+    cursor.execute(f"SELECT user_id FROM admins")
+    result_set = cursor.fetchall()
+    cursor.close()
+    is_succeed = False
+    for item in result_set:
+        if item[0] == message.from_user.id:
+            is_succeed = True
+    if is_succeed:
+        await message.reply(messages.end_of_registration_message
+                            , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+        conn.commit()
+        conn.close()
         state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
-        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
+        await state.reset_state()
     else:
-        conn = sqlite3.connect('db.db')
-        cursor = conn.cursor()
-        cursor.execute(f"UPDATE users SET user_group = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
-        cursor.execute(f"SELECT user_id FROM admins")
-        result_set = cursor.fetchall()
-        cursor.close()
-        is_succeed = False
-        for item in result_set:
-            if item[0] == message.from_user.id:
-                is_succeed = True
-        if is_succeed:
-            await message.reply(messages.end_of_registration_message
-                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
-            conn.commit()
-            conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
-        else:
-            await message.reply(messages.end_of_registration_message
-                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
-            conn.commit()
-            conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
+        await message.reply(messages.end_of_registration_message
+                            , reply=False, reply_markup=KeyBoards.menu_user_kb)
+        conn.commit()
+        conn.close()
+        state = dp.current_state(user=message.from_user.id)
+        await state.reset_state()
+
 
 #endregion
 
@@ -4400,10 +3852,7 @@ async def process_start_command(message: types.Message):
     cursor.execute(f"INSERT INTO users(chat_id, name) values ({message.from_user.id}, '{message.from_user.username}')")
     conn.commit()
     conn.close()
-
-    if message.text == '/start':
-        if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
+    await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
                                 '\n - Here you can always find the current schedule 🎓'
                                 '\n - Set reminders 🍻'
                                 '\n - Mailing lists from teachers ✉'
@@ -4425,30 +3874,8 @@ async def process_start_command(message: types.Message):
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
                                 '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-        else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-
+    state = dp.current_state(user=message.from_user.id)
+    await state.set_state(Register.all()[0])
 
 @dp.message_handler(commands='help')
 async def process_start2_command(message: types.Message):
@@ -4924,7 +4351,8 @@ async def handler_message(msg: types.Message):
         await state.set_state(Pay.all()[0])
         await msg.reply("Разработчики благодарны вам, что вы используете их телеграм-бота. Спасибо вам! 😘"
                         , reply_markup=KeyBoards.developer_support_kb)
-
+    elif switch_text == "test":
+        await msg.reply(f"{messages.greets_msg}")
 if __name__ == "__main__":
     stopFlag = threading.Event()
     thread = MyThread(stopFlag)
