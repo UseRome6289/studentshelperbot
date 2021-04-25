@@ -68,7 +68,7 @@ developer_support_kb = ReplyKeyboardMarkup(resize_keyboard=True).add('Узнат
 
 developer_support_kb2 = ReplyKeyboardMarkup(resize_keyboard=True).add('Поддержать разработчиков 100 рублей')\
     .add("Поддержать разработчиков 250 рублей").add("Поддержать разработчиков 500 рублей")\
-    .add("Поддержать разработчиков 1000 рублей").add('Меню')
+    .add("Поддержать разработчиков 1000 рублей").add('Поддержать разработчиков другой суммой').add('Меню')
 
 # Локация и контакт
 markup_request = ReplyKeyboardMarkup(resize_keyboard=True).add(

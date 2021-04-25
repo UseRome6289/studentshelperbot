@@ -1818,6 +1818,7 @@ async def process_buy_command01(message: types.Message):
                                payload='some-invoice-payload-for-our-internal-use'
                                )
     elif switch_text == "поддержать разработчиков 1000 рублей":
+        print(PRICE1000)
         if PAYMENTS_PROVIDER_TOKEN.split(':')[1] == 'TEST':
             await bot.send_message(message.chat.id, MESSAGES['pre_buy_demo_alert'])
         await bot.send_invoice(message.chat.id,
@@ -1834,6 +1835,100 @@ async def process_buy_command01(message: types.Message):
                                start_parameter='developer-support',
                                payload='some-invoice-payload-for-our-internal-use'
                                )
+    elif switch_text == "поддержать разработчиков другой суммой":
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state(Pay.all()[2])
+        await bot.send_message(message.from_user.id,
+                               "Наберите свою сумму (Сумма должна быть больше 75 рублей и меньше 100000 рублей!)")
+
+
+@dp.message_handler(state=Pay.PAY_DISTRIBUTOR3)
+async def process_buy_command01(message: types.Message):
+    switch_text = message.text.lower()
+    if message.text == '/start':
+        if message.from_user.username != None:
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+        else:
+            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot!🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+
+    elif switch_text == "регистрация":
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state(Register.all()[0])
+        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
+    if message.text == 'Меню':
+        state = dp.current_state(user=message.from_user.id)
+        await state.reset_state()
+        await message.reply("Вы в меню ✨", reply_markup=KeyBoards.menu_admin_kb)
+    else:
+        if (int(message.text) > 75 and message.text.isdigit() == True and int(message.text) <= 100000):
+            integer = int(message.text)
+            pr = integer * 100
+            price = types.LabeledPrice(label='Поддержать разработчиков другой суммой', amount=pr)
+            if PAYMENTS_PROVIDER_TOKEN.split(':')[1] == 'TEST':
+                await bot.send_message(message.chat.id, MESSAGES['pre_buy_demo_alert'])
+            await bot.send_invoice(message.chat.id,
+                                   title=MESSAGES['tm_title'],
+                                   description=MESSAGES['tm_description'],
+                                   provider_token=PAYMENTS_PROVIDER_TOKEN,
+                                   currency='rub',
+                                   photo_url=TIME_MACHINE_IMAGE_URL,
+                                   photo_height=512,  # !=0/None, иначе изображение не покажется
+                                   photo_width=512,
+                                   photo_size=512,
+                                   is_flexible=False,  # True если конечная цена зависит от способа доставки
+                                   prices=[price],
+                                   start_parameter='developer-support',
+                                   payload='some-invoice-payload-for-our-internal-use'
+                                   )
+            state = dp.current_state(user=message.from_user.id)
+            await state.set_state(Pay.all()[1])
+        else:
+            state = dp.current_state(user=message.from_user.id)
+            await state.set_state(Pay.all()[1])
+            await bot.send_message(message.from_user.id, "Вы неправильно ввели данные, попробуйте еще раз  "
+                                                         "(Нажмите кнопку выбора действия)")
 
 
 @dp.pre_checkout_query_handler(lambda query: True)
