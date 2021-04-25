@@ -1,3 +1,4 @@
+#region imports
 import re
 import sqlite3
 import threading
@@ -18,7 +19,10 @@ from config import TOKEN, PAYMENTS_PROVIDER_TOKEN, TIME_MACHINE_IMAGE_URL
 from messages import MESSAGES
 from utils import Register, Change, Pay, AdminPanel, ScheduleUser, Events, Schedule
 
+#endregion
 
+
+#region global
 async def shutdown(dispatcher: Dispatcher):
     await dispatcher.storage.close()
     await dispatcher.storage.wait_closed()
@@ -38,6 +42,173 @@ PRICE1000 = types.LabeledPrice(label='Поддержка разработчик�
 incoming_events = {}
 
 
+
+class MyThread(Thread):
+    def __init__(self, event):
+        Thread.__init__(self)
+        self.stopped = event
+
+    def run(self):
+        global adding
+        while not self.stopped.wait(3):
+            conn = sqlite3.connect('db.db')
+
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT * FROM `times` WHERE `time` <=  strftime('%s', 'now') + 1800;")
+            result_set30 = cursor.fetchall()
+            for item in result_set30:
+                cursor.execute(f"SELECT `real_name` FROM `users` WHERE `chat_id` = {item[0]}")
+                real_name = cursor.fetchall()
+                cursor.execute(f"SELECT `30min` FROM `times` WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
+                state = cursor.fetchall()
+                if state[0][0] == 1:
+                    cursor.execute(
+                        f"UPDATE `times` SET `30min`= {0} WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
+                    bot2.send_message(item[0], f'{real_name[0][0]}! Мероприятие: {item[1]} состоится через пол часа')
+
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT * FROM `times` WHERE `time` <=  strftime('%s', 'now') + 300;")
+            result_set5 = cursor.fetchall()
+            for item in result_set5:
+                cursor.execute(f"SELECT `real_name` FROM `users` WHERE `chat_id` = {item[0]}")
+                real_name = cursor.fetchall()
+                cursor.execute(f"SELECT `5min` FROM `times` WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
+                state = cursor.fetchall()
+                if state[0][0] == 1:
+                    cursor.execute(
+                        f"UPDATE `times` SET `5min`= {0} WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
+                    bot2.send_message(item[0], f'{real_name[0][0]}! Мероприятие: {item[1]} состоится через пять минут')
+
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT * FROM `times` WHERE `time` <=  strftime('%s', 'now');")
+            result_set = cursor.fetchall()
+            cursor.execute(f"DELETE FROM `times` WHERE `time` <=  strftime('%s', 'now');")
+            conn.commit()
+            for item in result_set:
+                cursor.execute(f"SELECT `real_name` FROM `users` WHERE `chat_id` = {item[0]}")
+                real_name = cursor.fetchall()
+                bot2.send_message(item[0], f'{real_name[0][0]}! Ваше мероприятие: {item[1]}\nокончено')
+
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT * FROM `mail` WHERE `time` <=  strftime('%s', 'now') + 1800;")
+            result_set30 = cursor.fetchall()
+            for item in result_set30:
+                cursor.execute(f"SELECT `real_name` FROM `users` WHERE `chat_id` = {item[0]}")
+                real_name = cursor.fetchall()
+                cursor.execute(f"SELECT `30min` FROM `mail` WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
+                state = cursor.fetchall()
+                if state[0][0] == 1:
+                    cursor.execute(
+                        f"UPDATE `mail` SET `30min`= {0} WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
+                    bot2.send_message(item[0], f'{real_name[0][0]}! Рассылка: {item[1]} состоится через пол часа')
+
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT * FROM `mail` WHERE `time` <=  strftime('%s', 'now') + 300;")
+            result_set5 = cursor.fetchall()
+            for item in result_set5:
+                cursor.execute(f"SELECT `real_name` FROM `users` WHERE `chat_id` = {item[0]}")
+                real_name = cursor.fetchall()
+                cursor.execute(f"SELECT `5min` FROM `mail` WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
+                state = cursor.fetchall()
+                if state[0][0] == 1:
+                    cursor.execute(
+                        f"UPDATE `mail` SET `5min`= {0} WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
+                    bot2.send_message(item[0], f'{real_name[0][0]}! Рассылка: {item[1]} состоится через пять минут')
+
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT * FROM `mail` WHERE `time` <=  strftime('%s', 'now');")
+            result_set_del = cursor.fetchall()
+            cursor.execute(f"DELETE FROM `mail` WHERE `time` <=  strftime('%s', 'now');")
+            conn.commit()
+            conn.close()
+            for item in result_set_del:
+                conn = sqlite3.connect('db.db')
+                cursor = conn.cursor()
+                cursor.execute(f"SELECT `real_name` FROM `users` WHERE `chat_id` = {item[0]}")
+                real_name = cursor.fetchall()
+                conn.commit()
+                conn.close()
+                bot2.send_message(item[0], f'{real_name[0][0]}! Рассылка: {item[1]} закончилась')
+
+
+class MyThread2(Thread):
+    def __init__(self, event):
+        Thread.__init__(self)
+        self.stopped = event
+
+    def run(self):
+        global adding
+        while not self.stopped.wait(60):
+            url = 'https://edu.sfu-kras.ru/timetable'
+            response = requests.get(url).text
+            match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+            if match:
+                current_week = "1"
+            else:
+                current_week = "2"
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_group FROM users")
+            result_set = cursor.fetchall()
+            cursor.close()
+            listing = []
+            for i in result_set:
+                listing.append(i)
+            listing = list(set(listing))
+            for i in listing:
+                url = f'http://edu.sfu-kras.ru/api/timetable/get?target={i[0]}'
+                response = requests.get(url).json()
+                adding = []
+                date = datetime.datetime.today()
+                date_date = date.strftime('%H:%M')
+                date_split = date_date.split(':')
+                listing_date_split = []
+                for n in date_split:
+                    n = int(n)
+                    listing_date_split.append(n)
+                listing_date_sum = listing_date_split[0]*60+listing_date_split[1]
+                for item in response["timetable"]:
+                    if item["week"] == current_week:
+                        adding.append(
+                            [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
+                date1 = datetime.datetime.today()
+                now = datetime.datetime.weekday(date1)+1
+                for j in adding:
+                    if int(j[0]) == now:
+                        a = j[1].split('-')
+                        if date_date == a[0]:
+                            conn = sqlite3.connect('db.db')
+                            cursor = conn.cursor()
+                            cursor.execute(f"SELECT chat_id, real_name FROM users WHERE user_group = '{i[0]}'")
+                            id_group = cursor.fetchall()
+                            cursor.close()
+                            for k in id_group:
+                                if j[5] == "":
+                                    bot2.send_message(k[0], f'{k[1]}, у вас начался {j[2]}')
+                                else:
+                                    bot2.send_message(k[0], f'{k[1]}, у вас начался {j[2]} в {j[5]}')
+                        date_kur = a[0].split(':')
+                        listing_date = []
+                        for n in date_kur:
+                            n = int(n)
+                            listing_date.append(n)
+                        listing_date_sum2 = listing_date[0] * 60 + listing_date[1]
+                        if listing_date_sum == listing_date_sum2 - 5:
+                            conn = sqlite3.connect('db.db')
+                            cursor = conn.cursor()
+                            cursor.execute(f"SELECT chat_id, real_name FROM users WHERE user_group = '{i[0]}'")
+                            id_group = cursor.fetchall()
+                            cursor.close()
+                            for k in id_group:
+                                if j[5] == "":
+                                    bot2.send_message(k[0], f'{k[1]}, у вас через 5 минут начнется {j[2]}')
+                                else:
+                                    bot2.send_message(k[0], f'{k[1]}, у вас начнется {j[2]} через 5 минут в {j[5]}')
+
+
+#endregions
+
+#region userHandler
 @dp.message_handler(state=Events.EVENTS_USER_0)
 async def process_command0(message: types.Message):
     switch_text = message.text.lower()
@@ -242,7 +413,9 @@ async def process_command1(message: types.Message):
                 state = dp.current_state(user=message.from_user.id)
                 await state.reset_state()
 
+#endregion
 
+#region adminHandler
 @dp.message_handler(state=AdminPanel.ADMIN_0)
 async def process_admin_command2(message: types.Message):
     switch_text = message.text.lower()
@@ -334,336 +507,6 @@ async def process_admin_command2(message: types.Message):
         await state.set_state(AdminPanel.all()[7])
         await message.reply("Введите сообщение для рассылки"
                             ", чтобы вернуться - меню ✨", reply_markup=KeyBoards.return_keyboard)
-
-
-@dp.message_handler(state=AdminPanel.ADMIN_7)
-async def process_admin_command1(message: types.Message):
-    switch_text = message.text.lower()
-    if message.text == '/start':
-        if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-        else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-
-    elif switch_text == "регистрация":
-        state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
-        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
-    if switch_text == 'меню':
-        is_succeed = False
-        conn = sqlite3.connect('db.db')
-        cursor = conn.cursor()
-        cursor.execute(f"SELECT user_id FROM admins")
-        result_set = cursor.fetchall()
-        cursor.close()
-        for item in result_set:
-            if item[0] == message.from_user.id:
-                is_succeed = True
-        if is_succeed:
-            await message.reply('Вы в меню! ✨'
-                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
-            conn.commit()
-            conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
-        else:
-            await message.reply('Вы в меню! ✨'
-                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
-            conn.commit()
-            conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
-    else:
-        conn = sqlite3.connect('db.db')
-        cursor = conn.cursor()
-        cursor.execute(f"UPDATE admins SET last_content = '{message.text}' WHERE user_id = '{message.from_user.id}'")
-        conn.commit()
-        conn.close()
-        state = dp.current_state(user=message.from_user.id)
-        await state.set_state(AdminPanel.all()[8])
-        await message.reply("Выберите таймер:", reply_markup=KeyBoards.time_kb)
-
-
-@dp.message_handler(state=AdminPanel.ADMIN_8)
-async def process_admin_command4(message: types.Message):
-    switch_text = message.text.lower()
-    if message.text == '/start':
-        if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-        else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-
-    elif switch_text == "регистрация":
-        state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
-        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
-    if switch_text == 'меню':
-        is_succeed = False
-        conn = sqlite3.connect('db.db')
-        cursor = conn.cursor()
-        cursor.execute(f"SELECT user_id FROM admins")
-        result_set = cursor.fetchall()
-        cursor.close()
-        for item in result_set:
-            if item[0] == message.from_user.id:
-                is_succeed = True
-        if is_succeed:
-            await message.reply('Вы в меню! ✨'
-                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
-            conn.commit()
-            conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
-        else:
-            await message.reply('Вы в меню! ✨'
-                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
-            conn.commit()
-            conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
-    else:
-        m = {'1 час': 60 * 60, "2 часа": 60 * 60 * 2, "6 часов": 60 * 60 * 6, "12 часов": 60 * 60 * 12,
-             "24 часа": 60 * 60 * 24,
-             "2 дня": 60 * 60 * 48, "Неделя": 60 * 60 * 24 * 7}
-        if m[message.text]:
-            conn = sqlite3.connect('db.db')
-            cursor = conn.cursor()
-            cursor.execute(
-                f"UPDATE admins SET `time` = '{round(time.time() + m[message.text])}' WHERE user_id = '{message.from_user.id}'")
-            conn.commit()
-            conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.set_state(AdminPanel.all()[9])
-            await message.reply('Вы точно хотите отправить рассылку?', reply=False, reply_markup=KeyBoards.
-                                yes_or_no_keyboard)
-
-
-@dp.message_handler(state=AdminPanel.ADMIN_9)
-async def process_admin_command1(message: types.Message):
-    switch_text = message.text.lower()
-    if message.text == '/start':
-        if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-        else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-
-    elif switch_text == "регистрация":
-        state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
-        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
-    if switch_text == 'меню':
-        is_succeed = False
-        conn = sqlite3.connect('db.db')
-        cursor = conn.cursor()
-        cursor.execute(f"SELECT user_id FROM admins")
-        result_set = cursor.fetchall()
-        cursor.close()
-        for item in result_set:
-            if item[0] == message.from_user.id:
-                is_succeed = True
-        if is_succeed:
-            await message.reply('Вы в меню! ✨'
-                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
-            conn.commit()
-            conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
-        else:
-            await message.reply('Вы в меню! ✨'
-                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
-            conn.commit()
-            conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
-    elif switch_text == 'да':
-        conn = sqlite3.connect('db.db')
-        cursor = conn.cursor()
-        cursor.execute(f"SELECT chat_id FROM users")
-        id_users = cursor.fetchall()
-        cursor.close()
-        conn = sqlite3.connect('db.db')
-        cursor = conn.cursor()
-        cursor.execute(f"SELECT last_content FROM admins WHERE user_id = '{message.from_user.id}'")
-        content = cursor.fetchall()
-        cursor.execute(f"SELECT `real_name` FROM users WHERE chat_id = '{message.from_user.id}'")
-        name = cursor.fetchall()
-        cursor.execute(f"SELECT `time` FROM admins WHERE user_id = '{message.from_user.id}'")
-        time2 = cursor.fetchall()
-        cursor.close()
-        for user in id_users:
-            try:
-                a = f'Рассылка от пользователя: <b>{name[0][0]}</b>\n' + '\n ➖➖➖➖➖➖ \n\n' + f'<i>{content[0][0]}</i>'
-                conn = sqlite3.connect('db.db')
-                cursor = conn.cursor()
-                cursor.execute(
-                    f"INSERT INTO mail(`chat_id`, `event1`, `time`, `30min`, `5min`) values ({user[0]}, "
-                    f"'{content[0][0]}', {time2[0][0]}, {1}, {1})")
-
-                conn.commit()
-                conn.close()
-                await dp.bot.send_message(user[0], a, parse_mode='HTML')
-            except:
-                pass
-
-        await dp.bot.send_message(message.from_user.id,
-                                  f'Ваша рассылка: <b>{content[0][0]}</b>\nУспешно отправлена всем!'
-                                  , parse_mode='HTML')
-        state = dp.current_state(user=message.from_user.id)
-        await state.set_state(AdminPanel.all()[3])
-        is_succeed = False
-        conn = sqlite3.connect('db.db')
-        cursor = conn.cursor()
-        cursor.execute(f"SELECT user_id FROM admins")
-        result_set = cursor.fetchall()
-        cursor.close()
-        for item in result_set:
-            if item[0] == message.from_user.id:
-                is_succeed = True
-        if is_succeed:
-            await message.reply('Успешно! ✨'
-                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
-            conn.commit()
-            conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
-        else:
-            await message.reply('Успешно! ✨'
-                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
-            conn.commit()
-            conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
-
-    elif switch_text == 'изменить':
-        state = dp.current_state(user=message.from_user.id)
-        await state.set_state(AdminPanel.all()[0])
-        await message.reply("Выберите действие ✨", reply_markup=KeyBoards.admin_panel)
 
 
 @dp.message_handler(state=AdminPanel.ADMIN_1)
@@ -1614,6 +1457,339 @@ async def process_admin_command1(message: types.Message):
         await message.reply("Выберите действие ✨", reply_markup=KeyBoards.admin_panel)
 
 
+@dp.message_handler(state=AdminPanel.ADMIN_7)
+async def process_admin_command1(message: types.Message):
+    switch_text = message.text.lower()
+    if message.text == '/start':
+        if message.from_user.username != None:
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+        else:
+            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot!🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+
+    elif switch_text == "регистрация":
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state(Register.all()[0])
+        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
+    if switch_text == 'меню':
+        is_succeed = False
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT user_id FROM admins")
+        result_set = cursor.fetchall()
+        cursor.close()
+        for item in result_set:
+            if item[0] == message.from_user.id:
+                is_succeed = True
+        if is_succeed:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+        else:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+    else:
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"UPDATE admins SET last_content = '{message.text}' WHERE user_id = '{message.from_user.id}'")
+        conn.commit()
+        conn.close()
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state(AdminPanel.all()[8])
+        await message.reply("Выберите таймер:", reply_markup=KeyBoards.time_kb)
+
+
+@dp.message_handler(state=AdminPanel.ADMIN_8)
+async def process_admin_command4(message: types.Message):
+    switch_text = message.text.lower()
+    if message.text == '/start':
+        if message.from_user.username != None:
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+        else:
+            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot!🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+
+    elif switch_text == "регистрация":
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state(Register.all()[0])
+        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
+    if switch_text == 'меню':
+        is_succeed = False
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT user_id FROM admins")
+        result_set = cursor.fetchall()
+        cursor.close()
+        for item in result_set:
+            if item[0] == message.from_user.id:
+                is_succeed = True
+        if is_succeed:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+        else:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+    else:
+        m = {'1 час': 60 * 60, "2 часа": 60 * 60 * 2, "6 часов": 60 * 60 * 6, "12 часов": 60 * 60 * 12,
+             "24 часа": 60 * 60 * 24,
+             "2 дня": 60 * 60 * 48, "Неделя": 60 * 60 * 24 * 7}
+        if m[message.text]:
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(
+                f"UPDATE admins SET `time` = '{round(time.time() + m[message.text])}' WHERE user_id = '{message.from_user.id}'")
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.set_state(AdminPanel.all()[9])
+            await message.reply('Вы точно хотите отправить рассылку?', reply=False, reply_markup=KeyBoards.
+                                yes_or_no_keyboard)
+
+
+@dp.message_handler(state=AdminPanel.ADMIN_9)
+async def process_admin_command1(message: types.Message):
+    switch_text = message.text.lower()
+    if message.text == '/start':
+        if message.from_user.username != None:
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+        else:
+            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot!🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+
+    elif switch_text == "регистрация":
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state(Register.all()[0])
+        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
+    if switch_text == 'меню':
+        is_succeed = False
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT user_id FROM admins")
+        result_set = cursor.fetchall()
+        cursor.close()
+        for item in result_set:
+            if item[0] == message.from_user.id:
+                is_succeed = True
+        if is_succeed:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+        else:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+    elif switch_text == 'да':
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT chat_id FROM users")
+        id_users = cursor.fetchall()
+        cursor.close()
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT last_content FROM admins WHERE user_id = '{message.from_user.id}'")
+        content = cursor.fetchall()
+        cursor.execute(f"SELECT `real_name` FROM users WHERE chat_id = '{message.from_user.id}'")
+        name = cursor.fetchall()
+        cursor.execute(f"SELECT `time` FROM admins WHERE user_id = '{message.from_user.id}'")
+        time2 = cursor.fetchall()
+        cursor.close()
+        for user in id_users:
+            try:
+                a = f'Рассылка от пользователя: <b>{name[0][0]}</b>\n' + '\n ➖➖➖➖➖➖ \n\n' + f'<i>{content[0][0]}</i>'
+                conn = sqlite3.connect('db.db')
+                cursor = conn.cursor()
+                cursor.execute(
+                    f"INSERT INTO mail(`chat_id`, `event1`, `time`, `30min`, `5min`) values ({user[0]}, "
+                    f"'{content[0][0]}', {time2[0][0]}, {1}, {1})")
+
+                conn.commit()
+                conn.close()
+                await dp.bot.send_message(user[0], a, parse_mode='HTML')
+            except:
+                pass
+
+        await dp.bot.send_message(message.from_user.id,
+                                  f'Ваша рассылка: <b>{content[0][0]}</b>\nУспешно отправлена всем!'
+                                  , parse_mode='HTML')
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state(AdminPanel.all()[3])
+        is_succeed = False
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT user_id FROM admins")
+        result_set = cursor.fetchall()
+        cursor.close()
+        for item in result_set:
+            if item[0] == message.from_user.id:
+                is_succeed = True
+        if is_succeed:
+            await message.reply('Успешно! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+        else:
+            await message.reply('Успешно! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+
+    elif switch_text == 'изменить':
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state(AdminPanel.all()[0])
+        await message.reply("Выберите действие ✨", reply_markup=KeyBoards.admin_panel)
+
+
+#endregion
+
+#region payHandler
 @dp.message_handler(state=Pay.PAY_DISTRIBUTOR)
 async def process_buy_command0(message: types.Message):
     switch_text = message.text.lower()
@@ -1928,6 +2104,7 @@ async def process_buy_command01(message: types.Message):
             await bot.send_message(message.from_user.id, "Вы неправильно ввели данные, попробуйте еще раз  "
                                                          "(Нажмите кнопку выбора действия)")
 
+#endregion payHandler
 
 @dp.pre_checkout_query_handler(lambda query: True)
 async def process_pre_checkout_query(pre_checkout_query: types.PreCheckoutQuery):
@@ -2036,6 +2213,8 @@ async def name_change(message: types.Message):
             state = dp.current_state(user=message.from_user.id)
             await state.reset_state()
 
+
+#region registerHandler
 
 @dp.message_handler(state=Register.REGISTER_0)
 async def register_1(message: types.Message):
@@ -2658,7 +2837,10 @@ async def register_3(message: types.Message):
             state = dp.current_state(user=message.from_user.id)
             await state.reset_state()
 
+#endregion
 
+
+#region schedule_userHandler
 @dp.message_handler(state=ScheduleUser.SCHEDULE_USER_0)
 async def schedule_0(msg: types.Message):
     switch_text = msg.text.lower()
@@ -3881,6 +4063,7 @@ async def register_3(message: types.Message):
                 timetable_message += 'В следующую субботу пар нет!\n Отличный повод увидеться с друзьями! 🎉'
             await message.reply(timetable_message, parse_mode="HTML")
 
+#endregion
 
 @dp.message_handler(state=Schedule.SCHEDULE_0)
 async def register_3(message: types.Message):
@@ -4741,170 +4924,6 @@ async def handler_message(msg: types.Message):
         await state.set_state(Pay.all()[0])
         await msg.reply("Разработчики благодарны вам, что вы используете их телеграм-бота. Спасибо вам! 😘"
                         , reply_markup=KeyBoards.developer_support_kb)
-
-
-class MyThread(Thread):
-    def __init__(self, event):
-        Thread.__init__(self)
-        self.stopped = event
-
-    def run(self):
-        global adding
-        while not self.stopped.wait(3):
-            conn = sqlite3.connect('db.db')
-
-            cursor = conn.cursor()
-            cursor.execute(f"SELECT * FROM `times` WHERE `time` <=  strftime('%s', 'now') + 1800;")
-            result_set30 = cursor.fetchall()
-            for item in result_set30:
-                cursor.execute(f"SELECT `real_name` FROM `users` WHERE `chat_id` = {item[0]}")
-                real_name = cursor.fetchall()
-                cursor.execute(f"SELECT `30min` FROM `times` WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
-                state = cursor.fetchall()
-                if state[0][0] == 1:
-                    cursor.execute(
-                        f"UPDATE `times` SET `30min`= {0} WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
-                    bot2.send_message(item[0], f'{real_name[0][0]}! Мероприятие: {item[1]} состоится через пол часа')
-
-            cursor = conn.cursor()
-            cursor.execute(f"SELECT * FROM `times` WHERE `time` <=  strftime('%s', 'now') + 300;")
-            result_set5 = cursor.fetchall()
-            for item in result_set5:
-                cursor.execute(f"SELECT `real_name` FROM `users` WHERE `chat_id` = {item[0]}")
-                real_name = cursor.fetchall()
-                cursor.execute(f"SELECT `5min` FROM `times` WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
-                state = cursor.fetchall()
-                if state[0][0] == 1:
-                    cursor.execute(
-                        f"UPDATE `times` SET `5min`= {0} WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
-                    bot2.send_message(item[0], f'{real_name[0][0]}! Мероприятие: {item[1]} состоится через пять минут')
-
-            cursor = conn.cursor()
-            cursor.execute(f"SELECT * FROM `times` WHERE `time` <=  strftime('%s', 'now');")
-            result_set = cursor.fetchall()
-            cursor.execute(f"DELETE FROM `times` WHERE `time` <=  strftime('%s', 'now');")
-            conn.commit()
-            for item in result_set:
-                cursor.execute(f"SELECT `real_name` FROM `users` WHERE `chat_id` = {item[0]}")
-                real_name = cursor.fetchall()
-                bot2.send_message(item[0], f'{real_name[0][0]}! Ваше мероприятие: {item[1]}\nокончено')
-
-            cursor = conn.cursor()
-            cursor.execute(f"SELECT * FROM `mail` WHERE `time` <=  strftime('%s', 'now') + 1800;")
-            result_set30 = cursor.fetchall()
-            for item in result_set30:
-                cursor.execute(f"SELECT `real_name` FROM `users` WHERE `chat_id` = {item[0]}")
-                real_name = cursor.fetchall()
-                cursor.execute(f"SELECT `30min` FROM `mail` WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
-                state = cursor.fetchall()
-                if state[0][0] == 1:
-                    cursor.execute(
-                        f"UPDATE `mail` SET `30min`= {0} WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
-                    bot2.send_message(item[0], f'{real_name[0][0]}! Рассылка: {item[1]} состоится через пол часа')
-
-            cursor = conn.cursor()
-            cursor.execute(f"SELECT * FROM `mail` WHERE `time` <=  strftime('%s', 'now') + 300;")
-            result_set5 = cursor.fetchall()
-            for item in result_set5:
-                cursor.execute(f"SELECT `real_name` FROM `users` WHERE `chat_id` = {item[0]}")
-                real_name = cursor.fetchall()
-                cursor.execute(f"SELECT `5min` FROM `mail` WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
-                state = cursor.fetchall()
-                if state[0][0] == 1:
-                    cursor.execute(
-                        f"UPDATE `mail` SET `5min`= {0} WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
-                    bot2.send_message(item[0], f'{real_name[0][0]}! Рассылка: {item[1]} состоится через пять минут')
-
-            cursor = conn.cursor()
-            cursor.execute(f"SELECT * FROM `mail` WHERE `time` <=  strftime('%s', 'now');")
-            result_set_del = cursor.fetchall()
-            cursor.execute(f"DELETE FROM `mail` WHERE `time` <=  strftime('%s', 'now');")
-            conn.commit()
-            conn.close()
-            for item in result_set_del:
-                conn = sqlite3.connect('db.db')
-                cursor = conn.cursor()
-                cursor.execute(f"SELECT `real_name` FROM `users` WHERE `chat_id` = {item[0]}")
-                real_name = cursor.fetchall()
-                conn.commit()
-                conn.close()
-                bot2.send_message(item[0], f'{real_name[0][0]}! Рассылка: {item[1]} закончилась')
-
-
-class MyThread2(Thread):
-    def __init__(self, event):
-        Thread.__init__(self)
-        self.stopped = event
-
-    def run(self):
-        global adding
-        while not self.stopped.wait(60):
-            url = 'https://edu.sfu-kras.ru/timetable'
-            response = requests.get(url).text
-            match = re.search(r'Идёт\s\w{8}\sнеделя', response)
-            if match:
-                current_week = "1"
-            else:
-                current_week = "2"
-            conn = sqlite3.connect('db.db')
-            cursor = conn.cursor()
-            cursor.execute(f"SELECT user_group FROM users")
-            result_set = cursor.fetchall()
-            cursor.close()
-            listing = []
-            for i in result_set:
-                listing.append(i)
-            listing = list(set(listing))
-            for i in listing:
-                url = f'http://edu.sfu-kras.ru/api/timetable/get?target={i[0]}'
-                response = requests.get(url).json()
-                adding = []
-                date = datetime.datetime.today()
-                date_date = date.strftime('%H:%M')
-                date_split = date_date.split(':')
-                listing_date_split = []
-                for n in date_split:
-                    n = int(n)
-                    listing_date_split.append(n)
-                listing_date_sum = listing_date_split[0]*60+listing_date_split[1]
-                for item in response["timetable"]:
-                    if item["week"] == current_week:
-                        adding.append(
-                            [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
-                date1 = datetime.datetime.today()
-                now = datetime.datetime.weekday(date1)+1
-                for j in adding:
-                    if int(j[0]) == now:
-                        a = j[1].split('-')
-                        if date_date == a[0]:
-                            conn = sqlite3.connect('db.db')
-                            cursor = conn.cursor()
-                            cursor.execute(f"SELECT chat_id, real_name FROM users WHERE user_group = '{i[0]}'")
-                            id_group = cursor.fetchall()
-                            cursor.close()
-                            for k in id_group:
-                                if j[5] == "":
-                                    bot2.send_message(k[0], f'{k[1]}, у вас начался {j[2]}')
-                                else:
-                                    bot2.send_message(k[0], f'{k[1]}, у вас начался {j[2]} в {j[5]}')
-                        date_kur = a[0].split(':')
-                        listing_date = []
-                        for n in date_kur:
-                            n = int(n)
-                            listing_date.append(n)
-                        listing_date_sum2 = listing_date[0] * 60 + listing_date[1]
-                        if listing_date_sum == listing_date_sum2 - 5:
-                            conn = sqlite3.connect('db.db')
-                            cursor = conn.cursor()
-                            cursor.execute(f"SELECT chat_id, real_name FROM users WHERE user_group = '{i[0]}'")
-                            id_group = cursor.fetchall()
-                            cursor.close()
-                            for k in id_group:
-                                if j[5] == "":
-                                    bot2.send_message(k[0], f'{k[1]}, у вас через 5 минут начнется {j[2]}')
-                                else:
-                                    bot2.send_message(k[0], f'{k[1]}, у вас начнется {j[2]} через 5 минут в {j[5]}')
-
 
 if __name__ == "__main__":
     stopFlag = threading.Event()
