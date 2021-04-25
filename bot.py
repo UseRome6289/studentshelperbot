@@ -218,7 +218,6 @@ async def process_command1(message: types.Message):
             incoming_events.pop(message.from_user.id)
             conn.commit()
             conn.close()
-
             is_succeed = False
             conn = sqlite3.connect('db.db')
             cursor = conn.cursor()
@@ -1818,7 +1817,6 @@ async def process_buy_command01(message: types.Message):
                                payload='some-invoice-payload-for-our-internal-use'
                                )
     elif switch_text == "поддержать разработчиков 1000 рублей":
-        print(PRICE1000)
         if PAYMENTS_PROVIDER_TOKEN.split(':')[1] == 'TEST':
             await bot.send_message(message.chat.id, MESSAGES['pre_buy_demo_alert'])
         await bot.send_invoice(message.chat.id,
