@@ -1,4 +1,4 @@
-#region imports
+# region imports
 import re
 import sqlite3
 import threading
@@ -20,10 +20,10 @@ from messages import MESSAGES
 from utils import Register, Change, Pay, AdminPanel, ScheduleUser, Events, Schedule, CheckSchedule, Delete
 
 
-#endregion
+# endregion
 
 
-#region global
+# region global
 async def shutdown(dispatcher: Dispatcher):
     await dispatcher.storage.close()
     await dispatcher.storage.wait_closed()
@@ -168,13 +168,13 @@ class MyThread2(Thread):
                 for n in date_split:
                     n = int(n)
                     listing_date_split.append(n)
-                listing_date_sum = listing_date_split[0]*60+listing_date_split[1]
+                listing_date_sum = listing_date_split[0] * 60 + listing_date_split[1]
                 for item in response["timetable"]:
                     if item["week"] == current_week:
                         adding.append(
                             [item['day'], item['time'], item['subject'], item['type'], "", item['place']])
                 date1 = datetime.datetime.today()
-                now = datetime.datetime.weekday(date1)+1
+                now = datetime.datetime.weekday(date1) + 1
                 for j in adding:
                     if int(j[0]) == now:
                         a = j[1].split('-')
@@ -208,8 +208,7 @@ class MyThread2(Thread):
                                     bot2.send_message(k[0], f'{k[1]}, у вас начнется {j[2]} через 5 минут в {j[5]}')
 
 
-#endregions
-
+# endregions
 
 
 @dp.message_handler(state='*', commands='start')
@@ -269,8 +268,7 @@ async def process_start_command(message: types.Message):
     await state.set_state(Register.all()[0])
 
 
-
-#region userHandler
+# region userHandler
 @dp.message_handler(state=Events.EVENTS_USER_0)
 async def process_command0(message: types.Message):
     switch_text = message.text.lower()
@@ -371,9 +369,10 @@ async def process_command1(message: types.Message):
                 state = dp.current_state(user=message.from_user.id)
                 await state.reset_state()
 
-#endregion
 
-#region adminHandler
+# endregion
+
+# region adminHandler
 @dp.message_handler(state=AdminPanel.ADMIN_0)
 async def process_admin_command2(message: types.Message):
     switch_text = message.text.lower()
@@ -482,7 +481,8 @@ async def process_admin_command4(message: types.Message):
     else:
         conn = sqlite3.connect('db.db')
         cursor = conn.cursor()
-        cursor.execute(f"UPDATE admins SET inst = '{messages.institutes[message.text]}' WHERE user_id = '{message.from_user.id}'")
+        cursor.execute(
+            f"UPDATE admins SET inst = '{messages.institutes[message.text]}' WHERE user_id = '{message.from_user.id}'")
         conn.commit()
         cursor.execute(f"SELECT inst FROM admins WHERE user_id = '{message.from_user.id}'")
         inst = cursor.fetchall()[0][0]
@@ -851,9 +851,9 @@ async def process_admin_command1(message: types.Message):
         await message.reply("Выберите действие ✨", reply_markup=KeyBoards.admin_panel)
 
 
-#endregion
+# endregion
 
-#region payHandler
+# region payHandler
 @dp.message_handler(state=Pay.PAY_DISTRIBUTOR)
 async def process_buy_command0(message: types.Message):
     switch_text = message.text.lower()
@@ -1012,8 +1012,8 @@ async def process_buy_command01(message: types.Message):
             await bot.send_message(message.from_user.id, "Вы неправильно ввели данные, попробуйте еще раз  "
                                                          "(Нажмите кнопку выбора действия)")
 
-#endregion payHandler
 
+# endregion payHandler
 
 
 @dp.pre_checkout_query_handler(lambda query: True)
@@ -1071,7 +1071,7 @@ async def name_change(message: types.Message):
         await state.reset_state()
 
 
-#region registerHandler
+# region registerHandler
 
 # start
 @dp.message_handler(state=Register.REGISTER_0)
@@ -1085,6 +1085,8 @@ async def register_1(message: types.Message):
         state = dp.current_state(user=message.from_user.id)
         await state.set_state(Register.all()[4])
         await message.reply("Ну начнем знакомство! 😉\nВведите вашу фамилию:")
+
+
 # name
 @dp.message_handler(state=Register.REGISTER_1)
 async def register_2(message: types.Message):
@@ -1101,27 +1103,27 @@ async def register_2(message: types.Message):
 # inst
 @dp.message_handler(state=Register.REGISTER_2)
 async def register_2(message: types.Message):
-        conn = sqlite3.connect('db.db')
-        cursor = conn.cursor()
-        cursor.execute(f"UPDATE users SET school = '{messages.institutes[message.text]}' WHERE chat_id = '{message.from_user.id}'")
-        conn.commit()
-        cursor.execute(f"SELECT school FROM users WHERE chat_id = '{message.from_user.id}'")
-        inst = cursor.fetchall()[0][0]
-        keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
-        url = 'https://edu.sfu-kras.ru/api/timetable/groups'
-        response = requests.get(url).json()
-        for item in response:
-            if item['institute'] == inst:
-                keyboard.add(item['name'])
-        await message.reply(messages.group_message, reply_markup=keyboard)
-        state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[3])
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
+    cursor.execute(
+        f"UPDATE users SET school = '{messages.institutes[message.text]}' WHERE chat_id = '{message.from_user.id}'")
+    conn.commit()
+    cursor.execute(f"SELECT school FROM users WHERE chat_id = '{message.from_user.id}'")
+    inst = cursor.fetchall()[0][0]
+    keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
+    url = 'https://edu.sfu-kras.ru/api/timetable/groups'
+    response = requests.get(url).json()
+    for item in response:
+        if item['institute'] == inst:
+            keyboard.add(item['name'])
+    await message.reply(messages.group_message, reply_markup=keyboard)
+    state = dp.current_state(user=message.from_user.id)
+    await state.set_state(Register.all()[3])
 
 
 # group
 @dp.message_handler(state=Register.REGISTER_3)
 async def register_3(message: types.Message):
-
     conn = sqlite3.connect('db.db')
     cursor = conn.cursor()
     cursor.execute(f"UPDATE users SET user_group = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
@@ -1193,11 +1195,10 @@ async def register_5(message: types.message):
         await state.reset_state()
 
 
+# endregion
 
-#endregion
 
-
-#region schedule_userHandler
+# region schedule_userHandler
 @dp.message_handler(state=ScheduleUser.SCHEDULE_USER_0)
 async def schedule_0(msg: types.Message):
     inst = messages.institutes[msg.text]
@@ -1833,10 +1834,11 @@ async def schedule_1(message: types.Message):
                 timetable_message += 'В следующую субботу пар нет!\n Отличный повод увидеться с друзьями! 🎉'
             await message.reply(timetable_message, parse_mode="HTML")
 
-#endregion
+
+# endregion
 
 @dp.message_handler(state=Schedule.SCHEDULE_0)
-async def schedule (message: types.Message):
+async def schedule(message: types.Message):
     global group
     switch_text = message.text.lower()
     if switch_text == 'меню':
@@ -2366,7 +2368,7 @@ async def schedule (message: types.Message):
 async def schedule_check(msg: types.Message):
     if msg.text.lower() == "меню":
         await msg.reply('Вы в меню! ✨'
-                            , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+                        , reply=False, reply_markup=KeyBoards.menu_admin_kb)
         state = dp.current_state(user=msg.from_user.id)
         await state.reset_state()
     else:
@@ -2930,12 +2932,12 @@ async def schedule_check(msg: types.Message):
             state = dp.current_state(user=msg.from_user.id)
             await state.set_state(Schedule.all()[0])
             await msg.reply('Выберите день недели 👇'
-                                , reply=False, reply_markup=KeyBoards.day_of_the_week_kb2)
+                            , reply=False, reply_markup=KeyBoards.day_of_the_week_kb2)
         conn.close()
 
 
 @dp.message_handler(state=Delete.DELETE_EVENTS_0)
-async def schedule (message: types.Message):
+async def schedule(message: types.Message):
     global group
     switch_text = message.text.lower()
     if switch_text == 'меню':
@@ -2977,7 +2979,7 @@ async def schedule (message: types.Message):
 
 
 @dp.message_handler(state=Delete.DELETE_EVENTS_1)
-async def schedule (message: types.Message):
+async def schedule(message: types.Message):
     global group
     switch_text = message.text.lower()
     if switch_text == 'меню':
@@ -3044,7 +3046,7 @@ async def schedule(message: types.Message):
         conn = sqlite3.connect('db.db')
         cursor = conn.cursor()
         cursor.execute(
-            f"DELETE FROM `mail` WHERE (`mail` ==  {message.from_user.id} AND `event1` == '{incoming_events2[message.from_user.id]}');")
+            f"DELETE FROM `mail` WHERE (`chat_id` ==  {message.from_user.id} AND `event1` == '{incoming_events2[message.from_user.id]}');")
         incoming_events2.pop(message.from_user.id)
         conn.commit()
         conn.close()
@@ -3261,12 +3263,14 @@ async def handler_message(msg: types.Message):
     elif switch_text == "профиль":
         conn = sqlite3.connect('db.db')
         cursor = conn.cursor()
-        cursor.execute(f"SELECT chat_id, real_name, user_group FROM users")
+        cursor.execute(f"SELECT chat_id, real_name, school, user_group FROM users")
         result_set = cursor.fetchall()
         for i in result_set:
             if i[0] == msg.from_user.id:
                 await bot.send_message(msg.from_user.id, f"Ваше ФИО: <b>{i[1]}</b>\n"
-                                                         f"Ваша группа: <i><b>{i[2]}</b></i> 🎓", parse_mode="HTML")
+                                                         f"Ваш институт: <i><b>{i[2]}</b></i> 🎓\n"
+                                                         f"Ваша группа: <i><b>{i[3]}</b></i> 🎓"
+                                       , parse_mode="HTML")
         conn.commit()
         conn.close()
     elif switch_text == "настройки":
@@ -3324,8 +3328,8 @@ async def handler_message(msg: types.Message):
                     local_time[1] = "Декабря"
 
                 a = a + f" - <b>{item[1]}</b>" + '\n' + \
-                                         f'Это мероприятие заканчивается {local_time[2]} {local_time[1]} ' \
-                                         f'({local_time[0]}) {local_time[4]} года в {local_time[3]} ' + '\n'
+                    f'Это мероприятие заканчивается {local_time[2]} {local_time[1]} ' \
+                    f'({local_time[0]}) {local_time[4]} года в {local_time[3]} ' + '\n'
         await msg.reply(a, reply_markup=KeyBoards.events_kb, parse_mode="HTML")
 
     elif switch_text == "изменить информацию":
@@ -3379,22 +3383,36 @@ async def handler_message(msg: types.Message):
         state = dp.current_state(user=msg.from_user.id)
         await state.set_state(Change.all()[0])
         await bot.send_message(msg.from_user.id, "Введите ваше ФИО 👇")
+
     # Изменение группы
     elif switch_text == "изменить группу":
         conn = sqlite3.connect('db.db')
         cursor = conn.cursor()
-        cursor.execute(f"SELECT chat_id, user_group, school, course FROM users")
+        cursor.execute(f"SELECT chat_id, user_group, school FROM users")
         result_set = cursor.fetchall()
         for i in result_set:
             if i[0] == msg.from_user.id:
                 await bot.send_message(msg.from_user.id,
-                                       f"Ваш институт: <b>{i[2]}</b>\nВаш курс: <b>{i[3]}</b>\nВаша группа:"
+                                       f"Ваш институт: <b>{i[2]}</b>\nВаша группа:"
                                        f" <b>{i[1]}</b>\n", parse_mode='HTML')
         conn.commit()
         conn.close()
         state = dp.current_state(user=msg.from_user.id)
-        await state.set_state(Register.all()[1])
-        await msg.reply("Выберите ваш институт 👇", reply_markup=KeyBoards.institute_kb)
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT chat_id, is_teacher FROM users")
+        result_set = cursor.fetchall()
+        is_teacher = False
+        for item in result_set:
+            if item[0] == msg.from_user.id:
+                if item[1] == 'True':
+                    is_teacher = True
+        if is_teacher:
+            await state.set_state(Register.all()[4])
+            await msg.reply("Введите вашу фамилию:")
+        else:
+            await state.set_state(Register.all()[2])
+            await msg.reply("Выберите ваш институт 👇", reply_markup=KeyBoards.institute_kb)
 
     elif switch_text == "посмотреть расписание другой группы":
         await msg.reply("Выберите институт: 🎓", reply_markup=KeyBoards.institute_kb)
@@ -3408,7 +3426,6 @@ async def handler_message(msg: types.Message):
                         , reply_markup=KeyBoards.developer_support_kb)
     elif switch_text == "test":
         await msg.reply(f"{messages.greets_msg}")
-
 
 
 @dp.message_handler(commands='help')
@@ -3470,5 +3487,4 @@ if __name__ == "__main__":
     thread2.start()
     executor.start_polling(dp, on_shutdown=shutdown, skip_updates=shutdown)
 
-
-# парсинг кнопок, удаление мероприятий и удаление рассылок, тестовый платеж убрать, визуализация
+#  тестовый платеж убрать, визуализация, защита от sql инъекций
