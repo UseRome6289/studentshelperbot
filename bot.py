@@ -3940,8 +3940,51 @@ async def handler_message(msg: types.Message):
         for item in result_set:
             if item[0] == msg.from_user.id:
                 local_time = time.ctime(item[2])
-                a = a + item[1] + '\n' + 'Это мероприятие заканчивается: ' + local_time + '\n'
-        await msg.reply(a, reply_markup=KeyBoards.events_kb)
+                local_time = local_time.split(' ')
+                # день недели
+                if local_time[0] == "Mon":
+                    local_time[0] = "Понедельник"
+                if local_time[0] == "Tue":
+                    local_time[0] = "Вторник"
+                if local_time[0] == "Wed":
+                    local_time[0] = "Среда"
+                if local_time[0] == "Thu":
+                    local_time[0] = "Чеверг"
+                if local_time[0] == "Fri":
+                    local_time[0] = "Пятница"
+                if local_time[0] == "Sat":
+                    local_time[0] = "Суббота"
+                if local_time[0] == "Sun":
+                    local_time[0] = "Воскресенье"
+                # месяц
+                if local_time[1] == "Jan":
+                    local_time[1] = "Января"
+                if local_time[1] == "Feb":
+                    local_time[1] = "Февраля"
+                if local_time[1] == "Mar":
+                    local_time[1] = "Марта"
+                if local_time[1] == "Apr":
+                    local_time[1] = "Апреля"
+                if local_time[1] == "May":
+                    local_time[1] = "Мая"
+                if local_time[1] == "June":
+                    local_time[1] = "Июня"
+                if local_time[1] == "July":
+                    local_time[1] = "Июля"
+                if local_time[1] == "Aug":
+                    local_time[1] = "Августа"
+                if local_time[1] == "Sept":
+                    local_time[1] = "Сентября"
+                if local_time[1] == "Oct":
+                    local_time[1] = "Октября"
+                if local_time[1] == "Nov":
+                    local_time[1] = "Ноября"
+                if local_time[1] == "Dec":
+                    local_time[1] = "Декабря"
+
+                a = a + f" - <b>{item[1]}</b>" + '\n' + f'Это мероприятие заканчивается {local_time[2]} {local_time[1]} ' \
+                                         f'({local_time[0]}) {local_time[4]} года в {local_time[3]} ' + '\n'
+        await msg.reply(a, reply_markup=KeyBoards.events_kb, parse_mode="HTML")
 
     elif switch_text == "изменить информацию":
         await msg.reply("Выберите, что хотите изменить 👇", reply_markup=KeyBoards.change_information_kb)
@@ -4007,4 +4050,4 @@ if __name__ == "__main__":
     executor.start_polling(dp, on_shutdown=shutdown, skip_updates=shutdown)
 
 
-# руссификация дат, парсинг кнопок, удаление мероприятий и удаление рассылок, тестовый платеж убрать, визуализация
+# парсинг кнопок, удаление мероприятий и удаление рассылок, тестовый платеж убрать, визуализация
