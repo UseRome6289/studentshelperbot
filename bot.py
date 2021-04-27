@@ -237,28 +237,7 @@ async def process_command0(message: types.Message):
                                 '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+            await message.reply(messages.greets_msg, reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
         state = dp.current_state(user=message.from_user.id)
@@ -326,32 +305,11 @@ async def process_command1(message: types.Message):
                                 '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+            await message.reply(messages.greets_msg, reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
         state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
+        await state.set_state(Register.all()[1])
         await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
     if switch_text == 'меню':
         is_succeed = False
@@ -444,32 +402,11 @@ async def process_admin_command2(message: types.Message):
                                 '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+            await message.reply(messages.greets_msg, reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
         state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
+        await state.set_state(Register.all()[1])
         await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
 
     if switch_text == 'меню':
@@ -537,32 +474,11 @@ async def process_admin_command1(message: types.Message):
                                 '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+            await message.reply(messages.greets_msg, reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
         state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
+        await state.set_state(Register.all()[1])
         await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
     if switch_text == 'меню':
         is_succeed = False
@@ -627,32 +543,11 @@ async def process_admin_command4(message: types.Message):
                                 '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+            await message.reply(messages.greets_msg, reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
         state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
+        await state.set_state(Register.all()[1])
         await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
     if switch_text == 'меню':
         is_succeed = False
@@ -717,32 +612,11 @@ async def process_admin_command4(message: types.Message):
                                 '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+            await message.reply(messages.greets_msg, reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
         state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
+        await state.set_state(Register.all()[1])
         await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
     if switch_text == 'меню':
         is_succeed = False
@@ -1149,32 +1023,11 @@ async def process_admin_command4(message: types.Message):
                                 '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+            await message.reply(messages.greets_msg, reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
         state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
+        await state.set_state(Register.all()[1])
         await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
     if switch_text == 'меню':
         is_succeed = False
@@ -1239,32 +1092,11 @@ async def process_admin_command4(message: types.Message):
                                 '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+            await message.reply(messages.greets_msg, reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
         state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
+        await state.set_state(Register.all()[1])
         await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
     if switch_text == 'меню':
         is_succeed = False
@@ -1335,32 +1167,11 @@ async def process_admin_command1(message: types.Message):
                                 '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+            await message.reply(messages.greets_msg, reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
         state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
+        await state.set_state(Register.all()[1])
         await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
     if switch_text == 'меню':
         is_succeed = False
@@ -1485,32 +1296,11 @@ async def process_admin_command1(message: types.Message):
                                 '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+            await message.reply(messages.greets_msg, reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
         state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
+        await state.set_state(Register.all()[1])
         await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
     if switch_text == 'меню':
         is_succeed = False
@@ -1575,32 +1365,11 @@ async def process_admin_command4(message: types.Message):
                                 '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+            await message.reply(messages.greets_msg, reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
         state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
+        await state.set_state(Register.all()[1])
         await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
     if switch_text == 'меню':
         is_succeed = False
@@ -1671,32 +1440,11 @@ async def process_admin_command1(message: types.Message):
                                 '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+            await message.reply(messages.greets_msg, reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
         state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
+        await state.set_state(Register.all()[1])
         await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
     if switch_text == 'меню':
         is_succeed = False
@@ -1818,32 +1566,11 @@ async def process_buy_command0(message: types.Message):
                                 '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+            await message.reply(messages.greets_msg, reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
         state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
+        await state.set_state(Register.all()[1])
         await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
     if message.text == 'Меню':
         is_succeed = False
@@ -1910,32 +1637,11 @@ async def process_buy_command01(message: types.Message):
                                 '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+            await message.reply(messages.greets_msg, reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
         state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
+        await state.set_state(Register.all()[1])
         await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
     if message.text == 'Меню':
         state = dp.current_state(user=message.from_user.id)
@@ -2044,32 +1750,11 @@ async def process_buy_command01(message: types.Message):
                                 '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+            await message.reply(messages.greets_msg, reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
         state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
+        await state.set_state(Register.all()[1])
         await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
     if message.text == 'Меню':
         state = dp.current_state(user=message.from_user.id)
@@ -2158,32 +1843,11 @@ async def name_change(message: types.Message):
                                 '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+            await message.reply(messages.greets_msg, reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
         state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
+        await state.set_state(Register.all()[1])
         await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
     else:
         conn = sqlite3.connect('db.db')
@@ -2220,28 +1884,122 @@ async def name_change(message: types.Message):
 @dp.message_handler(state=Register.REGISTER_0)
 async def register_1(message: types.Message):
     switch_text = message.text.lower()
-    if switch_text == "регистрация":
+    if message.text == '/start':
+        if message.from_user.username != None:
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+        else:
+            await message.reply(messages.greets_msg, reply_markup=KeyBoards.greet_kb)
+
+    elif switch_text == "регистрация":
         state = dp.current_state(user=message.from_user.id)
         await state.set_state(Register.all()[1])
         await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
 
 
+
 # name
 @dp.message_handler(state=Register.REGISTER_1)
 async def register_2(message: types.Message):
-    conn = sqlite3.connect('db.db')
-    cursor = conn.cursor()
-    cursor.execute(f"UPDATE users SET real_name = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
-    conn.commit()
-    conn.close()
-    state = dp.current_state(user=message.from_user.id)
-    await state.set_state(Register.all()[2])
-    await message.reply(messages.institute_message, reply=False, reply_markup=KeyBoards.institute_kb)
+    switch_text = message.text.lower()
+    if message.text == '/start':
+        if message.from_user.username != None:
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+        else:
+            await message.reply(messages.greets_msg, reply_markup=KeyBoards.greet_kb)
+
+    elif switch_text == "регистрация":
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state(Register.all()[1])
+        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
+    else:
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"UPDATE users SET real_name = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
+        conn.commit()
+        conn.close()
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state(Register.all()[2])
+        await message.reply(messages.institute_message, reply=False, reply_markup=KeyBoards.institute_kb)
 
 
 # inst
 @dp.message_handler(state=Register.REGISTER_2)
 async def register_2(message: types.Message):
+    switch_text = message.text.lower()
+    if message.text == '/start':
+        if message.from_user.username != None:
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+        else:
+            await message.reply(messages.greets_msg, reply_markup=KeyBoards.greet_kb)
+
+    elif switch_text == "регистрация":
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state(Register.all()[1])
+        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
+    else:
         conn = sqlite3.connect('db.db')
         cursor = conn.cursor()
         cursor.execute(f"UPDATE users SET school = '{messages.institutes[message.text]}' WHERE chat_id = '{message.from_user.id}'")
@@ -2262,31 +2020,63 @@ async def register_2(message: types.Message):
 # group
 @dp.message_handler(state=Register.REGISTER_3)
 async def register_3(message: types.Message):
+    switch_text = message.text.lower()
+    if message.text == '/start':
+        if message.from_user.username != None:
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+        else:
+            await message.reply(messages.greets_msg, reply_markup=KeyBoards.greet_kb)
 
-    conn = sqlite3.connect('db.db')
-    cursor = conn.cursor()
-    cursor.execute(f"UPDATE users SET user_group = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
-    cursor.execute(f"SELECT user_id FROM admins")
-    result_set = cursor.fetchall()
-    cursor.close()
-    is_succeed = False
-    for item in result_set:
-        if item[0] == message.from_user.id:
-            is_succeed = True
-    if is_succeed:
-        await message.reply(messages.end_of_registration_message
-                            , reply=False, reply_markup=KeyBoards.menu_admin_kb)
-        conn.commit()
-        conn.close()
+    elif switch_text == "регистрация":
         state = dp.current_state(user=message.from_user.id)
-        await state.reset_state()
+        await state.set_state(Register.all()[1])
+        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
     else:
-        await message.reply(messages.end_of_registration_message
-                            , reply=False, reply_markup=KeyBoards.menu_user_kb)
-        conn.commit()
-        conn.close()
-        state = dp.current_state(user=message.from_user.id)
-        await state.reset_state()
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"UPDATE users SET user_group = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
+        cursor.execute(f"SELECT user_id FROM admins")
+        result_set = cursor.fetchall()
+        cursor.close()
+        is_succeed = False
+        for item in result_set:
+            if item[0] == message.from_user.id:
+                is_succeed = True
+        if is_succeed:
+            await message.reply(messages.end_of_registration_message
+                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+        else:
+            await message.reply(messages.end_of_registration_message
+                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
 
 
 #endregion
@@ -2321,32 +2111,12 @@ async def schedule_0(msg: types.Message):
                                 '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await msg.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+            await msg.reply(messages.greets_msg
+                            , reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
         state = dp.current_state(user=msg.from_user.id)
-        await state.set_state(Register.all()[0])
+        await state.set_state(Register.all()[1])
         await msg.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
     else:
         conn = sqlite3.connect('db.db')
@@ -2388,32 +2158,11 @@ async def schedule_0(message: types.Message):
                                 '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+            await message.reply(messages.greets_msg, reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
         state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
+        await state.set_state(Register.all()[1])
         await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
     else:
         conn = sqlite3.connect('db.db')
@@ -2797,33 +2546,12 @@ async def register_3(message: types.Message):
                                 '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+            await message.reply(messages.greets_msg, reply_markup=KeyBoards.greet_kb)
 
 
     elif switch_text == "регистрация":
         state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
+        await state.set_state(Register.all()[1])
         await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
     else:
         conn = sqlite3.connect('db.db')
@@ -2865,32 +2593,11 @@ async def register_3(message: types.Message):
                                 '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+            await message.reply(messages.greets_msg, reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
         state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
+        await state.set_state(Register.all()[1])
         await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
     elif switch_text == 'меню':
         is_succeed = False
@@ -3217,32 +2924,11 @@ async def register_3(message: types.Message):
                                 '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+            await message.reply(messages.greets_msg, reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
         state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
+        await state.set_state(Register.all()[1])
         await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
     elif switch_text == 'меню':
         is_succeed = False
@@ -3546,32 +3232,11 @@ async def register_3(message: types.Message):
                                 '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
         else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+            await message.reply(messages.greets_msg, reply_markup=KeyBoards.greet_kb)
 
     elif switch_text == "регистрация":
         state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
+        await state.set_state(Register.all()[1])
         await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
     elif switch_text == 'меню':
         is_succeed = False
@@ -3875,7 +3540,7 @@ async def process_start_command(message: types.Message):
                                 '\n'
                                 ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
     state = dp.current_state(user=message.from_user.id)
-    await state.set_state(Register.all()[0])
+    await state.set_state(Register.all()[1])
 
 @dp.message_handler(commands='help')
 async def process_start2_command(message: types.Message):
@@ -3903,28 +3568,7 @@ async def process_start2_command(message: types.Message):
                             '\n'
                             ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
     else:
-        await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                            '\n - Here you can always find the current schedule 🎓'
-                            '\n - Set reminders 🍻'
-                            '\n - Mailing lists from teachers ✉'
-                            '\n - View the current schedule of another group ✌'
-                            '\n - Support developers 👌'
-                            '\n - We have our own PevCoin (currency in development) 💵'
-                            '\n'
-                            '\n  Registering? ✨'
-                            '\n'
-                            '\n ➖➖➖➖➖➖'
-                            '\n'
-                            '\n'
-                            f'Добро пожаловать в StudentHelperBot!🔥\n'
-                            '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                            '\n - Поставить напоминания 🍻'
-                            '\n - Рассылки от преподавателей ✉'
-                            '\n - Посмотреть актуальное расписание другой группы ✌'
-                            '\n - Поддержать разработчиков 👌'
-                            '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                            '\n'
-                            ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+        await message.reply(messages.greets_msg, reply_markup=KeyBoards.greet_kb)
 
 
 @dp.message_handler(state='*', content_types=["text"])
