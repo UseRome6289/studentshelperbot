@@ -60,3 +60,11 @@ class Events(Helper):
     mode = HelperMode.snake_case
     EVENTS_USER_0 = ListItem()
     EVENTS_USER_1 = ListItem()
+
+
+class Delete(Helper):
+    mode = HelperMode.snake_case
+    DELETE_EVENTS_0 = ListItem()
+    DELETE_EVENTS_1 = ListItem()
+    DELETE_EVENTS_2 = ListItem()
+    DELETE_EVENTS_3 = ListItem()

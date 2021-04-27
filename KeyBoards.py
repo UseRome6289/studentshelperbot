@@ -16,7 +16,7 @@ menu_user_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Расписани
     .add("Настройки").add("Поддержка разработчиков")
 
 # Рассылки
-mailing_lists_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Изменить рассылки").add("Меню")
+mailing_lists_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Удалить рассылку").add("Меню")
 
 # Профиль
 profile_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Меню")
@@ -35,9 +35,10 @@ mailing_lists_kb2 = ReplyKeyboardMarkup(resize_keyboard=True).add("Меню")
 # Отправление рассылок из админ-панели
 admin_panel = ReplyKeyboardMarkup(resize_keyboard=True).add("Отправить рассылку")\
     .add('Отправить рассылку всем пользователям').add("Меню")
-
+admin_panel_teacher = ReplyKeyboardMarkup(resize_keyboard=True).add("Отправить рассылку")\
+    .add("Меню")
 # Запланированные мероприятия
-events_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Добавить мероприятие").add("Меню")
+events_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Добавить мероприятие").add("Удалить мероприятие").add("Меню")
 
 # Универсальная кнопка(просто в меню)
 universal_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Меню")
@@ -75,6 +76,7 @@ markup_request = ReplyKeyboardMarkup(resize_keyboard=True).add(
 return_keyboard = ReplyKeyboardMarkup(resize_keyboard=True).add("Меню")
 
 yes_or_no_keyboard = ReplyKeyboardMarkup(resize_keyboard=True).add("Да").add("Изменить").add("Меню")
+yes_or_no_keyboard2 = ReplyKeyboardMarkup(resize_keyboard=True).add("Да").add("Меню")
 time_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("1 час").add('2 часа').add("6 часов").add("12 часов")\
     .add('24 часа')\
     .add('2 дня').add('Неделя').add('Меню')

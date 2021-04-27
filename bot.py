@@ -17,7 +17,8 @@ import KeyBoards
 import messages
 from config import TOKEN, PAYMENTS_PROVIDER_TOKEN, TIME_MACHINE_IMAGE_URL
 from messages import MESSAGES
-from utils import Register, Change, Pay, AdminPanel, ScheduleUser, Events, Schedule, CheckSchedule
+from utils import Register, Change, Pay, AdminPanel, ScheduleUser, Events, Schedule, CheckSchedule, Delete
+
 
 #endregion
 
@@ -40,7 +41,7 @@ PRICE500 = types.LabeledPrice(label='Поддержка разработчико
 PRICE1000 = types.LabeledPrice(label='Поддержка разработчиков 1000 Рублей', amount=100000)
 
 incoming_events = {}
-
+incoming_events2 = {}
 
 
 class MyThread(Thread):
@@ -218,28 +219,52 @@ async def process_start_command(message: types.Message):
     cursor.execute(f"INSERT INTO users(chat_id, name) values ({message.from_user.id}, '{message.from_user.username}')")
     conn.commit()
     conn.close()
-    await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+    if message.from_user.username != None:
+        await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
+                            '\n - Here you can always find the current schedule 🎓'
+                            '\n - Set reminders 🍻'
+                            '\n - Mailing lists from teachers ✉'
+                            '\n - View the current schedule of another group ✌'
+                            '\n - Support developers 👌'
+                            '\n - We have our own PevCoin (currency in development) 💵'
+                            '\n'
+                            '\n  Registering? ✨'
+                            '\n'
+                            '\n ➖➖➖➖➖➖'
+                            '\n'
+                            '\n'
+                            f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
+                            '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                            '\n - Поставить напоминания 🍻'
+                            '\n - Рассылки от преподавателей ✉'
+                            '\n - Посмотреть актуальное расписание другой группы ✌'
+                            '\n - Поддержать разработчиков 👌'
+                            '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                            '\n'
+                            ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+    else:
+        await message.reply(f'Welcome to StudentHelperBot!🔥\n'
+                            '\n - Here you can always find the current schedule 🎓'
+                            '\n - Set reminders 🍻'
+                            '\n - Mailing lists from teachers ✉'
+                            '\n - View the current schedule of another group ✌'
+                            '\n - Support developers 👌'
+                            '\n - We have our own PevCoin (currency in development) 💵'
+                            '\n'
+                            '\n  Registering? ✨'
+                            '\n'
+                            '\n ➖➖➖➖➖➖'
+                            '\n'
+                            '\n'
+                            f'Добро пожаловать в StudentHelperBot!🔥\n'
+                            '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                            '\n - Поставить напоминания 🍻'
+                            '\n - Рассылки от преподавателей ✉'
+                            '\n - Посмотреть актуальное расписание другой группы ✌'
+                            '\n - Поддержать разработчиков 👌'
+                            '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                            '\n'
+                            ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
     state = dp.current_state(user=message.from_user.id)
     await state.set_state(Register.all()[0])
 
@@ -249,58 +274,6 @@ async def process_start_command(message: types.Message):
 @dp.message_handler(state=Events.EVENTS_USER_0)
 async def process_command0(message: types.Message):
     switch_text = message.text.lower()
-    if message.text == '/start':
-        if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-        else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-
-    elif switch_text == "регистрация":
-        state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
-        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
     if switch_text == 'меню':
         is_succeed = False
         conn = sqlite3.connect('db.db')
@@ -338,58 +311,6 @@ async def process_command0(message: types.Message):
 async def process_command1(message: types.Message):
     global timing
     switch_text = message.text.lower()
-    if message.text == '/start':
-        if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-        else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-
-    elif switch_text == "регистрация":
-        state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
-        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
     if switch_text == 'меню':
         is_succeed = False
         conn = sqlite3.connect('db.db')
@@ -456,59 +377,6 @@ async def process_command1(message: types.Message):
 @dp.message_handler(state=AdminPanel.ADMIN_0)
 async def process_admin_command2(message: types.Message):
     switch_text = message.text.lower()
-    if message.text == '/start':
-        if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-        else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-
-    elif switch_text == "регистрация":
-        state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
-        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
-
     if switch_text == 'меню':
         is_succeed = False
         conn = sqlite3.connect('db.db')
@@ -541,7 +409,7 @@ async def process_admin_command2(message: types.Message):
                             ", чтобы вернуться - меню ✨", reply_markup=KeyBoards.return_keyboard)
     elif switch_text == 'отправить рассылку всем пользователям':
         state = dp.current_state(user=message.from_user.id)
-        await state.set_state(AdminPanel.all()[7])
+        await state.set_state(AdminPanel.all()[6])
         await message.reply("Введите сообщение для рассылки"
                             ", чтобы вернуться - меню ✨", reply_markup=KeyBoards.return_keyboard)
 
@@ -549,58 +417,6 @@ async def process_admin_command2(message: types.Message):
 @dp.message_handler(state=AdminPanel.ADMIN_1)
 async def process_admin_command1(message: types.Message):
     switch_text = message.text.lower()
-    if message.text == '/start':
-        if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-        else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-
-    elif switch_text == "регистрация":
-        state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
-        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
     if switch_text == 'меню':
         is_succeed = False
         conn = sqlite3.connect('db.db')
@@ -639,58 +455,6 @@ async def process_admin_command1(message: types.Message):
 @dp.message_handler(state=AdminPanel.ADMIN_2)
 async def process_admin_command4(message: types.Message):
     switch_text = message.text.lower()
-    if message.text == '/start':
-        if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-        else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-
-    elif switch_text == "регистрация":
-        state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
-        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
     if switch_text == 'меню':
         is_succeed = False
         conn = sqlite3.connect('db.db')
@@ -718,501 +482,24 @@ async def process_admin_command4(message: types.Message):
     else:
         conn = sqlite3.connect('db.db')
         cursor = conn.cursor()
-        cursor.execute(f"UPDATE admins SET inst = '{message.text}' WHERE user_id = '{message.from_user.id}'")
+        cursor.execute(f"UPDATE admins SET inst = '{messages.institutes[message.text]}' WHERE user_id = '{message.from_user.id}'")
         conn.commit()
-        conn.close()
+        cursor.execute(f"SELECT inst FROM admins WHERE user_id = '{message.from_user.id}'")
+        inst = cursor.fetchall()[0][0]
+        keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
+        url = 'https://edu.sfu-kras.ru/api/timetable/groups'
+        response = requests.get(url).json()
+        for item in response:
+            if item['institute'] == inst:
+                keyboard.add(item['name'])
+        await message.reply(messages.group_message, reply_markup=keyboard)
         state = dp.current_state(user=message.from_user.id)
         await state.set_state(AdminPanel.all()[3])
-        await message.reply("Выберите курс", reply_markup=KeyBoards.course_kb)
 
 
 @dp.message_handler(state=AdminPanel.ADMIN_3)
 async def process_admin_command4(message: types.Message):
     switch_text = message.text.lower()
-    if message.text == '/start':
-        if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-        else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-
-    elif switch_text == "регистрация":
-        state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
-        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
-    if switch_text == 'меню':
-        is_succeed = False
-        conn = sqlite3.connect('db.db')
-        cursor = conn.cursor()
-        cursor.execute(f"SELECT user_id FROM admins")
-        result_set = cursor.fetchall()
-        cursor.close()
-        for item in result_set:
-            if item[0] == message.from_user.id:
-                is_succeed = True
-        if is_succeed:
-            await message.reply('Вы в меню! ✨'
-                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
-            conn.commit()
-            conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
-        else:
-            await message.reply('Вы в меню! ✨'
-                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
-            conn.commit()
-            conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
-    else:
-        conn = sqlite3.connect('db.db')
-        cursor = conn.cursor()
-        cursor.execute(f"UPDATE admins SET course = '{message.text}' WHERE user_id = '{message.from_user.id}'")
-        conn.commit()
-        conn.close()
-        state = dp.current_state(user=message.from_user.id)
-        conn = sqlite3.connect('db.db')
-        cursor = conn.cursor()
-        cursor.execute(f"SELECT user_id, inst, course FROM admins")
-        result_set = cursor.fetchall()
-        for i in result_set:
-            if i[0] == message.from_user.id:
-                # ИКИТ
-                if i[1] == "ИКИТ" and i[2] == "1 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.ikit_kb)
-                elif i[1] == "ИКИТ" and i[2] == "2 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.ikit_kb)
-                elif i[1] == "ИКИТ" and i[2] == "3 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.ikit_kb)
-                elif i[1] == "ИКИТ" and i[2] == "4 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.ikit_kb)
-                elif i[1] == "ИКИТ" and i[2] == "5 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.ikit_kb)
-                # ИУБП
-                elif i[1] == "ИУБП" and i[2] == "1 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИУБП" and i[2] == "2 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИУБП" and i[2] == "3 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИУБП" and i[2] == "4 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИУБП" and i[2] == "5 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                # ИФБИБТ
-                elif i[1] == "ИФБиБТ" and i[2] == "1 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИФБиБТ" and i[2] == "2 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИФБиБТ" and i[2] == "3 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИФБиБТ" and i[2] == "4 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИФБиБТ" and i[2] == "5 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                # ИФИЯК
-                elif i[1] == "ИФиЯК" and i[2] == "1 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИФиЯК" and i[2] == "2 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИФиЯК" and i[2] == "3 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИФиЯК" and i[2] == "4 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИФиЯК" and i[2] == "5 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                # ВУЦ
-                elif i[1] == "ВУЦ" and i[2] == "1 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ВУЦ" and i[2] == "2 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ВУЦ" and i[2] == "3 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ВУЦ" and i[2] == "4 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ВУЦ" and i[2] == "5 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                # ГИ
-                elif i[1] == "ГИ" and i[2] == "1 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ГИ" and i[2] == "2 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ГИ" and i[2] == "3 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ГИ" and i[2] == "4 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ГИ" and i[2] == "5 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                # ИСИ
-                elif i[1] == "ИСИ" and i[2] == "1 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИСИ" and i[2] == "2 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИСИ" and i[2] == "3 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИСИ" and i[2] == "4 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИСИ" and i[2] == "5 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                # ИНИГ
-                elif i[1] == "ИНиГ" and i[2] == "1 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИНиГ" and i[2] == "2 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИНиГ" and i[2] == "3 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИНиГ" and i[2] == "4 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИНиГ" and i[2] == "5 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                # ИАИД
-                elif i[1] == "ИАиД" and i[2] == "1 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИАиД" and i[2] == "2 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИАиД" and i[2] == "3 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИАиД" and i[2] == "4 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИАиД" and i[2] == "5 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                # ИГДГиГ
-                elif i[1] == "ИГДГиГ" and i[2] == "1 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИГДГиГ" and i[2] == "2 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИГДГиГ" and i[2] == "3 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИГДГиГ" and i[2] == "4 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИГДГиГ" and i[2] == "5 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                # ИИФиРЭ
-                elif i[1] == "ИИФиРЭ" and i[2] == "1 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИИФиРЭ" and i[2] == "2 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИИФиРЭ" and i[2] == "3 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИИФиРЭ" and i[2] == "4 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИИФиРЭ" and i[2] == "5 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                # ИМИФИ
-                elif i[1] == "ИМиФИ" and i[2] == "1 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИМиФИ" and i[2] == "2 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИМиФИ" and i[2] == "3 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИМиФИ" and i[2] == "4 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИМиФИ" and i[2] == "5 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                # ИППС
-                elif i[1] == "ИППС" and i[2] == "1 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИППС" and i[2] == "2 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИППС" and i[2] == "3 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИППС" and i[2] == "4 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИППС" and i[2] == "5 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                # ИФКСИТ
-                elif i[1] == "ИФКСиТ" and i[2] == "1 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИФКСиТ" and i[2] == "2 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИФКСиТ" and i[2] == "3 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИФКСиТ" and i[2] == "4 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИФКСиТ" and i[2] == "5 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                # ИЦМИМ
-                elif i[1] == "ИЦМиМ" and i[2] == "1 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИЦМиМ" and i[2] == "2 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИЦМиМ" and i[2] == "3 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИЦМиМ" and i[2] == "4 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИЦМиМ" and i[2] == "5 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                # ИЭИГ
-                elif i[1] == "ИЭиГ" and i[2] == "1 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИЭиГ" and i[2] == "2 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИЭиГ" and i[2] == "3 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИЭиГ" and i[2] == "4 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИЭиГ" and i[2] == "5 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                # ИГ
-                elif i[1] == "ИГ" and i[2] == "1 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИГ" and i[2] == "2 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИГ" and i[2] == "3 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИГ" and i[2] == "4 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИГ" and i[2] == "5 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                # ИТИСУ
-                elif i[1] == "ИТиСУ" and i[2] == "1 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИТиСУ" and i[2] == "2 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИТиСУ" and i[2] == "3 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИТиСУ" and i[2] == "4 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИТиСУ" and i[2] == "5 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                # ИЭУИФ
-                elif i[1] == "ИЭУиФ" and i[2] == "1 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИЭУиФ" and i[2] == "2 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИЭУиФ" and i[2] == "3 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИЭУиФ" and i[2] == "4 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ИЭУиФ" and i[2] == "5 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                # ПИ
-                elif i[1] == "ПИ" and i[2] == "1 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ПИ" and i[2] == "2 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ПИ" and i[2] == "3 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ПИ" and i[2] == "4 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ПИ" and i[2] == "5 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                # ЮИ
-                elif i[1] == "ЮИ" and i[2] == "1 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ЮИ" and i[2] == "2 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ЮИ" and i[2] == "3 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ЮИ" and i[2] == "4 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-                elif i[1] == "ЮИ" and i[2] == "5 курс":
-                    await state.set_state(AdminPanel.all()[4])
-                    await message.reply(messages.group_message, reply=False, reply_markup=KeyBoards.gi_kb)
-        conn.commit()
-        conn.close()
-
-
-@dp.message_handler(state=AdminPanel.ADMIN_4)
-async def process_admin_command4(message: types.Message):
-    switch_text = message.text.lower()
-    if message.text == '/start':
-        if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-        else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-
-    elif switch_text == "регистрация":
-        state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
-        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
     if switch_text == 'меню':
         is_succeed = False
         conn = sqlite3.connect('db.db')
@@ -1244,65 +531,13 @@ async def process_admin_command4(message: types.Message):
         conn.commit()
         conn.close()
         state = dp.current_state(user=message.from_user.id)
-        await state.set_state(AdminPanel.all()[5])
+        await state.set_state(AdminPanel.all()[4])
         await message.reply('Выберите таймер:', reply=False, reply_markup=KeyBoards.time_kb)
 
 
-@dp.message_handler(state=AdminPanel.ADMIN_5)
+@dp.message_handler(state=AdminPanel.ADMIN_4)
 async def process_admin_command4(message: types.Message):
     switch_text = message.text.lower()
-    if message.text == '/start':
-        if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-        else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-
-    elif switch_text == "регистрация":
-        state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
-        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
     if switch_text == 'меню':
         is_succeed = False
         conn = sqlite3.connect('db.db')
@@ -1339,66 +574,14 @@ async def process_admin_command4(message: types.Message):
             conn.commit()
             conn.close()
             state = dp.current_state(user=message.from_user.id)
-            await state.set_state(AdminPanel.all()[6])
+            await state.set_state(AdminPanel.all()[5])
             await message.reply('Вы точно хотите отправить рассылку?', reply=False, reply_markup=KeyBoards.
                                 yes_or_no_keyboard)
 
 
-@dp.message_handler(state=AdminPanel.ADMIN_6)
+@dp.message_handler(state=AdminPanel.ADMIN_5)
 async def process_admin_command1(message: types.Message):
     switch_text = message.text.lower()
-    if message.text == '/start':
-        if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-        else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-
-    elif switch_text == "регистрация":
-        state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
-        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
     if switch_text == 'меню':
         is_succeed = False
         conn = sqlite3.connect('db.db')
@@ -1463,7 +646,7 @@ async def process_admin_command1(message: types.Message):
                                   f'Ваша рассылка: <b>{content[0][0]}</b>\nУспешно отправлена группе '
                                   f'<b>{group[0][0]}</b>', parse_mode='HTML')
         state = dp.current_state(user=message.from_user.id)
-        await state.set_state(AdminPanel.all()[3])
+        await state.set_state(AdminPanel.all()[2])
         is_succeed = False
         conn = sqlite3.connect('db.db')
         cursor = conn.cursor()
@@ -1494,61 +677,9 @@ async def process_admin_command1(message: types.Message):
         await message.reply("Выберите действие ✨", reply_markup=KeyBoards.admin_panel)
 
 
-@dp.message_handler(state=AdminPanel.ADMIN_7)
+@dp.message_handler(state=AdminPanel.ADMIN_6)
 async def process_admin_command1(message: types.Message):
     switch_text = message.text.lower()
-    if message.text == '/start':
-        if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-        else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-
-    elif switch_text == "регистрация":
-        state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
-        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
     if switch_text == 'меню':
         is_succeed = False
         conn = sqlite3.connect('db.db')
@@ -1580,65 +711,13 @@ async def process_admin_command1(message: types.Message):
         conn.commit()
         conn.close()
         state = dp.current_state(user=message.from_user.id)
-        await state.set_state(AdminPanel.all()[8])
+        await state.set_state(AdminPanel.all()[7])
         await message.reply("Выберите таймер:", reply_markup=KeyBoards.time_kb)
 
 
-@dp.message_handler(state=AdminPanel.ADMIN_8)
+@dp.message_handler(state=AdminPanel.ADMIN_7)
 async def process_admin_command4(message: types.Message):
     switch_text = message.text.lower()
-    if message.text == '/start':
-        if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-        else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-
-    elif switch_text == "регистрация":
-        state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
-        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
     if switch_text == 'меню':
         is_succeed = False
         conn = sqlite3.connect('db.db')
@@ -1675,66 +754,14 @@ async def process_admin_command4(message: types.Message):
             conn.commit()
             conn.close()
             state = dp.current_state(user=message.from_user.id)
-            await state.set_state(AdminPanel.all()[9])
+            await state.set_state(AdminPanel.all()[8])
             await message.reply('Вы точно хотите отправить рассылку?', reply=False, reply_markup=KeyBoards.
                                 yes_or_no_keyboard)
 
 
-@dp.message_handler(state=AdminPanel.ADMIN_9)
+@dp.message_handler(state=AdminPanel.ADMIN_8)
 async def process_admin_command1(message: types.Message):
     switch_text = message.text.lower()
-    if message.text == '/start':
-        if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-        else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-
-    elif switch_text == "регистрация":
-        state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
-        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
     if switch_text == 'меню':
         is_succeed = False
         conn = sqlite3.connect('db.db')
@@ -1793,7 +820,7 @@ async def process_admin_command1(message: types.Message):
                                   f'Ваша рассылка: <b>{content[0][0]}</b>\nУспешно отправлена всем!'
                                   , parse_mode='HTML')
         state = dp.current_state(user=message.from_user.id)
-        await state.set_state(AdminPanel.all()[3])
+        await state.set_state(AdminPanel.all()[2])
         is_succeed = False
         conn = sqlite3.connect('db.db')
         cursor = conn.cursor()
@@ -1830,58 +857,6 @@ async def process_admin_command1(message: types.Message):
 @dp.message_handler(state=Pay.PAY_DISTRIBUTOR)
 async def process_buy_command0(message: types.Message):
     switch_text = message.text.lower()
-    if message.text == '/start':
-        if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-        else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-
-    elif switch_text == "регистрация":
-        state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
-        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
     if message.text == 'Меню':
         is_succeed = False
         conn = sqlite3.connect('db.db')
@@ -1922,58 +897,6 @@ async def process_buy_command0(message: types.Message):
 @dp.message_handler(state=Pay.PAY_DISTRIBUTOR2)
 async def process_buy_command01(message: types.Message):
     switch_text = message.text.lower()
-    if message.text == '/start':
-        if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-        else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-
-    elif switch_text == "регистрация":
-        state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
-        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
     if message.text == 'Меню':
         state = dp.current_state(user=message.from_user.id)
         await state.reset_state()
@@ -2056,58 +979,6 @@ async def process_buy_command01(message: types.Message):
 @dp.message_handler(state=Pay.PAY_DISTRIBUTOR3)
 async def process_buy_command01(message: types.Message):
     switch_text = message.text.lower()
-    if message.text == '/start':
-        if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-        else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-
-    elif switch_text == "регистрация":
-        state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
-        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
     if message.text == 'Меню':
         state = dp.current_state(user=message.from_user.id)
         await state.reset_state()
@@ -2172,85 +1043,32 @@ async def process_successful_payment(message: types.Message):
 @dp.message_handler(state=Change.CHANGE_0)
 async def name_change(message: types.Message):
     switch_text = message.text.lower()
-    if message.text == '/start':
-        if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-        else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-
-    elif switch_text == "регистрация":
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
+    cursor.execute(f"UPDATE users SET real_name = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
+    is_succeed = False
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT user_id FROM admins")
+    result_set = cursor.fetchall()
+    cursor.close()
+    for item in result_set:
+        if item[0] == message.from_user.id:
+            is_succeed = True
+    if is_succeed:
+        await message.reply('Вы в меню! ✨'
+                            , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+        conn.commit()
+        conn.close()
         state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
-        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
+        await state.reset_state()
     else:
-        conn = sqlite3.connect('db.db')
-        cursor = conn.cursor()
-        cursor.execute(f"UPDATE users SET real_name = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
-        is_succeed = False
-        conn = sqlite3.connect('db.db')
-        cursor = conn.cursor()
-        cursor.execute(f"SELECT user_id FROM admins")
-        result_set = cursor.fetchall()
-        cursor.close()
-        for item in result_set:
-            if item[0] == message.from_user.id:
-                is_succeed = True
-        if is_succeed:
-            await message.reply('Вы в меню! ✨'
-                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
-            conn.commit()
-            conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
-        else:
-            await message.reply('Вы в меню! ✨'
-                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
-            conn.commit()
-            conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
+        await message.reply('Вы в меню! ✨'
+                            , reply=False, reply_markup=KeyBoards.menu_user_kb)
+        conn.commit()
+        conn.close()
+        state = dp.current_state(user=message.from_user.id)
+        await state.reset_state()
 
 
 #region registerHandler
@@ -2345,7 +1163,6 @@ async def register_4(message: types.message):
         await message.reply("Возможно вы допустили ошибку, попробуйте еще раз: ", reply_markup=keyboard)
 
 
-
 @dp.message_handler(state=Register.REGISTER_5)
 async def register_5(message: types.message):
     conn = sqlite3.connect('db.db')
@@ -2397,25 +1214,624 @@ async def schedule_0(msg: types.Message):
 
 @dp.message_handler(state=ScheduleUser.SCHEDULE_USER_1)
 async def schedule_1(message: types.Message):
-    group = message.text
-    timetable_message = ""
-    current_week = "0"
-    url = 'https://edu.sfu-kras.ru/timetable'
-    response = requests.get(url).text
-    match = re.search(r'Идёт\s\w{8}\sнеделя', response)
-    if match:
-        current_week = "2"
+    switch_text = message.text.lower()
+    if switch_text == 'меню':
+        is_succeed = False
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT user_id FROM admins")
+        result_set = cursor.fetchall()
+        cursor.close()
+        for item in result_set:
+            if item[0] == message.from_user.id:
+                is_succeed = True
+        if is_succeed:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+        else:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
     else:
-        current_week = "1"
-    url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={group}')
-    response = requests.get(url).json()
-    adding = []
-    for item in response["timetable"]:
-        if item["week"] == current_week:
-            adding.append(
-                [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
-    await message.reply("функция на доработке")
-    await dp.current_state(user=message.from_user.id).reset_state()
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"UPDATE user_table SET user_group = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
+        conn.commit()
+        conn.close()
+        await message.reply('Выберите день недели', reply_markup=KeyBoards.day_of_the_week_kb)
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state(ScheduleUser.all()[2])
+
+
+@dp.message_handler(state=ScheduleUser.SCHEDULE_USER_2)
+async def schedule_1(message: types.Message):
+    switch_text = message.text.lower()
+    if switch_text == 'меню':
+        is_succeed = False
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT user_id FROM admins")
+        result_set = cursor.fetchall()
+        cursor.close()
+        for item in result_set:
+            if item[0] == message.from_user.id:
+                is_succeed = True
+        if is_succeed:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+        else:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+    else:
+        if switch_text == "понедельник":
+            timetable_message = ""
+            url = 'https://edu.sfu-kras.ru/timetable'
+            response = requests.get(url).text
+            match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+            if match:
+                current_week = "1"
+            else:
+                current_week = "2"
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT chat_id, user_group FROM user_table")
+            result_set = cursor.fetchall()
+            cursor.close()
+            for i in result_set:
+                if i[0] == message.from_user.id:
+                    group = i[1]
+            url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={group}')
+            response = requests.get(url).json()
+            adding = []
+            for item in response["timetable"]:
+                if item["week"] == current_week:
+                    adding.append(
+                        [item['day'], item['time'], item['subject'], "", item['type'], item['place']])
+            flag = 0
+            for i in adding:
+                if i[0] == '1':
+                    if i[2] != '':
+                        flag = 1
+            if flag == 1:
+                if match:
+                    timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
+                else:
+                    timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
+                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Понедельник</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                for i in adding:
+                    if i[0] == '1':
+                        if i[4] == '' and i[5] == '':
+                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
+                        else:
+                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
+            else:
+                timetable_message += 'Пар нет!\n Отличный повод увидеться с друзьями! 🎉'
+            await message.reply(timetable_message, parse_mode="HTML")
+
+        elif switch_text == "вторник":
+            timetable_message = ""
+
+            url = 'https://edu.sfu-kras.ru/timetable'
+            response = requests.get(url).text
+            match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+            if match:
+                current_week = "1"
+            else:
+                current_week = "2"
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT chat_id, user_group FROM user_table")
+            result_set = cursor.fetchall()
+            cursor.close()
+            for i in result_set:
+                if i[0] == message.from_user.id:
+                    group = i[1]
+            url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={group}')
+            response = requests.get(url).json()
+            adding = []
+            for item in response["timetable"]:
+                if item["week"] == current_week:
+                    adding.append(
+                        [item['day'], item['time'], item['subject'], item['type'], "", item['place']])
+            flag = 0
+            for i in adding:
+                if i[0] == '2':
+                    if i[2] != '':
+                        flag = 1
+            if flag == 1:
+                if match:
+                    timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
+                else:
+                    timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
+                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Вторник</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                for i in adding:
+                    if i[0] == '2':
+                        if i[4] == '' and i[5] == '':
+                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
+                        else:
+                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
+            else:
+                timetable_message += 'Пар нет! Отличный повод увидеться с друзьями! 🎉'
+            await message.reply(timetable_message, parse_mode="HTML")
+
+        elif switch_text == "среда":
+            timetable_message = ""
+
+            url = 'https://edu.sfu-kras.ru/timetable'
+            response = requests.get(url).text
+            match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+            if match:
+                current_week = "1"
+            else:
+                current_week = "2"
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT chat_id, user_group FROM user_table")
+            result_set = cursor.fetchall()
+            cursor.close()
+            for i in result_set:
+                if i[0] == message.from_user.id:
+                    group = i[1]
+            url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={group}')
+            response = requests.get(url).json()
+            adding = []
+            for item in response["timetable"]:
+                if item["week"] == current_week:
+                    adding.append(
+                        [item['day'], item['time'], item['subject'], item['type'], "", item['place']])
+            flag = 0
+            for i in adding:
+                if i[0] == '3':
+                    if i[2] != '':
+                        flag = 1
+            if flag == 1:
+                if match:
+                    timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
+                else:
+                    timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
+                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Среда</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                for i in adding:
+                    if i[0] == '3':
+                        if i[4] == '' and i[5] == '':
+                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
+                        else:
+                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
+            else:
+                timetable_message += 'Пар нет! Отличный повод увидеться с друзьями! 🎉'
+            await message.reply(timetable_message, parse_mode="HTML")
+
+        elif switch_text == "четверг":
+            timetable_message = ""
+
+            url = 'https://edu.sfu-kras.ru/timetable'
+            response = requests.get(url).text
+            match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+            if match:
+                current_week = "1"
+            else:
+                current_week = "2"
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT chat_id, user_group FROM user_table")
+            result_set = cursor.fetchall()
+            cursor.close()
+            for i in result_set:
+                if i[0] == message.from_user.id:
+                    group = i[1]
+            url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={group}')
+            response = requests.get(url).json()
+            adding = []
+            for item in response["timetable"]:
+                if item["week"] == current_week:
+                    adding.append(
+                        [item['day'], item['time'], item['subject'], item['type'], "", item['place']])
+            flag = 0
+            for i in adding:
+                if i[0] == '4':
+                    if i[2] != '':
+                        flag = 1
+            if flag == 1:
+                if match:
+                    timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
+                else:
+                    timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
+                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Четверг</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                for i in adding:
+                    if i[0] == '4':
+                        if i[4] == '' and i[5] == '':
+                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
+                        else:
+                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
+            else:
+                timetable_message += 'Пар нет! Отличный повод увидеться с друзьями! 🎉'
+            await message.reply(timetable_message, parse_mode="HTML")
+
+        elif switch_text == "пятница":
+            timetable_message = ""
+
+            url = 'https://edu.sfu-kras.ru/timetable'
+            response = requests.get(url).text
+            match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+            if match:
+                current_week = "1"
+            else:
+                current_week = "2"
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT chat_id, user_group FROM user_table")
+            result_set = cursor.fetchall()
+            cursor.close()
+            for i in result_set:
+                if i[0] == message.from_user.id:
+                    group = i[1]
+            url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={group}')
+            response = requests.get(url).json()
+            adding = []
+            for item in response["timetable"]:
+                if item["week"] == current_week:
+                    adding.append(
+                        [item['day'], item['time'], item['subject'], item['type'], "", item['place']])
+            flag = 0
+            for i in adding:
+                if i[0] == '5':
+                    if i[2] != '':
+                        flag = 1
+            if flag == 1:
+                if match:
+                    timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
+                else:
+                    timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
+                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Пятница</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                for i in adding:
+                    if i[0] == '5':
+                        if i[4] == '' and i[5] == '':
+                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
+                        else:
+                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
+            else:
+                timetable_message += 'Пар нет! Отличный повод увидеться с друзьями! 🎉'
+            await message.reply(timetable_message, parse_mode="HTML")
+
+        elif switch_text == "суббота":
+            timetable_message = ""
+
+            url = 'https://edu.sfu-kras.ru/timetable'
+            response = requests.get(url).text
+            match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+            if match:
+                current_week = "1"
+            else:
+                current_week = "2"
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT chat_id, user_group FROM user_table")
+            result_set = cursor.fetchall()
+            cursor.close()
+            for i in result_set:
+                if i[0] == message.from_user.id:
+                    group = i[1]
+            url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={group}')
+            response = requests.get(url).json()
+            adding = []
+            for item in response["timetable"]:
+                if item["week"] == current_week:
+                    adding.append(
+                        [item['day'], item['time'], item['subject'], item['type'], "", item['place']])
+            flag = 0
+            for i in adding:
+                if i[0] == '6':
+                    if i[2] != '':
+                        flag = 1
+            if flag == 1:
+                if match:
+                    timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
+                else:
+                    timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
+                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Суббота</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                for i in adding:
+                    if i[0] == '6':
+                        if i[4] == '' and i[5] == '':
+                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
+                        else:
+                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
+            else:
+                timetable_message += 'Пар нет! Отличный повод увидеться с друзьями! 🎉'
+            await message.reply(timetable_message, parse_mode="HTML")
+        if switch_text == 'посмотреть расписание на след. неделю':
+            state = dp.current_state(user=message.from_user.id)
+            await state.set_state(ScheduleUser.all()[3])
+            await message.reply('Выберите день недели 👇\n(Вы будете смотреть следующую неделю)'
+                                , reply=False, reply_markup=KeyBoards.day_of_the_week_kb2)
+
+
+@dp.message_handler(state=ScheduleUser.SCHEDULE_USER_3)
+async def schedule_1(message: types.Message):
+    switch_text = message.text.lower()
+    if switch_text == 'меню':
+        is_succeed = False
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT user_id FROM admins")
+        result_set = cursor.fetchall()
+        cursor.close()
+        for item in result_set:
+            if item[0] == message.from_user.id:
+                is_succeed = True
+        if is_succeed:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+        else:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+    else:
+        if switch_text == 'понедельник':
+            timetable_message = ""
+            current_week = "0"
+            url = 'https://edu.sfu-kras.ru/timetable'
+            response = requests.get(url).text
+            match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+            if match:
+                current_week = "2"
+            else:
+                current_week = "1"
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_group FROM user_table WHERE chat_id = '{message.from_user.id}'")
+            result_set1 = cursor.fetchall()
+            conn.commit()
+            conn.close()
+            url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={result_set1[0][0]}')
+            response = requests.get(url).json()
+            adding = []
+            for item in response["timetable"]:
+                if item["week"] == current_week:
+                    adding.append(
+                        [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
+            flag = 0
+            for i in adding:
+                if i[0] == '1':
+                    if i[2] != '':
+                        flag = 1
+            if flag == 1:
+                timetable_message += "Вы смотрите расписание на <b>следующую</b> неделю\n"
+                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Понедельник</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                for i in adding:
+                    if i[0] == '1':
+                        if i[4] == '' and i[5] == '':
+                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
+                        else:
+                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
+            else:
+                timetable_message += 'В следующий понедельник пар нет!\n Отличный повод увидеться с друзьями! 🎉'
+            await message.reply(timetable_message, parse_mode="HTML")
+
+        elif switch_text == 'вторник':
+            timetable_message = ""
+            current_week = "0"
+            url = 'https://edu.sfu-kras.ru/timetable'
+            response = requests.get(url).text
+            match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+            if match:
+                current_week = "2"
+            else:
+                current_week = "1"
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_group FROM user_table WHERE chat_id = '{message.from_user.id}'")
+            result_set1 = cursor.fetchall()
+            conn.commit()
+            conn.close()
+            url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={result_set1[0][0]}')
+            response = requests.get(url).json()
+            adding = []
+            for item in response["timetable"]:
+                if item["week"] == current_week:
+                    adding.append(
+                        [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
+            flag = 0
+            for i in adding:
+                if i[0] == '2':
+                    if i[2] != '':
+                        flag = 1
+            if flag == 1:
+                timetable_message += "Вы смотрите расписание на <b>следующую</b> неделю\n"
+                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Вторник</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                for i in adding:
+                    if i[0] == '2':
+                        if i[4] == '' and i[5] == '':
+                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
+                        else:
+                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
+            else:
+                timetable_message += 'Во следующий вторник пар нет!\n Отличный повод увидеться с друзьями! 🎉'
+            await message.reply(timetable_message, parse_mode="HTML")
+
+        elif switch_text == 'среда':
+            timetable_message = ""
+            current_week = "0"
+            url = 'https://edu.sfu-kras.ru/timetable'
+            response = requests.get(url).text
+            match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+            if match:
+                current_week = "2"
+            else:
+                current_week = "1"
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_group FROM user_table WHERE chat_id = '{message.from_user.id}'")
+            result_set1 = cursor.fetchall()
+            conn.commit()
+            conn.close()
+            url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={result_set1[0][0]}')
+            response = requests.get(url).json()
+            adding = []
+            for item in response["timetable"]:
+                if item["week"] == current_week:
+                    adding.append(
+                        [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
+            flag = 0
+            for i in adding:
+                if i[0] == '3':
+                    if i[2] != '':
+                        flag = 1
+            if flag == 1:
+                timetable_message += "Вы смотрите расписание на <b>следующую</b> неделю\n"
+                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Среда</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                for i in adding:
+                    if i[0] == '3':
+                        if i[4] == '' and i[5] == '':
+                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
+                        else:
+                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
+            else:
+                timetable_message += 'В следующую среду пар нет!\n Отличный повод увидеться с друзьями! 🎉'
+            await message.reply(timetable_message, parse_mode="HTML")
+
+        elif switch_text == 'четверг':
+            timetable_message = ""
+            current_week = "0"
+            url = 'https://edu.sfu-kras.ru/timetable'
+            response = requests.get(url).text
+            match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+            if match:
+                current_week = "2"
+            else:
+                current_week = "1"
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_group FROM user_table WHERE chat_id = '{message.from_user.id}'")
+            result_set1 = cursor.fetchall()
+            conn.commit()
+            conn.close()
+            url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={result_set1[0][0]}')
+            response = requests.get(url).json()
+            adding = []
+            for item in response["timetable"]:
+                if item["week"] == current_week:
+                    adding.append(
+                        [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
+            flag = 0
+            for i in adding:
+                if i[0] == '4':
+                    if i[2] != '':
+                        flag = 1
+            if flag == 1:
+                timetable_message += "Вы смотрите расписание на <b>следующую</b> неделю\n"
+                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Четверг</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                for i in adding:
+                    if i[0] == '4':
+                        if i[4] == '' and i[5] == '':
+                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
+                        else:
+                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
+            else:
+                timetable_message += 'В следующий четверг пар нет!\n Отличный повод увидеться с друзьями! 🎉'
+            await message.reply(timetable_message, parse_mode="HTML")
+
+        elif switch_text == 'пятница':
+            timetable_message = ""
+            current_week = "0"
+            url = 'https://edu.sfu-kras.ru/timetable'
+            response = requests.get(url).text
+            match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+            if match:
+                current_week = "2"
+            else:
+                current_week = "1"
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_group FROM user_table WHERE chat_id = '{message.from_user.id}'")
+            result_set1 = cursor.fetchall()
+            conn.commit()
+            conn.close()
+            url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={result_set1[0][0]}')
+            response = requests.get(url).json()
+            adding = []
+            for item in response["timetable"]:
+                if item["week"] == current_week:
+                    adding.append(
+                        [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
+            flag = 0
+            for i in adding:
+                if i[0] == '5':
+                    if i[2] != '':
+                        flag = 1
+            if flag == 1:
+                timetable_message += "Вы смотрите расписание на <b>следующую</b> неделю\n"
+                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Пятница</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                for i in adding:
+                    if i[0] == '5':
+                        if i[4] == '' and i[5] == '':
+                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
+                        else:
+                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
+            else:
+                timetable_message += 'В следующую пятницу пар нет!\n Отличный повод увидеться с друзьями! 🎉'
+            await message.reply(timetable_message, parse_mode="HTML")
+
+        elif switch_text == 'суббота':
+            timetable_message = ""
+            current_week = "0"
+            url = 'https://edu.sfu-kras.ru/timetable'
+            response = requests.get(url).text
+            match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+            if match:
+                current_week = "2"
+            else:
+                current_week = "1"
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_group FROM user_table WHERE chat_id = '{message.from_user.id}'")
+            result_set1 = cursor.fetchall()
+            conn.commit()
+            conn.close()
+            url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={result_set1[0][0]}')
+            response = requests.get(url).json()
+            adding = []
+            for item in response["timetable"]:
+                if item["week"] == current_week:
+                    adding.append(
+                        [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
+            flag = 0
+            for i in adding:
+                if i[0] == '6':
+                    if i[2] != '':
+                        flag = 1
+            if flag == 1:
+                timetable_message += "Вы смотрите расписание на <b>следующую</b> неделю\n"
+                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Суббота</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                for i in adding:
+                    if i[0] == '6':
+                        if i[4] == '' and i[5] == '':
+                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
+                        else:
+                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
+            else:
+                timetable_message += 'В следующую субботу пар нет!\n Отличный повод увидеться с друзьями! 🎉'
+            await message.reply(timetable_message, parse_mode="HTML")
 
 #endregion
 
@@ -2423,59 +1839,7 @@ async def schedule_1(message: types.Message):
 async def schedule (message: types.Message):
     global group
     switch_text = message.text.lower()
-    if message.text == '/start':
-        if message.from_user.username != None:
-            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-        else:
-            await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-
-    elif switch_text == "регистрация":
-        state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[0])
-        await message.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
-    elif switch_text == 'меню':
+    if switch_text == 'меню':
         is_succeed = False
         conn = sqlite3.connect('db.db')
         cursor = conn.cursor()
@@ -3570,6 +2934,207 @@ async def schedule_check(msg: types.Message):
         conn.close()
 
 
+@dp.message_handler(state=Delete.DELETE_EVENTS_0)
+async def schedule (message: types.Message):
+    global group
+    switch_text = message.text.lower()
+    if switch_text == 'меню':
+        is_succeed = False
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT user_id FROM admins")
+        result_set = cursor.fetchall()
+        cursor.close()
+        for item in result_set:
+            if item[0] == message.from_user.id:
+                is_succeed = True
+        if is_succeed:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+        else:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+
+    elif switch_text == "добавить мероприятие":
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state(Events.all()[0])
+        await message.reply("Введите ваше мероприятие 🍻", reply_markup=KeyBoards.universal_kb)
+
+    else:
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state(Delete.all()[3])
+        incoming_events2[message.from_user.id] = message.text
+        await message.reply('Вы точно хотите удалить мероприятие? '
+                            , reply=False, reply_markup=KeyBoards.yes_or_no_keyboard2)
+
+
+@dp.message_handler(state=Delete.DELETE_EVENTS_1)
+async def schedule (message: types.Message):
+    global group
+    switch_text = message.text.lower()
+    if switch_text == 'меню':
+        is_succeed = False
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT user_id FROM admins")
+        result_set = cursor.fetchall()
+        cursor.close()
+        for item in result_set:
+            if item[0] == message.from_user.id:
+                is_succeed = True
+        if is_succeed:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+        else:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+    else:
+        state = dp.current_state(user=message.from_user.id)
+        incoming_events2[message.from_user.id] = message.text
+        await state.set_state(Delete.all()[2])
+        await message.reply('Вы точно хотите удалить рассылку? '
+                            , reply=False, reply_markup=KeyBoards.yes_or_no_keyboard2)
+
+
+@dp.message_handler(state=Delete.DELETE_EVENTS_2)
+async def schedule(message: types.Message):
+    global group
+    switch_text = message.text.lower()
+    if switch_text == 'меню':
+        is_succeed = False
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT user_id FROM admins")
+        result_set = cursor.fetchall()
+        cursor.close()
+        for item in result_set:
+            if item[0] == message.from_user.id:
+                is_succeed = True
+        if is_succeed:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+        else:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+    elif switch_text == 'да':
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(
+            f"DELETE FROM `mail` WHERE (`mail` ==  {message.from_user.id} AND `event1` == '{incoming_events2[message.from_user.id]}');")
+        incoming_events2.pop(message.from_user.id)
+        conn.commit()
+        conn.close()
+        await bot.send_message(message.from_user.id, 'Успешно!')
+        is_succeed = False
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT user_id FROM admins")
+        result_set = cursor.fetchall()
+        cursor.close()
+        for item in result_set:
+            if item[0] == message.from_user.id:
+                is_succeed = True
+        if is_succeed:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+        else:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+
+
+@dp.message_handler(state=Delete.DELETE_EVENTS_3)
+async def schedule(message: types.Message):
+    global group
+    switch_text = message.text.lower()
+    if switch_text == 'меню':
+        is_succeed = False
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT user_id FROM admins")
+        result_set = cursor.fetchall()
+        cursor.close()
+        for item in result_set:
+            if item[0] == message.from_user.id:
+                is_succeed = True
+        if is_succeed:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+        else:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+    elif switch_text == 'да':
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(
+            f"DELETE FROM `times` WHERE (`chat_id` ==  {message.from_user.id} AND `event1` == '{incoming_events2[message.from_user.id]}');")
+        incoming_events2.pop(message.from_user.id)
+        conn.commit()
+        conn.close()
+        await bot.send_message(message.from_user.id, 'Успешно!')
+        is_succeed = False
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT user_id FROM admins")
+        result_set = cursor.fetchall()
+        cursor.close()
+        for item in result_set:
+            if item[0] == message.from_user.id:
+                is_succeed = True
+        if is_succeed:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+        else:
+            await message.reply('Вы в меню! ✨'
+                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+
 
 @dp.message_handler(state='*', content_types=["text"])
 async def handler_message(msg: types.Message):
@@ -3591,15 +3156,27 @@ async def handler_message(msg: types.Message):
         cursor = conn.cursor()
         cursor.execute(f"SELECT user_id FROM admins")
         result_set = cursor.fetchall()
+        cursor.execute(f"SELECT chat_id, is_teacher FROM users")
+        result_set2 = cursor.fetchall()
         cursor.close()
         is_succeed = False
+        is_teacher = False
         for item in result_set:
             if item[0] == msg.from_user.id:
                 is_succeed = True
+        for item in result_set2:
+            if item[0] == msg.from_user.id:
+                if item[1] == "True":
+                    is_teacher = True
         if is_succeed:
-            state = dp.current_state(user=msg.from_user.id)
-            await state.set_state(AdminPanel.all()[0])
-            await msg.reply("Добро пожаловать в админ-панель!", reply_markup=KeyBoards.admin_panel)
+            if is_teacher:
+                state = dp.current_state(user=msg.from_user.id)
+                await state.set_state(AdminPanel.all()[0])
+                await msg.reply("Добро пожаловать в админ-панель!", reply_markup=KeyBoards.admin_panel_teacher)
+            else:
+                state = dp.current_state(user=msg.from_user.id)
+                await state.set_state(AdminPanel.all()[0])
+                await msg.reply("Добро пожаловать в админ-панель!", reply_markup=KeyBoards.admin_panel)
         else:
             await msg.reply("Вы не являетесь админом", reply_markup=KeyBoards.menu_admin_kb)
     elif switch_text == "меню":
@@ -3630,13 +3207,56 @@ async def handler_message(msg: types.Message):
         cursor = conn.cursor()
         cursor.execute(f"SELECT * FROM mail")
         result_set = cursor.fetchall()
-        a = ""
-        cursor.close()
+        a = "Ваши рассылки: \n"
         for item in result_set:
             if item[0] == msg.from_user.id:
                 local_time = time.ctime(item[2])
-                a = a + item[1] + '\n' + 'Эта рассылка заканчивается: ' + local_time + '\n'
-        await msg.reply(f"Ваши последние рассылки ✉:\n\n{a}", reply_markup=KeyBoards.mailing_lists_kb)
+                local_time = local_time.split(' ')
+                # день недели
+                if local_time[0] == "Mon":
+                    local_time[0] = "Понедельник"
+                if local_time[0] == "Tue":
+                    local_time[0] = "Вторник"
+                if local_time[0] == "Wed":
+                    local_time[0] = "Среда"
+                if local_time[0] == "Thu":
+                    local_time[0] = "Чеверг"
+                if local_time[0] == "Fri":
+                    local_time[0] = "Пятница"
+                if local_time[0] == "Sat":
+                    local_time[0] = "Суббота"
+                if local_time[0] == "Sun":
+                    local_time[0] = "Воскресенье"
+                # месяц
+                if local_time[1] == "Jan":
+                    local_time[1] = "Января"
+                if local_time[1] == "Feb":
+                    local_time[1] = "Февраля"
+                if local_time[1] == "Mar":
+                    local_time[1] = "Марта"
+                if local_time[1] == "Apr":
+                    local_time[1] = "Апреля"
+                if local_time[1] == "May":
+                    local_time[1] = "Мая"
+                if local_time[1] == "June":
+                    local_time[1] = "Июня"
+                if local_time[1] == "July":
+                    local_time[1] = "Июля"
+                if local_time[1] == "Aug":
+                    local_time[1] = "Августа"
+                if local_time[1] == "Sept":
+                    local_time[1] = "Сентября"
+                if local_time[1] == "Oct":
+                    local_time[1] = "Октября"
+                if local_time[1] == "Nov":
+                    local_time[1] = "Ноября"
+                if local_time[1] == "Dec":
+                    local_time[1] = "Декабря"
+
+                a = a + f" - <b>{item[1]}</b>" + '\n' + \
+                    f'Эта рассылка заканчивается {local_time[2]} {local_time[1]} ' \
+                    f'({local_time[0]}) {local_time[4]} года в {local_time[3]} ' + '\n'
+        await msg.reply(a, reply_markup=KeyBoards.mailing_lists_kb, parse_mode="HTML")
 
     elif switch_text == "профиль":
         conn = sqlite3.connect('db.db')
@@ -3715,6 +3335,32 @@ async def handler_message(msg: types.Message):
         state = dp.current_state(user=msg.from_user.id)
         await state.set_state(Events.all()[0])
         await msg.reply("Введите ваше мероприятие 🍻", reply_markup=KeyBoards.universal_kb)
+
+    elif switch_text == "удалить мероприятие":
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT * FROM times")
+        result_set = cursor.fetchall()
+        keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
+        for item in result_set:
+            if item[0] == msg.from_user.id:
+                keyboard.add(item[1])
+        state = dp.current_state(user=msg.from_user.id)
+        await state.set_state(Delete.all()[0])
+        await msg.reply("Выберите мероприятие, которое хотите удалить 👇", reply_markup=keyboard)
+
+    elif switch_text == "удалить рассылку":
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT * FROM mail")
+        result_set = cursor.fetchall()
+        keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
+        for item in result_set:
+            if item[0] == msg.from_user.id:
+                keyboard.add(item[1])
+        state = dp.current_state(user=msg.from_user.id)
+        await state.set_state(Delete.all()[1])
+        await msg.reply("Выберите рассылку, которую хотите удалить 👇", reply_markup=keyboard)
 
     elif switch_text == "назад":
         await msg.reply("Вы в настройках ⚙", reply_markup=KeyBoards.setting_kb)
