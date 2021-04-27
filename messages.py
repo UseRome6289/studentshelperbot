@@ -10,8 +10,8 @@ tm_title = 'Поддержка разработчиков'
 tm_description = '''\
 Блин, спасибо, что помогаете нам! 💖💖💖
 '''
-"""
-greets_msg = '''Welcome to StudentHelperBot, {msg.from_user.username}!🔥\n 
+
+greets_msg = '''Welcome to StudentHelperBot!🔥\n 
 \n - Here you can always find the current schedule 🎓
 \n - Set reminders 🍻
 \n - Mailing lists from teachers ✉
@@ -33,7 +33,7 @@ greets_msg = '''Welcome to StudentHelperBot, {msg.from_user.username}!🔥\n
 \n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵
 \n
  \n  Регистрируемся? ✨'''
-"""
+
 successful_payment = '''
 Ура! 🔥\nПлатеж на сумму `{total_amount} {currency}` совершен успешно! Спасибо, что поддержали разработчиков!💖💖💖
 '''
