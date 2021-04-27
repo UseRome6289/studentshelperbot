@@ -1,7 +1,7 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
 # Начало
-greet_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add("Регистрация")
+greet_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add("Я студент").add("Я преподаватель")
 
 # Добавил запланированные мероприятия для пользователя(По просьбе Никиты)
 # Меню с админ-панелью
