@@ -3703,7 +3703,8 @@ async def handler_message(msg: types.Message):
                 if local_time[1] == "Dec":
                     local_time[1] = "Декабря"
 
-                a = a + f" - <b>{item[1]}</b>" + '\n' + f'Это мероприятие заканчивается {local_time[2]} {local_time[1]} ' \
+                a = a + f" - <b>{item[1]}</b>" + '\n' + \
+                                         f'Это мероприятие заканчивается {local_time[2]} {local_time[1]} ' \
                                          f'({local_time[0]}) {local_time[4]} года в {local_time[3]} ' + '\n'
         await msg.reply(a, reply_markup=KeyBoards.events_kb, parse_mode="HTML")
 
