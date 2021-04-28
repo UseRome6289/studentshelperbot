@@ -3258,6 +3258,8 @@ async def handler_message(msg: types.Message):
                 a = a + f" - <b>{item[1]}</b>" + '\n' + \
                     f'Эта рассылка заканчивается {local_time[2]} {local_time[1]} ' \
                     f'({local_time[0]}) {local_time[4]} года в {local_time[3]} ' + '\n'
+        if a == "Ваши рассылки: \n":
+            a = 'Вам еще не приходили рассылки!'
         await msg.reply(a, reply_markup=KeyBoards.mailing_lists_kb, parse_mode="HTML")
 
     elif switch_text == "профиль":
@@ -3330,10 +3332,29 @@ async def handler_message(msg: types.Message):
                 a = a + f" - <b>{item[1]}</b>" + '\n' + \
                     f'Это мероприятие заканчивается {local_time[2]} {local_time[1]} ' \
                     f'({local_time[0]}) {local_time[4]} года в {local_time[3]} ' + '\n'
+        if a == "Ваши мероприятия: \n":
+            a = 'У вас нет мероприятий!'
         await msg.reply(a, reply_markup=KeyBoards.events_kb, parse_mode="HTML")
 
     elif switch_text == "изменить информацию":
-        await msg.reply("Выберите, что хотите изменить 👇", reply_markup=KeyBoards.change_information_kb)
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT chat_id, is_teacher FROM users")
+        result_set = cursor.fetchall()
+        is_teacher = False
+        for item in result_set:
+            if item[0] == msg.from_user.id:
+                if item[1] == 'True':
+                    is_teacher = True
+        if is_teacher:
+            await msg.reply("Выберите, что хотите изменить 👇", reply_markup=KeyBoards.change_information_kb2)
+        else:
+            await msg.reply("Выберите, что хотите изменить 👇", reply_markup=KeyBoards.change_information_kb)
+
+    elif switch_text == "поменять преподавателя":
+        state = dp.current_state(user=msg.from_user.id)
+        await state.set_state(Register.all()[4])
+        await msg.reply("Введите вашу фамилию:")
 
     elif switch_text == "добавить мероприятие":
         state = dp.current_state(user=msg.from_user.id)
@@ -3398,21 +3419,8 @@ async def handler_message(msg: types.Message):
         conn.commit()
         conn.close()
         state = dp.current_state(user=msg.from_user.id)
-        conn = sqlite3.connect('db.db')
-        cursor = conn.cursor()
-        cursor.execute(f"SELECT chat_id, is_teacher FROM users")
-        result_set = cursor.fetchall()
-        is_teacher = False
-        for item in result_set:
-            if item[0] == msg.from_user.id:
-                if item[1] == 'True':
-                    is_teacher = True
-        if is_teacher:
-            await state.set_state(Register.all()[4])
-            await msg.reply("Введите вашу фамилию:")
-        else:
-            await state.set_state(Register.all()[2])
-            await msg.reply("Выберите ваш институт 👇", reply_markup=KeyBoards.institute_kb)
+        await state.set_state(Register.all()[2])
+        await msg.reply("Выберите ваш институт 👇", reply_markup=KeyBoards.institute_kb)
 
     elif switch_text == "посмотреть расписание другой группы":
         await msg.reply("Выберите институт: 🎓", reply_markup=KeyBoards.institute_kb)
