@@ -1,10 +1,11 @@
 # region imports
+import datetime
 import re
 import sqlite3
 import threading
 import time
 from threading import Thread
-import datetime
+
 import requests
 import telebot
 from aiogram import Bot, types
@@ -13,6 +14,7 @@ from aiogram.contrib.middlewares.logging import LoggingMiddleware
 from aiogram.dispatcher import Dispatcher
 from aiogram.types import ContentType, ReplyKeyboardMarkup
 from aiogram.utils import executor
+
 import KeyBoards
 import messages
 from config import TOKEN, PAYMENTS_PROVIDER_TOKEN, TIME_MACHINE_IMAGE_URL
@@ -242,28 +244,7 @@ async def process_start_command(message: types.Message):
                             '\n'
                             ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
     else:
-        await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                            '\n - Here you can always find the current schedule 🎓'
-                            '\n - Set reminders 🍻'
-                            '\n - Mailing lists from teachers ✉'
-                            '\n - View the current schedule of another group ✌'
-                            '\n - Support developers 👌'
-                            '\n - We have our own PevCoin (currency in development) 💵'
-                            '\n'
-                            '\n  Registering? ✨'
-                            '\n'
-                            '\n ➖➖➖➖➖➖'
-                            '\n'
-                            '\n'
-                            f'Добро пожаловать в StudentHelperBot!🔥\n'
-                            '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                            '\n - Поставить напоминания 🍻'
-                            '\n - Рассылки от преподавателей ✉'
-                            '\n - Посмотреть актуальное расписание другой группы ✌'
-                            '\n - Поддержать разработчиков 👌'
-                            '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                            '\n'
-                            ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+        await message.reply(messages.greets_msg, reply_markup=KeyBoards.greet_kb)
     state = dp.current_state(user=message.from_user.id)
     await state.set_state(Register.all()[0])
 
@@ -283,14 +264,14 @@ async def process_command0(message: types.Message):
             if item[0] == message.from_user.id:
                 is_succeed = True
         if is_succeed:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_admin_kb)
             conn.commit()
             conn.close()
             state = dp.current_state(user=message.from_user.id)
             await state.reset_state()
         else:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_user_kb)
             conn.commit()
             conn.close()
@@ -301,7 +282,7 @@ async def process_command0(message: types.Message):
         state = dp.current_state(user=message.from_user.id)
         await state.set_state(Events.all()[1])
         incoming_events[message.from_user.id] = message.text
-        await message.reply("Мероприятие успешно добавлено!\nПоставьте таймер:"
+        await message.reply(messages.events
                             , reply_markup=KeyBoards.time_kb)
 
 
@@ -320,23 +301,25 @@ async def process_command1(message: types.Message):
             if item[0] == message.from_user.id:
                 is_succeed = True
         if is_succeed:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_admin_kb)
             conn.commit()
             conn.close()
             state = dp.current_state(user=message.from_user.id)
             await state.reset_state()
         else:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_user_kb)
             conn.commit()
             conn.close()
             state = dp.current_state(user=message.from_user.id)
             await state.reset_state()
     else:
-        m = {'1 час': 60 * 60, "2 часа": 60 * 60 * 2, "6 часов": 60 * 60 * 6, "12 часов": 60 * 60 * 12,
+        m = {'1 час': 60 * 60, "2 часа": 60 * 60 * 2, "3 часа": 60 * 60 * 3, "4 часа": 60 * 60 * 4,
+             "5 часов": 60 * 60 * 5,
+             "18 часов": 60 * 60 * 18, "6 часов": 60 * 60 * 6, "12 часов": 60 * 60 * 12,
              "24 часа": 60 * 60 * 24,
-             "2 дня": 60 * 60 * 48, "Неделя": 60 * 60 * 24 * 7}
+             "2 дня": 60 * 60 * 48, "3 дня": 60 * 60 * 24 * 3, "Неделя": 60 * 60 * 24 * 7}
         if m[message.text]:
             conn = sqlite3.connect('db.db')
             cursor = conn.cursor()
@@ -355,14 +338,14 @@ async def process_command1(message: types.Message):
                 if item[0] == message.from_user.id:
                     is_succeed = True
             if is_succeed:
-                await message.reply('Успешно! ✨'
+                await message.reply(messages.successfully
                                     , reply=False, reply_markup=KeyBoards.menu_admin_kb)
                 conn.commit()
                 conn.close()
                 state = dp.current_state(user=message.from_user.id)
                 await state.reset_state()
             else:
-                await message.reply('Успешно! ✨'
+                await message.reply(messages.successfully
                                     , reply=False, reply_markup=KeyBoards.menu_user_kb)
                 conn.commit()
                 conn.close()
@@ -387,14 +370,14 @@ async def process_admin_command2(message: types.Message):
             if item[0] == message.from_user.id:
                 is_succeed = True
         if is_succeed:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_admin_kb)
             conn.commit()
             conn.close()
             state = dp.current_state(user=message.from_user.id)
             await state.reset_state()
         else:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_user_kb)
             conn.commit()
             conn.close()
@@ -404,13 +387,11 @@ async def process_admin_command2(message: types.Message):
     elif switch_text == 'отправить рассылку':
         state = dp.current_state(user=message.from_user.id)
         await state.set_state(AdminPanel.all()[1])
-        await message.reply("Введите сообщение для рассылки"
-                            ", чтобы вернуться - меню ✨", reply_markup=KeyBoards.return_keyboard)
+        await message.reply(messages.write_mail, reply_markup=KeyBoards.return_keyboard)
     elif switch_text == 'отправить рассылку всем пользователям':
         state = dp.current_state(user=message.from_user.id)
         await state.set_state(AdminPanel.all()[6])
-        await message.reply("Введите сообщение для рассылки"
-                            ", чтобы вернуться - меню ✨", reply_markup=KeyBoards.return_keyboard)
+        await message.reply(messages.write_mail, reply_markup=KeyBoards.return_keyboard)
 
 
 @dp.message_handler(state=AdminPanel.ADMIN_1)
@@ -427,14 +408,14 @@ async def process_admin_command1(message: types.Message):
             if item[0] == message.from_user.id:
                 is_succeed = True
         if is_succeed:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_admin_kb)
             conn.commit()
             conn.close()
             state = dp.current_state(user=message.from_user.id)
             await state.reset_state()
         else:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_user_kb)
             conn.commit()
             conn.close()
@@ -448,7 +429,7 @@ async def process_admin_command1(message: types.Message):
         conn.close()
         state = dp.current_state(user=message.from_user.id)
         await state.set_state(AdminPanel.all()[2])
-        await message.reply("Кому отправить данную расслыку? Выберите инстиут", reply_markup=KeyBoards.institute_kb)
+        await message.reply(messages.university, reply_markup=KeyBoards.institute_kb)
 
 
 @dp.message_handler(state=AdminPanel.ADMIN_2)
@@ -465,14 +446,14 @@ async def process_admin_command4(message: types.Message):
             if item[0] == message.from_user.id:
                 is_succeed = True
         if is_succeed:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_admin_kb)
             conn.commit()
             conn.close()
             state = dp.current_state(user=message.from_user.id)
             await state.reset_state()
         else:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_user_kb)
             conn.commit()
             conn.close()
@@ -511,14 +492,14 @@ async def process_admin_command4(message: types.Message):
             if item[0] == message.from_user.id:
                 is_succeed = True
         if is_succeed:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_admin_kb)
             conn.commit()
             conn.close()
             state = dp.current_state(user=message.from_user.id)
             await state.reset_state()
         else:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_user_kb)
             conn.commit()
             conn.close()
@@ -532,7 +513,7 @@ async def process_admin_command4(message: types.Message):
         conn.close()
         state = dp.current_state(user=message.from_user.id)
         await state.set_state(AdminPanel.all()[4])
-        await message.reply('Выберите таймер:', reply=False, reply_markup=KeyBoards.time_kb)
+        await message.reply(messages.timer, reply=False, reply_markup=KeyBoards.time_kb)
 
 
 @dp.message_handler(state=AdminPanel.ADMIN_4)
@@ -549,23 +530,25 @@ async def process_admin_command4(message: types.Message):
             if item[0] == message.from_user.id:
                 is_succeed = True
         if is_succeed:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_admin_kb)
             conn.commit()
             conn.close()
             state = dp.current_state(user=message.from_user.id)
             await state.reset_state()
         else:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_user_kb)
             conn.commit()
             conn.close()
             state = dp.current_state(user=message.from_user.id)
             await state.reset_state()
     else:
-        m = {'1 час': 60 * 60, "2 часа": 60 * 60 * 2, "6 часов": 60 * 60 * 6, "12 часов": 60 * 60 * 12,
+        m = {'1 час': 60 * 60, "2 часа": 60 * 60 * 2, "3 часа": 60 * 60 * 3, "4 часа": 60 * 60 * 4,
+             "5 часов": 60 * 60 * 5,
+             "18 часов": 60 * 60 * 18, "6 часов": 60 * 60 * 6, "12 часов": 60 * 60 * 12,
              "24 часа": 60 * 60 * 24,
-             "2 дня": 60 * 60 * 48, "Неделя": 60 * 60 * 24 * 7}
+             "2 дня": 60 * 60 * 48, "3 дня": 60 * 60 * 24 * 3, "Неделя": 60 * 60 * 24 * 7}
         if m[message.text]:
             conn = sqlite3.connect('db.db')
             cursor = conn.cursor()
@@ -575,7 +558,7 @@ async def process_admin_command4(message: types.Message):
             conn.close()
             state = dp.current_state(user=message.from_user.id)
             await state.set_state(AdminPanel.all()[5])
-            await message.reply('Вы точно хотите отправить рассылку?', reply=False, reply_markup=KeyBoards.
+            await message.reply(messages.mailing, reply=False, reply_markup=KeyBoards.
                                 yes_or_no_keyboard)
 
 
@@ -593,14 +576,14 @@ async def process_admin_command1(message: types.Message):
             if item[0] == message.from_user.id:
                 is_succeed = True
         if is_succeed:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_admin_kb)
             conn.commit()
             conn.close()
             state = dp.current_state(user=message.from_user.id)
             await state.reset_state()
         else:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_user_kb)
             conn.commit()
             conn.close()
@@ -657,14 +640,14 @@ async def process_admin_command1(message: types.Message):
             if item[0] == message.from_user.id:
                 is_succeed = True
         if is_succeed:
-            await message.reply('Успешно! ✨'
+            await message.reply(messages.successfully
                                 , reply=False, reply_markup=KeyBoards.menu_admin_kb)
             conn.commit()
             conn.close()
             state = dp.current_state(user=message.from_user.id)
             await state.reset_state()
         else:
-            await message.reply('Успешно! ✨'
+            await message.reply(messages.successfully
                                 , reply=False, reply_markup=KeyBoards.menu_user_kb)
             conn.commit()
             conn.close()
@@ -691,14 +674,14 @@ async def process_admin_command1(message: types.Message):
             if item[0] == message.from_user.id:
                 is_succeed = True
         if is_succeed:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_admin_kb)
             conn.commit()
             conn.close()
             state = dp.current_state(user=message.from_user.id)
             await state.reset_state()
         else:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_user_kb)
             conn.commit()
             conn.close()
@@ -712,7 +695,7 @@ async def process_admin_command1(message: types.Message):
         conn.close()
         state = dp.current_state(user=message.from_user.id)
         await state.set_state(AdminPanel.all()[7])
-        await message.reply("Выберите таймер:", reply_markup=KeyBoards.time_kb)
+        await message.reply(messages.timer, reply_markup=KeyBoards.time_kb)
 
 
 @dp.message_handler(state=AdminPanel.ADMIN_7)
@@ -729,23 +712,25 @@ async def process_admin_command4(message: types.Message):
             if item[0] == message.from_user.id:
                 is_succeed = True
         if is_succeed:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_admin_kb)
             conn.commit()
             conn.close()
             state = dp.current_state(user=message.from_user.id)
             await state.reset_state()
         else:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_user_kb)
             conn.commit()
             conn.close()
             state = dp.current_state(user=message.from_user.id)
             await state.reset_state()
     else:
-        m = {'1 час': 60 * 60, "2 часа": 60 * 60 * 2, "6 часов": 60 * 60 * 6, "12 часов": 60 * 60 * 12,
+        m = {'1 час': 60 * 60, "2 часа": 60 * 60 * 2, "3 часа": 60 * 60 * 3, "4 часа": 60 * 60 * 4,
+             "5 часов": 60 * 60 * 5,
+             "18 часов": 60 * 60 * 18, "6 часов": 60 * 60 * 6, "12 часов": 60 * 60 * 12,
              "24 часа": 60 * 60 * 24,
-             "2 дня": 60 * 60 * 48, "Неделя": 60 * 60 * 24 * 7}
+             "2 дня": 60 * 60 * 48, "3 дня": 60 * 60 * 24 * 3, "Неделя": 60 * 60 * 24 * 7}
         if m[message.text]:
             conn = sqlite3.connect('db.db')
             cursor = conn.cursor()
@@ -755,7 +740,7 @@ async def process_admin_command4(message: types.Message):
             conn.close()
             state = dp.current_state(user=message.from_user.id)
             await state.set_state(AdminPanel.all()[8])
-            await message.reply('Вы точно хотите отправить рассылку?', reply=False, reply_markup=KeyBoards.
+            await message.reply(messages.mailing, reply=False, reply_markup=KeyBoards.
                                 yes_or_no_keyboard)
 
 
@@ -773,14 +758,14 @@ async def process_admin_command1(message: types.Message):
             if item[0] == message.from_user.id:
                 is_succeed = True
         if is_succeed:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_admin_kb)
             conn.commit()
             conn.close()
             state = dp.current_state(user=message.from_user.id)
             await state.reset_state()
         else:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_user_kb)
             conn.commit()
             conn.close()
@@ -831,14 +816,14 @@ async def process_admin_command1(message: types.Message):
             if item[0] == message.from_user.id:
                 is_succeed = True
         if is_succeed:
-            await message.reply('Успешно! ✨'
+            await message.reply(messages.successfully
                                 , reply=False, reply_markup=KeyBoards.menu_admin_kb)
             conn.commit()
             conn.close()
             state = dp.current_state(user=message.from_user.id)
             await state.reset_state()
         else:
-            await message.reply('Успешно! ✨'
+            await message.reply(messages.successfully
                                 , reply=False, reply_markup=KeyBoards.menu_user_kb)
             conn.commit()
             conn.close()
@@ -848,7 +833,7 @@ async def process_admin_command1(message: types.Message):
     elif switch_text == 'изменить':
         state = dp.current_state(user=message.from_user.id)
         await state.set_state(AdminPanel.all()[0])
-        await message.reply("Выберите действие ✨", reply_markup=KeyBoards.admin_panel)
+        await message.reply(messages.choose_action, reply_markup=KeyBoards.admin_panel)
 
 
 # endregion
@@ -868,14 +853,14 @@ async def process_buy_command0(message: types.Message):
             if item[0] == message.from_user.id:
                 is_succeed = True
         if is_succeed:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_admin_kb)
             conn.commit()
             conn.close()
             state = dp.current_state(user=message.from_user.id)
             await state.reset_state()
         else:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_user_kb)
             conn.commit()
             conn.close()
@@ -890,7 +875,7 @@ async def process_buy_command0(message: types.Message):
     elif message.text == 'Поддержать разработку телеграмм-бота':
         state = dp.current_state(user=message.from_user.id)
         await state.set_state(Pay.all()[1])
-        await message.reply("Спасибо, что решили поддержать нашего телеграмм-бота! 🔥"
+        await message.reply(messages.thanks
                             , reply_markup=KeyBoards.developer_support_kb2)
 
 
@@ -900,7 +885,7 @@ async def process_buy_command01(message: types.Message):
     if message.text == 'Меню':
         state = dp.current_state(user=message.from_user.id)
         await state.reset_state()
-        await message.reply("Вы в меню ✨", reply_markup=KeyBoards.menu_admin_kb)
+        await message.reply(messages.menu, reply_markup=KeyBoards.menu_admin_kb)
     elif switch_text == "поддержать разработчиков 100 рублей":
         if PAYMENTS_PROVIDER_TOKEN.split(':')[1] == 'TEST':
             await bot.send_message(message.chat.id, MESSAGES['pre_buy_demo_alert'])
@@ -972,8 +957,7 @@ async def process_buy_command01(message: types.Message):
     elif switch_text == "поддержать разработчиков другой суммой":
         state = dp.current_state(user=message.from_user.id)
         await state.set_state(Pay.all()[2])
-        await bot.send_message(message.from_user.id,
-                               "Наберите свою сумму (Сумма должна быть больше 75 рублей и меньше 100000 рублей!)")
+        await bot.send_message(message.from_user.id, messages.summa)
 
 
 @dp.message_handler(state=Pay.PAY_DISTRIBUTOR3)
@@ -982,9 +966,9 @@ async def process_buy_command01(message: types.Message):
     if message.text == 'Меню':
         state = dp.current_state(user=message.from_user.id)
         await state.reset_state()
-        await message.reply("Вы в меню ✨", reply_markup=KeyBoards.menu_admin_kb)
+        await message.reply(messages.menu, reply_markup=KeyBoards.menu_admin_kb)
     else:
-        if (int(message.text) > 75 and message.text.isdigit() == True and int(message.text) <= 100000):
+        if (int(message.text) >= 80 and message.text.isdigit() == True and int(message.text) <= 100000):
             integer = int(message.text)
             pr = integer * 100
             price = types.LabeledPrice(label='Поддержать разработчиков другой суммой', amount=pr)
@@ -1009,8 +993,7 @@ async def process_buy_command01(message: types.Message):
         else:
             state = dp.current_state(user=message.from_user.id)
             await state.set_state(Pay.all()[1])
-            await bot.send_message(message.from_user.id, "Вы неправильно ввели данные, попробуйте еще раз  "
-                                                         "(Нажмите кнопку выбора действия)")
+            await bot.send_message(message.from_user.id, messages.wrong)
 
 
 # endregion payHandler
@@ -1037,7 +1020,7 @@ async def process_successful_payment(message: types.Message):
     )
     state = dp.current_state(user=message.from_user.id)
     await state.reset_state()
-    await message.reply("Вы в меню ✨", reply_markup=KeyBoards.menu_admin_kb)
+    await message.reply(messages.menu, reply_markup=KeyBoards.menu_admin_kb)
 
 
 @dp.message_handler(state=Change.CHANGE_0)
@@ -1056,14 +1039,14 @@ async def name_change(message: types.Message):
         if item[0] == message.from_user.id:
             is_succeed = True
     if is_succeed:
-        await message.reply('Вы в меню! ✨'
+        await message.reply(messages.menu
                             , reply=False, reply_markup=KeyBoards.menu_admin_kb)
         conn.commit()
         conn.close()
         state = dp.current_state(user=message.from_user.id)
         await state.reset_state()
     else:
-        await message.reply('Вы в меню! ✨'
+        await message.reply(messages.menu
                             , reply=False, reply_markup=KeyBoards.menu_user_kb)
         conn.commit()
         conn.close()
@@ -1080,11 +1063,11 @@ async def register_1(message: types.Message):
     if switch_text == "я студент":
         state = dp.current_state(user=message.from_user.id)
         await state.set_state(Register.all()[1])
-        await message.reply("Ну начнем знакомство! 😉\nВведите ваше имя:")
+        await message.reply(messages.student_name)
     elif switch_text == "я преподаватель":
         state = dp.current_state(user=message.from_user.id)
         await state.set_state(Register.all()[4])
-        await message.reply("Ну начнем знакомство! 😉\nВведите вашу фамилию:")
+        await message.reply(messages.teacher_surname)
 
 
 # name
@@ -1159,10 +1142,10 @@ async def register_4(message: types.message):
     if len(response) != 0:
         for item in response:
             keyboard.add(item)
-        await message.reply("Выберите: ", reply_markup=keyboard)
+        await message.reply(messages.select, reply_markup=keyboard)
         await dp.current_state(user=message.from_user.id).set_state(Register.all()[5])
     else:
-        await message.reply("Возможно вы допустили ошибку, попробуйте еще раз: ", reply_markup=keyboard)
+        await message.reply(messages.error, reply_markup=keyboard)
 
 
 @dp.message_handler(state=Register.REGISTER_5)
@@ -1227,14 +1210,14 @@ async def schedule_1(message: types.Message):
             if item[0] == message.from_user.id:
                 is_succeed = True
         if is_succeed:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_admin_kb)
             conn.commit()
             conn.close()
             state = dp.current_state(user=message.from_user.id)
             await state.reset_state()
         else:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_user_kb)
             conn.commit()
             conn.close()
@@ -1246,13 +1229,14 @@ async def schedule_1(message: types.Message):
         cursor.execute(f"UPDATE user_table SET user_group = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
         conn.commit()
         conn.close()
-        await message.reply('Выберите день недели', reply_markup=KeyBoards.day_of_the_week_kb)
+        await message.reply(messages.day_of_the_week, reply_markup=KeyBoards.day_of_the_week_kb)
         state = dp.current_state(user=message.from_user.id)
         await state.set_state(ScheduleUser.all()[2])
 
 
 @dp.message_handler(state=ScheduleUser.SCHEDULE_USER_2)
 async def schedule_1(message: types.Message):
+    global group
     switch_text = message.text.lower()
     if switch_text == 'меню':
         is_succeed = False
@@ -1265,14 +1249,14 @@ async def schedule_1(message: types.Message):
             if item[0] == message.from_user.id:
                 is_succeed = True
         if is_succeed:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_admin_kb)
             conn.commit()
             conn.close()
             state = dp.current_state(user=message.from_user.id)
             await state.reset_state()
         else:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_user_kb)
             conn.commit()
             conn.close()
@@ -1321,7 +1305,7 @@ async def schedule_1(message: types.Message):
                         else:
                             timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
             else:
-                timetable_message += 'Пар нет!\n Отличный повод увидеться с друзьями! 🎉'
+                timetable_message += 'В понедельник у этой группы пар нет!'
             await message.reply(timetable_message, parse_mode="HTML")
 
         elif switch_text == "вторник":
@@ -1367,7 +1351,7 @@ async def schedule_1(message: types.Message):
                         else:
                             timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
             else:
-                timetable_message += 'Пар нет! Отличный повод увидеться с друзьями! 🎉'
+                timetable_message += 'Во вторник у этой группы пар нет!'
             await message.reply(timetable_message, parse_mode="HTML")
 
         elif switch_text == "среда":
@@ -1413,7 +1397,7 @@ async def schedule_1(message: types.Message):
                         else:
                             timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
             else:
-                timetable_message += 'Пар нет! Отличный повод увидеться с друзьями! 🎉'
+                timetable_message += 'В среду у этой группы пар нет!'
             await message.reply(timetable_message, parse_mode="HTML")
 
         elif switch_text == "четверг":
@@ -1459,7 +1443,7 @@ async def schedule_1(message: types.Message):
                         else:
                             timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
             else:
-                timetable_message += 'Пар нет! Отличный повод увидеться с друзьями! 🎉'
+                timetable_message += 'В четверг у этой группы пар нет!'
             await message.reply(timetable_message, parse_mode="HTML")
 
         elif switch_text == "пятница":
@@ -1505,7 +1489,7 @@ async def schedule_1(message: types.Message):
                         else:
                             timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
             else:
-                timetable_message += 'Пар нет! Отличный повод увидеться с друзьями! 🎉'
+                timetable_message += 'В пятницу у этой группы пар нет!'
             await message.reply(timetable_message, parse_mode="HTML")
 
         elif switch_text == "суббота":
@@ -1551,7 +1535,7 @@ async def schedule_1(message: types.Message):
                         else:
                             timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
             else:
-                timetable_message += 'Пар нет! Отличный повод увидеться с друзьями! 🎉'
+                timetable_message += 'В субботу у этой группы пар нет!'
             await message.reply(timetable_message, parse_mode="HTML")
         if switch_text == 'посмотреть расписание на след. неделю':
             state = dp.current_state(user=message.from_user.id)
@@ -1574,14 +1558,14 @@ async def schedule_1(message: types.Message):
             if item[0] == message.from_user.id:
                 is_succeed = True
         if is_succeed:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_admin_kb)
             conn.commit()
             conn.close()
             state = dp.current_state(user=message.from_user.id)
             await state.reset_state()
         else:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_user_kb)
             conn.commit()
             conn.close()
@@ -1626,7 +1610,7 @@ async def schedule_1(message: types.Message):
                         else:
                             timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
             else:
-                timetable_message += 'В следующий понедельник пар нет!\n Отличный повод увидеться с друзьями! 🎉'
+                timetable_message += 'В следующий понедельник у этой группы пар нет!'
             await message.reply(timetable_message, parse_mode="HTML")
 
         elif switch_text == 'вторник':
@@ -1667,7 +1651,7 @@ async def schedule_1(message: types.Message):
                         else:
                             timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
             else:
-                timetable_message += 'Во следующий вторник пар нет!\n Отличный повод увидеться с друзьями! 🎉'
+                timetable_message += 'Во следующий вторник у этой группы пар нет!'
             await message.reply(timetable_message, parse_mode="HTML")
 
         elif switch_text == 'среда':
@@ -1708,7 +1692,7 @@ async def schedule_1(message: types.Message):
                         else:
                             timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
             else:
-                timetable_message += 'В следующую среду пар нет!\n Отличный повод увидеться с друзьями! 🎉'
+                timetable_message += 'В следующую среду у этой группы пар нет!'
             await message.reply(timetable_message, parse_mode="HTML")
 
         elif switch_text == 'четверг':
@@ -1749,7 +1733,7 @@ async def schedule_1(message: types.Message):
                         else:
                             timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
             else:
-                timetable_message += 'В следующий четверг пар нет!\n Отличный повод увидеться с друзьями! 🎉'
+                timetable_message += 'В следующий четверг у этой группы пар нет!'
             await message.reply(timetable_message, parse_mode="HTML")
 
         elif switch_text == 'пятница':
@@ -1790,7 +1774,7 @@ async def schedule_1(message: types.Message):
                         else:
                             timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
             else:
-                timetable_message += 'В следующую пятницу пар нет!\n Отличный повод увидеться с друзьями! 🎉'
+                timetable_message += 'В следующую пятницу у этой группы пар нет!'
             await message.reply(timetable_message, parse_mode="HTML")
 
         elif switch_text == 'суббота':
@@ -1831,7 +1815,7 @@ async def schedule_1(message: types.Message):
                         else:
                             timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
             else:
-                timetable_message += 'В следующую субботу пар нет!\n Отличный повод увидеться с друзьями! 🎉'
+                timetable_message += 'В следующую субботу у этой группы пар нет!'
             await message.reply(timetable_message, parse_mode="HTML")
 
 
@@ -1852,14 +1836,14 @@ async def schedule(message: types.Message):
             if item[0] == message.from_user.id:
                 is_succeed = True
         if is_succeed:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_admin_kb)
             conn.commit()
             conn.close()
             state = dp.current_state(user=message.from_user.id)
             await state.reset_state()
         else:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_user_kb)
             conn.commit()
             conn.close()
@@ -1909,7 +1893,7 @@ async def schedule(message: types.Message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += 'В следующий понедельник пар нет!\n Отличный повод увидеться с друзьями! 🎉'
+                    timetable_message += 'В следующий понедельник пар нет! Отличный повод увидеться с друзьями! 🎉'
                 await message.reply(timetable_message, parse_mode="HTML")
 
             elif switch_text == 'вторник':
@@ -1950,7 +1934,7 @@ async def schedule(message: types.Message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += 'Во следующий вторник пар нет!\n Отличный повод увидеться с друзьями! 🎉'
+                    timetable_message += 'Во следующий вторник пар нет! Отличный повод увидеться с друзьями! 🎉'
                 await message.reply(timetable_message, parse_mode="HTML")
 
             elif switch_text == 'среда':
@@ -1991,7 +1975,7 @@ async def schedule(message: types.Message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += 'В следующую среду пар нет!\n Отличный повод увидеться с друзьями! 🎉'
+                    timetable_message += 'В следующую среду пар нет! Отличный повод увидеться с друзьями! 🎉'
                 await message.reply(timetable_message, parse_mode="HTML")
 
             elif switch_text == 'четверг':
@@ -2032,7 +2016,7 @@ async def schedule(message: types.Message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += 'В следующий четверг пар нет!\n Отличный повод увидеться с друзьями! 🎉'
+                    timetable_message += 'В следующий четверг пар нет! Отличный повод увидеться с друзьями! 🎉'
                 await message.reply(timetable_message, parse_mode="HTML")
 
             elif switch_text == 'пятница':
@@ -2073,7 +2057,7 @@ async def schedule(message: types.Message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += 'В следующую пятницу пар нет!\n Отличный повод увидеться с друзьями! 🎉'
+                    timetable_message += 'В следующую пятницу пар нет! Отличный повод увидеться с друзьями! 🎉'
                 await message.reply(timetable_message, parse_mode="HTML")
 
             elif switch_text == 'суббота':
@@ -2114,7 +2098,7 @@ async def schedule(message: types.Message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += 'В следующую субботу пар нет!\n Отличный повод увидеться с друзьями! 🎉'
+                    timetable_message += 'В следующую субботу пар нет! Отличный повод увидеться с друзьями! 🎉'
                 await message.reply(timetable_message, parse_mode="HTML")
         else:
             if switch_text == 'понедельник':
@@ -2155,7 +2139,7 @@ async def schedule(message: types.Message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += 'В следующий понедельник пар нет!\n Отличный повод увидеться с друзьями! 🎉'
+                    timetable_message += 'В следующий понедельник у вас пар нет!'
                 await message.reply(timetable_message, parse_mode="HTML")
 
             elif switch_text == 'вторник':
@@ -2196,7 +2180,7 @@ async def schedule(message: types.Message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += 'Во следующий вторник пар нет!\n Отличный повод увидеться с друзьями! 🎉'
+                    timetable_message += 'Во следующий вторник у вас пар нет!'
                 await message.reply(timetable_message, parse_mode="HTML")
 
             elif switch_text == 'среда':
@@ -2237,7 +2221,7 @@ async def schedule(message: types.Message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += 'В следующую среду пар нет!\n Отличный повод увидеться с друзьями! 🎉'
+                    timetable_message += 'В следующую среду у вас пар нет!'
                 await message.reply(timetable_message, parse_mode="HTML")
 
             elif switch_text == 'четверг':
@@ -2278,7 +2262,7 @@ async def schedule(message: types.Message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += 'В следующий четверг пар нет!\n Отличный повод увидеться с друзьями! 🎉'
+                    timetable_message += 'В следующий четверг у вас пар нет!'
                 await message.reply(timetable_message, parse_mode="HTML")
 
             elif switch_text == 'пятница':
@@ -2319,7 +2303,7 @@ async def schedule(message: types.Message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += 'В следующую пятницу пар нет!\n Отличный повод увидеться с друзьями! 🎉'
+                    timetable_message += 'В следующую пятницу у вас пар нет!'
                 await message.reply(timetable_message, parse_mode="HTML")
 
             elif switch_text == 'суббота':
@@ -2360,14 +2344,15 @@ async def schedule(message: types.Message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += 'В следующую субботу пар нет!\n Отличный повод увидеться с друзьями! 🎉'
+                    timetable_message += 'В следующую субботу у вас пар нет!'
                 await message.reply(timetable_message, parse_mode="HTML")
 
 
 @dp.message_handler(state=CheckSchedule.SCH_0)
 async def schedule_check(msg: types.Message):
+    global group
     if msg.text.lower() == "меню":
-        await msg.reply('Вы в меню! ✨'
+        await msg.reply(messages.menu
                         , reply=False, reply_markup=KeyBoards.menu_admin_kb)
         state = dp.current_state(user=msg.from_user.id)
         await state.reset_state()
@@ -2378,7 +2363,6 @@ async def schedule_check(msg: types.Message):
         teacher = cursor.fetchall()[0][0]
         switch_text = msg.text.lower()
         if not teacher:
-
             if switch_text == "понедельник":
                 timetable_message = ""
                 url = 'https://edu.sfu-kras.ru/timetable'
@@ -2421,7 +2405,7 @@ async def schedule_check(msg: types.Message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += 'Пар нет!\n Отличный повод увидеться с друзьями! 🎉'
+                    timetable_message += 'В понедельник пар нет! Отличный повод увидеться с друзьями! 🎉'
                 await msg.reply(timetable_message, parse_mode="HTML")
 
             elif switch_text == "вторник":
@@ -2467,7 +2451,7 @@ async def schedule_check(msg: types.Message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += 'Пар нет! Отличный повод увидеться с друзьями! 🎉'
+                    timetable_message += 'Во вторник пар нет! Отличный повод увидеться с друзьями! 🎉'
                 await msg.reply(timetable_message, parse_mode="HTML")
 
             elif switch_text == "среда":
@@ -2513,7 +2497,7 @@ async def schedule_check(msg: types.Message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += 'Пар нет! Отличный повод увидеться с друзьями! 🎉'
+                    timetable_message += 'В среду пар нет! Отличный повод увидеться с друзьями! 🎉'
                 await msg.reply(timetable_message, parse_mode="HTML")
 
             elif switch_text == "четверг":
@@ -2559,7 +2543,7 @@ async def schedule_check(msg: types.Message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += 'Пар нет! Отличный повод увидеться с друзьями! 🎉'
+                    timetable_message += 'В четверг пар нет! Отличный повод увидеться с друзьями! 🎉'
                 await msg.reply(timetable_message, parse_mode="HTML")
 
             elif switch_text == "пятница":
@@ -2605,7 +2589,7 @@ async def schedule_check(msg: types.Message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += 'Пар нет! Отличный повод увидеться с друзьями! 🎉'
+                    timetable_message += 'В пятницу пар нет! Отличный повод увидеться с друзьями! 🎉'
                 await msg.reply(timetable_message, parse_mode="HTML")
 
             elif switch_text == "суббота":
@@ -2651,7 +2635,7 @@ async def schedule_check(msg: types.Message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += 'Пар нет! Отличный повод увидеться с друзьями! 🎉'
+                    timetable_message += 'В субботу пар нет! Отличный повод увидеться с друзьями! 🎉'
                 await msg.reply(timetable_message, parse_mode="HTML")
         else:
             if switch_text == "понедельник":
@@ -2696,7 +2680,7 @@ async def schedule_check(msg: types.Message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += 'Пар нет!\n Отличный повод увидеться с друзьями! 🎉'
+                    timetable_message += 'В понедельник у вас пар нет!'
                 await msg.reply(timetable_message, parse_mode="HTML")
 
             elif switch_text == "вторник":
@@ -2742,7 +2726,7 @@ async def schedule_check(msg: types.Message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += 'Пар нет! Отличный повод увидеться с друзьями! 🎉'
+                    timetable_message += 'Во вторник у вас пар нет!'
                 await msg.reply(timetable_message, parse_mode="HTML")
 
             elif switch_text == "среда":
@@ -2788,7 +2772,7 @@ async def schedule_check(msg: types.Message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += 'Пар нет! Отличный повод увидеться с друзьями! 🎉'
+                    timetable_message += 'В среду у вас пар нет!'
                 await msg.reply(timetable_message, parse_mode="HTML")
 
             elif switch_text == "четверг":
@@ -2834,7 +2818,7 @@ async def schedule_check(msg: types.Message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += 'Пар нет! Отличный повод увидеться с друзьями! 🎉'
+                    timetable_message += 'В четверг у вас пар нет!'
                 await msg.reply(timetable_message, parse_mode="HTML")
 
             elif switch_text == "пятница":
@@ -2880,7 +2864,7 @@ async def schedule_check(msg: types.Message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += 'Пар нет! Отличный повод увидеться с друзьями! 🎉'
+                    timetable_message += 'В пятницу у вас пар нет!'
                 await msg.reply(timetable_message, parse_mode="HTML")
 
             elif switch_text == "суббота":
@@ -2926,7 +2910,7 @@ async def schedule_check(msg: types.Message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += 'Пар нет! Отличный повод увидеться с друзьями! 🎉'
+                    timetable_message += 'В субботу у вас пар нет!'
                 await msg.reply(timetable_message, parse_mode="HTML")
         if switch_text == 'посмотреть расписание на след. неделю':
             state = dp.current_state(user=msg.from_user.id)
@@ -2951,14 +2935,14 @@ async def schedule(message: types.Message):
             if item[0] == message.from_user.id:
                 is_succeed = True
         if is_succeed:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_admin_kb)
             conn.commit()
             conn.close()
             state = dp.current_state(user=message.from_user.id)
             await state.reset_state()
         else:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_user_kb)
             conn.commit()
             conn.close()
@@ -2968,13 +2952,13 @@ async def schedule(message: types.Message):
     elif switch_text == "добавить мероприятие":
         state = dp.current_state(user=message.from_user.id)
         await state.set_state(Events.all()[0])
-        await message.reply("Введите ваше мероприятие 🍻", reply_markup=KeyBoards.universal_kb)
+        await message.reply(messages.events_write, reply_markup=KeyBoards.universal_kb)
 
     else:
         state = dp.current_state(user=message.from_user.id)
         await state.set_state(Delete.all()[3])
         incoming_events2[message.from_user.id] = message.text
-        await message.reply('Вы точно хотите удалить мероприятие? '
+        await message.reply(messages.events_del
                             , reply=False, reply_markup=KeyBoards.yes_or_no_keyboard2)
 
 
@@ -2993,14 +2977,14 @@ async def schedule(message: types.Message):
             if item[0] == message.from_user.id:
                 is_succeed = True
         if is_succeed:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_admin_kb)
             conn.commit()
             conn.close()
             state = dp.current_state(user=message.from_user.id)
             await state.reset_state()
         else:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_user_kb)
             conn.commit()
             conn.close()
@@ -3010,7 +2994,7 @@ async def schedule(message: types.Message):
         state = dp.current_state(user=message.from_user.id)
         incoming_events2[message.from_user.id] = message.text
         await state.set_state(Delete.all()[2])
-        await message.reply('Вы точно хотите удалить рассылку? '
+        await message.reply(messages.mailing_del
                             , reply=False, reply_markup=KeyBoards.yes_or_no_keyboard2)
 
 
@@ -3029,14 +3013,14 @@ async def schedule(message: types.Message):
             if item[0] == message.from_user.id:
                 is_succeed = True
         if is_succeed:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_admin_kb)
             conn.commit()
             conn.close()
             state = dp.current_state(user=message.from_user.id)
             await state.reset_state()
         else:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_user_kb)
             conn.commit()
             conn.close()
@@ -3050,7 +3034,7 @@ async def schedule(message: types.Message):
         incoming_events2.pop(message.from_user.id)
         conn.commit()
         conn.close()
-        await bot.send_message(message.from_user.id, 'Успешно!')
+        await bot.send_message(message.from_user.id, messages.successfully)
         is_succeed = False
         conn = sqlite3.connect('db.db')
         cursor = conn.cursor()
@@ -3061,14 +3045,14 @@ async def schedule(message: types.Message):
             if item[0] == message.from_user.id:
                 is_succeed = True
         if is_succeed:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_admin_kb)
             conn.commit()
             conn.close()
             state = dp.current_state(user=message.from_user.id)
             await state.reset_state()
         else:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_user_kb)
             conn.commit()
             conn.close()
@@ -3091,14 +3075,14 @@ async def schedule(message: types.Message):
             if item[0] == message.from_user.id:
                 is_succeed = True
         if is_succeed:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_admin_kb)
             conn.commit()
             conn.close()
             state = dp.current_state(user=message.from_user.id)
             await state.reset_state()
         else:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_user_kb)
             conn.commit()
             conn.close()
@@ -3112,7 +3096,7 @@ async def schedule(message: types.Message):
         incoming_events2.pop(message.from_user.id)
         conn.commit()
         conn.close()
-        await bot.send_message(message.from_user.id, 'Успешно!')
+        await bot.send_message(message.from_user.id, messages.successfully)
         is_succeed = False
         conn = sqlite3.connect('db.db')
         cursor = conn.cursor()
@@ -3123,14 +3107,14 @@ async def schedule(message: types.Message):
             if item[0] == message.from_user.id:
                 is_succeed = True
         if is_succeed:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_admin_kb)
             conn.commit()
             conn.close()
             state = dp.current_state(user=message.from_user.id)
             await state.reset_state()
         else:
-            await message.reply('Вы в меню! ✨'
+            await message.reply(messages.menu
                                 , reply=False, reply_markup=KeyBoards.menu_user_kb)
             conn.commit()
             conn.close()
@@ -3145,13 +3129,7 @@ async def handler_message(msg: types.Message):
     switch_text = msg.text.lower()
     if switch_text == "расписание":
         await dp.current_state(user=msg.from_user.id).set_state(CheckSchedule.all()[0])
-        await msg.reply("Выберите день недели", reply_markup=KeyBoards.day_of_the_week_kb)
-
-    # Регистрация
-    elif switch_text == "регистрация":
-        state = dp.current_state(user=msg.from_user.id)
-        await state.set_state(Register.all()[0])
-        await msg.reply("Ну начнем знакомство! 😉\nВведите ваше ФИО:")
+        await msg.reply(messages.day_of_the_week, reply_markup=KeyBoards.day_of_the_week_kb)
 
     elif switch_text == "админ-панель":
         conn = sqlite3.connect('db.db')
@@ -3174,13 +3152,13 @@ async def handler_message(msg: types.Message):
             if is_teacher:
                 state = dp.current_state(user=msg.from_user.id)
                 await state.set_state(AdminPanel.all()[0])
-                await msg.reply("Добро пожаловать в админ-панель!", reply_markup=KeyBoards.admin_panel_teacher)
+                await msg.reply(messages.admin_panel, reply_markup=KeyBoards.admin_panel_teacher)
             else:
                 state = dp.current_state(user=msg.from_user.id)
                 await state.set_state(AdminPanel.all()[0])
-                await msg.reply("Добро пожаловать в админ-панель!", reply_markup=KeyBoards.admin_panel)
+                await msg.reply(messages.admin_panel, reply_markup=KeyBoards.admin_panel)
         else:
-            await msg.reply("Вы не являетесь админом", reply_markup=KeyBoards.menu_admin_kb)
+            await msg.reply(messages.not_admin, reply_markup=KeyBoards.menu_admin_kb)
     elif switch_text == "меню":
         is_succeed = False
         conn = sqlite3.connect('db.db')
@@ -3192,14 +3170,14 @@ async def handler_message(msg: types.Message):
             if item[0] == msg.from_user.id:
                 is_succeed = True
         if is_succeed:
-            await msg.reply('Вы в меню! ✨'
+            await msg.reply(messages.menu
                             , reply=False, reply_markup=KeyBoards.menu_admin_kb)
             conn.commit()
             conn.close()
             state = dp.current_state(user=msg.from_user.id)
             await state.reset_state()
         else:
-            await msg.reply('Вы в меню! ✨'
+            await msg.reply(messages.menu
                             , reply=False, reply_markup=KeyBoards.menu_user_kb)
             conn.commit()
             conn.close()
@@ -3256,8 +3234,8 @@ async def handler_message(msg: types.Message):
                     local_time[1] = "Декабря"
 
                 a = a + f" - <b>{item[1]}</b>" + '\n' + \
-                    f'Эта рассылка заканчивается {local_time[2]} {local_time[1]} ' \
-                    f'({local_time[0]}) {local_time[4]} года в {local_time[3]} ' + '\n'
+                    f'Эта рассылка заканчивается {local_time[3]} {local_time[1]} ' \
+                    f'({local_time[0]}) {local_time[5]} года в {local_time[4]} ' + '\n'
         if a == "Ваши рассылки: \n":
             a = 'Вам еще не приходили рассылки!'
         await msg.reply(a, reply_markup=KeyBoards.mailing_lists_kb, parse_mode="HTML")
@@ -3276,7 +3254,7 @@ async def handler_message(msg: types.Message):
         conn.commit()
         conn.close()
     elif switch_text == "настройки":
-        await msg.reply("Вы в настройках ⚙", reply_markup=KeyBoards.setting_kb)
+        await msg.reply(messages.settings, reply_markup=KeyBoards.setting_kb)
 
     elif switch_text == "запланированные мероприятия":
         conn = sqlite3.connect('db.db')
@@ -3330,8 +3308,8 @@ async def handler_message(msg: types.Message):
                     local_time[1] = "Декабря"
 
                 a = a + f" - <b>{item[1]}</b>" + '\n' + \
-                    f'Это мероприятие заканчивается {local_time[2]} {local_time[1]} ' \
-                    f'({local_time[0]}) {local_time[4]} года в {local_time[3]} ' + '\n'
+                    f'Это мероприятие заканчивается {local_time[3]} {local_time[1]} ' \
+                    f'({local_time[0]}) {local_time[5]} года в {local_time[4]} ' + '\n'
         if a == "Ваши мероприятия: \n":
             a = 'У вас нет мероприятий!'
         await msg.reply(a, reply_markup=KeyBoards.events_kb, parse_mode="HTML")
@@ -3347,19 +3325,19 @@ async def handler_message(msg: types.Message):
                 if item[1] == 'True':
                     is_teacher = True
         if is_teacher:
-            await msg.reply("Выберите, что хотите изменить 👇", reply_markup=KeyBoards.change_information_kb2)
+            await msg.reply(messages.choose_want_change, reply_markup=KeyBoards.change_information_kb2)
         else:
-            await msg.reply("Выберите, что хотите изменить 👇", reply_markup=KeyBoards.change_information_kb)
+            await msg.reply(messages.choose_want_change, reply_markup=KeyBoards.change_information_kb)
 
     elif switch_text == "поменять преподавателя":
         state = dp.current_state(user=msg.from_user.id)
         await state.set_state(Register.all()[4])
-        await msg.reply("Введите вашу фамилию:")
+        await msg.reply(messages.teacher_surname2)
 
     elif switch_text == "добавить мероприятие":
         state = dp.current_state(user=msg.from_user.id)
         await state.set_state(Events.all()[0])
-        await msg.reply("Введите ваше мероприятие 🍻", reply_markup=KeyBoards.universal_kb)
+        await msg.reply(messages.events_write, reply_markup=KeyBoards.universal_kb)
 
     elif switch_text == "удалить мероприятие":
         conn = sqlite3.connect('db.db')
@@ -3372,7 +3350,7 @@ async def handler_message(msg: types.Message):
                 keyboard.add(item[1])
         state = dp.current_state(user=msg.from_user.id)
         await state.set_state(Delete.all()[0])
-        await msg.reply("Выберите мероприятие, которое хотите удалить 👇", reply_markup=keyboard)
+        await msg.reply(messages.choose_event_del, reply_markup=keyboard)
 
     elif switch_text == "удалить рассылку":
         conn = sqlite3.connect('db.db')
@@ -3385,10 +3363,10 @@ async def handler_message(msg: types.Message):
                 keyboard.add(item[1])
         state = dp.current_state(user=msg.from_user.id)
         await state.set_state(Delete.all()[1])
-        await msg.reply("Выберите рассылку, которую хотите удалить 👇", reply_markup=keyboard)
+        await msg.reply(messages.choose_mail_del, reply_markup=keyboard)
 
     elif switch_text == "назад":
-        await msg.reply("Вы в настройках ⚙", reply_markup=KeyBoards.setting_kb)
+        await msg.reply(messages.settings, reply_markup=KeyBoards.setting_kb)
 
     # Изменение имени
     elif switch_text == "изменить имя":
@@ -3398,12 +3376,12 @@ async def handler_message(msg: types.Message):
         result_set = cursor.fetchall()
         for i in result_set:
             if i[0] == msg.from_user.id:
-                await bot.send_message(msg.from_user.id, f"Ваше ФИО: {i[1]}\n")
+                await bot.send_message(msg.from_user.id, f"Ваше прошлое имя: {i[1]}\n")
         conn.commit()
         conn.close()
         state = dp.current_state(user=msg.from_user.id)
         await state.set_state(Change.all()[0])
-        await bot.send_message(msg.from_user.id, "Введите ваше ФИО 👇")
+        await bot.send_message(msg.from_user.id, "Введите ваше имя 👇")
 
     # Изменение группы
     elif switch_text == "изменить группу":
@@ -3420,17 +3398,17 @@ async def handler_message(msg: types.Message):
         conn.close()
         state = dp.current_state(user=msg.from_user.id)
         await state.set_state(Register.all()[2])
-        await msg.reply("Выберите ваш институт 👇", reply_markup=KeyBoards.institute_kb)
+        await msg.reply(messages.choose_inst_change, reply_markup=KeyBoards.institute_kb)
 
     elif switch_text == "посмотреть расписание другой группы":
-        await msg.reply("Выберите институт: 🎓", reply_markup=KeyBoards.institute_kb)
+        await msg.reply(messages.choose_inst, reply_markup=KeyBoards.institute_kb)
         state = dp.current_state(user=msg.from_user.id)
         await state.set_state(ScheduleUser.all()[0])
 
     elif switch_text == "поддержка разработчиков":
         state = dp.current_state(user=msg.from_user.id)
         await state.set_state(Pay.all()[0])
-        await msg.reply("Разработчики благодарны вам, что вы используете их телеграм-бота. Спасибо вам! 😘"
+        await msg.reply(messages.gratitude
                         , reply_markup=KeyBoards.developer_support_kb)
     elif switch_text == "test":
         await msg.reply(f"{messages.greets_msg}")
@@ -3462,28 +3440,7 @@ async def process_start2_command(message: types.Message):
                             '\n'
                             ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
     else:
-        await message.reply(f'Welcome to StudentHelperBot!🔥\n'
-                            '\n - Here you can always find the current schedule 🎓'
-                            '\n - Set reminders 🍻'
-                            '\n - Mailing lists from teachers ✉'
-                            '\n - View the current schedule of another group ✌'
-                            '\n - Support developers 👌'
-                            '\n - We have our own PevCoin (currency in development) 💵'
-                            '\n'
-                            '\n  Registering? ✨'
-                            '\n'
-                            '\n ➖➖➖➖➖➖'
-                            '\n'
-                            '\n'
-                            f'Добро пожаловать в StudentHelperBot!🔥\n'
-                            '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                            '\n - Поставить напоминания 🍻'
-                            '\n - Рассылки от преподавателей ✉'
-                            '\n - Посмотреть актуальное расписание другой группы ✌'
-                            '\n - Поддержать разработчиков 👌'
-                            '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                            '\n'
-                            ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+        await message.reply(messages.greets_msg, reply_markup=KeyBoards.greet_kb)
 
 
 if __name__ == "__main__":

@@ -22,7 +22,7 @@ mailing_lists_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Удалить
 profile_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Меню")
 
 # Настройки
-setting_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Рассылки"). \
+setting_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Рассылки").add('Запланированные мероприятия').\
     add("Изменить информацию").add("Меню")
 
 # Изменение информации о себе
@@ -53,7 +53,7 @@ day_of_the_week_kb2 = ReplyKeyboardMarkup(resize_keyboard=True).add("Понед�
     .add("Меню")
 # Кнопки выбора института
 institute_kb = ReplyKeyboardMarkup(resize_keyboard=True).add('ИКИТ').add('ВИИ').add('ГИ').add('ИСИ').add('ИАиД') \
-    .add('ИГ').add('ИГДГиГ').add('ИИФиРЭ').add('ИМиФИ').add('ИНиГ').add('ИППС').add('ИТиСУ').add('ИУБП').add('ИФКСиТ') \
+    .add('ИГ').add('ИГДГиГ').add('ИИФиРЭ').add('ИМиФИ').add('ИНиГ').add('ИППС').add('ИТиСУ').add('ИУБП').add('ИФКСиТ')\
     .add('ИФиЯК').add('ИЦМиМ').add('ИЭиГ').add('ИЭГУиФ').add('ПИ').add('ЮИ').add('ИФБиБТ')
 
 # Кнопки институтов
@@ -78,6 +78,6 @@ return_keyboard = ReplyKeyboardMarkup(resize_keyboard=True).add("Меню")
 
 yes_or_no_keyboard = ReplyKeyboardMarkup(resize_keyboard=True).add("Да").add("Изменить").add("Меню")
 yes_or_no_keyboard2 = ReplyKeyboardMarkup(resize_keyboard=True).add("Да").add("Меню")
-time_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("1 час").add('2 часа').add("6 часов").add("12 часов") \
-    .add('24 часа') \
-    .add('2 дня').add('Неделя').add('Меню')
+time_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("1 час").add('2 часа').add('3 часа').add('4 часа')\
+    .add('5 часов').add("6 часов").add("12 часов").add('18 часов').add('24 часа').add('2 дня').add('3 дня')\
+    .add('Неделя').add('Меню')
