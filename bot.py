@@ -47,10 +47,12 @@ alphabet = {"а", "б", "в", "г", "д", "е", "ё", "ж", "з", "и", "й", "�
             '5', '6', '7', '8', '9', '0', '(', ')', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
             'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '.', ',', 'А', 'Б', 'В', 'Г', 'Д', 'Е',
             'Ё', 'Ж', 'З', 'И', 'Й', 'К', 'Л', 'М', 'Н', 'О', 'П', 'Р', 'С', 'Т', 'У', 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Щ',
-            'Ъ', 'Ы', 'Ь', 'Э', 'Ю', 'Я', '-', '/', ' ',''}
+            'Ъ', 'Ы', 'Ь', 'Э', 'Ю', 'Я', '-', '/', ' ', ''}
 incoming_events = {}
 incoming_events2 = {}
 incoming_inst = []
+
+
 def only_letters(tested_string):
     for letter in tested_string:
         if letter not in alphabet:
@@ -366,6 +368,7 @@ async def process_command1(message: types.Message):
                     await state.reset_state()
         except KeyError:
             await bot.send_message(message.from_user.id, messages.message_error4)
+
 
 # endregion
 
@@ -915,10 +918,7 @@ async def process_buy_command0(message: types.Message):
             state = dp.current_state(user=message.from_user.id)
             await state.reset_state()
     elif message.text == 'Узнать команду разработчиков':
-        await message.reply('✨ <i>Разработчики телеграм-бота:</i>\n '
-                            '<b><i>1.</i></b> <b>Шульц Илья 🤩 </b>\n '
-                            '<b><i>2.</i></b> <b>Присяжнюк Кирилл</b> 😜\n '
-                            '<b><i>3.</i></b> <b>Степанцов Антон</b> 😇', parse_mode="HTML",
+        await message.reply(messages.admin, parse_mode="HTML",
                             reply_markup=KeyBoards.developer_support_kb)
     elif message.text == 'Поддержать разработку телеграмм-бота':
         state = dp.current_state(user=message.from_user.id)
@@ -1732,7 +1732,6 @@ async def schedule_1(message: types.Message):
             await bot.send_message(message.from_user.id, messages.what)
 
 
-
 @dp.message_handler(state=ScheduleUser.SCHEDULE_USER_3)
 async def schedule_1(message: types.Message):
     switch_text = message.text.lower()
@@ -2008,6 +2007,7 @@ async def schedule_1(message: types.Message):
             await message.reply(timetable_message, parse_mode="HTML")
         else:
             await bot.send_message(message.from_user.id, messages.what)
+
 
 # endregion
 
