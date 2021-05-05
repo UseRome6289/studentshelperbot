@@ -50,6 +50,7 @@ alphabet = {"а", "б", "в", "г", "д", "е", "ё", "ж", "з", "и", "й", "�
             'Ъ', 'Ы', 'Ь', 'Э', 'Ю', 'Я', '-', '/', ' ', ''}
 incoming_events = {}
 incoming_events2 = {}
+incoming_event3 = {}
 incoming_inst = []
 
 
@@ -550,7 +551,7 @@ async def process_admin_command4(message: types.Message):
                 conn.close()
                 state = dp.current_state(user=message.from_user.id)
                 await state.set_state(AdminPanel.all()[4])
-                await message.reply(messages.timer, reply=False, reply_markup=KeyBoards.time_kb)
+                await message.reply(messages.timer, reply=False, reply_markup=KeyBoards.time_kb2)
             else:
                 await bot.send_message(message.from_user.id, messages.message_error6)
         else:
@@ -585,7 +586,7 @@ async def process_admin_command4(message: types.Message):
             state = dp.current_state(user=message.from_user.id)
             await state.reset_state()
     else:
-        m = {'1 час': 60 * 60, "2 часа": 60 * 60 * 2, "3 часа": 60 * 60 * 3, "4 часа": 60 * 60 * 4,
+        m = {'Без таймера': 10, '1 час': 60 * 60, "2 часа": 60 * 60 * 2, "3 часа": 60 * 60 * 3, "4 часа": 60 * 60 * 4,
              "5 часов": 60 * 60 * 5,
              "18 часов": 60 * 60 * 18, "6 часов": 60 * 60 * 6, "12 часов": 60 * 60 * 12,
              "24 часа": 60 * 60 * 24,
@@ -594,8 +595,14 @@ async def process_admin_command4(message: types.Message):
             if m[message.text]:
                 conn = sqlite3.connect('db.db')
                 cursor = conn.cursor()
-                cursor.execute(
-                    f"UPDATE admins SET `time` = '{round(time.time() + m[message.text])}' WHERE user_id = '{message.from_user.id}'")
+                if message.text != 'Без таймера':
+                    cursor.execute(
+                        f"UPDATE admins SET `time` = '{round(time.time() + m[message.text])}' WHERE user_id = '{message.from_user.id}'")
+                    incoming_event3[message.from_user.id] = message.text
+                else:
+                    cursor.execute(
+                        f"UPDATE admins SET `time` = '{10}' WHERE user_id = '{message.from_user.id}'")
+                    incoming_event3[message.from_user.id] = message.text
                 conn.commit()
                 conn.close()
                 state = dp.current_state(user=message.from_user.id)
@@ -659,13 +666,17 @@ async def process_admin_command1(message: types.Message):
             if group_users == group:
                 try:
                     a = f'Рассылка от пользователя: <b>{name[0][0]}</b>\n' + f'<i>{content[0][0]}</i>'
-                    conn = sqlite3.connect('db.db')
-                    cursor = conn.cursor()
-                    cursor.execute(
-                        f"INSERT INTO mail(`chat_id`, `event1`, `time`, `30min`, `5min`) values ({user[0]}, '{content[0][0]}', {time2[0][0]}, {1}, {1})")
+                    if incoming_event3[message.from_user.id] == 'Без таймера':
+                        incoming_event3.pop(message.from_user.id)
+                    else:
+                        incoming_event3.pop(message.from_user.id)
+                        conn = sqlite3.connect('db.db')
+                        cursor = conn.cursor()
+                        cursor.execute(
+                            f"INSERT INTO mail(`chat_id`, `event1`, `time`, `30min`, `5min`) values ({user[0]}, '{content[0][0]}', {time2[0][0]}, {1}, {1})")
 
-                    conn.commit()
-                    conn.close()
+                        conn.commit()
+                        conn.close()
                     await dp.bot.send_message(user[0], a, parse_mode='HTML')
                 except:
                     pass
@@ -741,7 +752,7 @@ async def process_admin_command1(message: types.Message):
             conn.close()
             state = dp.current_state(user=message.from_user.id)
             await state.set_state(AdminPanel.all()[7])
-            await message.reply(messages.timer, reply_markup=KeyBoards.time_kb)
+            await message.reply(messages.timer, reply_markup=KeyBoards.time_kb2)
         else:
             await bot.send_message(message.from_user.id, messages.message_error5)
 
@@ -774,7 +785,7 @@ async def process_admin_command4(message: types.Message):
             state = dp.current_state(user=message.from_user.id)
             await state.reset_state()
     else:
-        m = {'1 час': 60 * 60, "2 часа": 60 * 60 * 2, "3 часа": 60 * 60 * 3, "4 часа": 60 * 60 * 4,
+        m = {'Без таймера': 10, '1 час': 60 * 60, "2 часа": 60 * 60 * 2, "3 часа": 60 * 60 * 3, "4 часа": 60 * 60 * 4,
              "5 часов": 60 * 60 * 5,
              "18 часов": 60 * 60 * 18, "6 часов": 60 * 60 * 6, "12 часов": 60 * 60 * 12,
              "24 часа": 60 * 60 * 24,
@@ -783,8 +794,14 @@ async def process_admin_command4(message: types.Message):
             if m[message.text]:
                 conn = sqlite3.connect('db.db')
                 cursor = conn.cursor()
-                cursor.execute(
-                    f"UPDATE admins SET `time` = '{round(time.time() + m[message.text])}' WHERE user_id = '{message.from_user.id}'")
+                if message.text != 'Без таймера':
+                    cursor.execute(
+                        f"UPDATE admins SET `time` = '{round(time.time() + m[message.text])}' WHERE user_id = '{message.from_user.id}'")
+                    incoming_event3[message.from_user.id] = message.text
+                else:
+                    cursor.execute(
+                        f"UPDATE admins SET `time` = '{0}' WHERE user_id = '{message.from_user.id}'")
+                    incoming_event3[message.from_user.id] = message.text
                 conn.commit()
                 conn.close()
                 state = dp.current_state(user=message.from_user.id)
@@ -840,18 +857,19 @@ async def process_admin_command1(message: types.Message):
         for user in id_users:
             try:
                 a = f'Рассылка от пользователя: <b>{name[0][0]}</b>\n' + '\n ➖➖➖➖➖➖ \n\n' + f'<i>{content[0][0]}</i>'
-                conn = sqlite3.connect('db.db')
-                cursor = conn.cursor()
-                cursor.execute(
-                    f"INSERT INTO mail(`chat_id`, `event1`, `time`, `30min`, `5min`) values ({user[0]}, "
-                    f"'{content[0][0]}', {time2[0][0]}, {1}, {1})")
+                if incoming_event3[message.from_user.id] != 'Без таймера':
+                    conn = sqlite3.connect('db.db')
+                    cursor = conn.cursor()
+                    cursor.execute(
+                        f"INSERT INTO mail(`chat_id`, `event1`, `time`, `30min`, `5min`) values ({user[0]}, "
+                        f"'{content[0][0]}', {time2[0][0]}, {1}, {1})")
 
-                conn.commit()
-                conn.close()
+                    conn.commit()
+                    conn.close()
                 await dp.bot.send_message(user[0], a, parse_mode='HTML')
             except:
                 pass
-
+        incoming_event3.pop(message.from_user.id)
         await dp.bot.send_message(message.from_user.id,
                                   f'Ваша рассылка: <b>{content[0][0]}</b>\nУспешно отправлена всем!'
                                   , parse_mode='HTML')
@@ -925,6 +943,8 @@ async def process_buy_command0(message: types.Message):
         await state.set_state(Pay.all()[1])
         await message.reply(messages.thanks
                             , reply_markup=KeyBoards.developer_support_kb2)
+    else:
+        await bot.send_message(message.from_user.id, messages.what)
 
 
 @dp.message_handler(state=Pay.PAY_DISTRIBUTOR2)
@@ -3567,7 +3587,7 @@ async def handler_message(msg: types.Message):
     elif switch_text == "назад":
         await msg.reply(messages.settings, reply_markup=KeyBoards.setting_kb)
 
-    # Изменение имени
+# Изменение имени
     elif switch_text == "изменить имя":
         conn = sqlite3.connect('db.db')
         cursor = conn.cursor()

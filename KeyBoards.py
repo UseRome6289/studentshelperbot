@@ -81,3 +81,6 @@ yes_or_no_keyboard2 = ReplyKeyboardMarkup(resize_keyboard=True).add("Да").add(
 time_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("1 час").add('2 часа').add('3 часа').add('4 часа')\
     .add('5 часов').add("6 часов").add("12 часов").add('18 часов').add('24 часа').add('2 дня').add('3 дня')\
     .add('Неделя').add('Меню')
+time_kb2 = ReplyKeyboardMarkup(resize_keyboard=True).add('Без таймера').add("1 час").add('2 часа').add('3 часа').add('4 часа')\
+    .add('5 часов').add("6 часов").add("12 часов").add('18 часов').add('24 часа').add('2 дня').add('3 дня')\
+    .add('Неделя').add('Меню')
