@@ -411,6 +411,8 @@ async def process_admin_command2(message: types.Message):
         state = dp.current_state(user=message.from_user.id)
         await state.set_state(AdminPanel.all()[6])
         await message.reply(messages.write_mail, reply_markup=KeyBoards.return_keyboard)
+    else:
+        await bot.send_message(message.from_user.id, messages.what)
 
 
 @dp.message_handler(state=AdminPanel.ADMIN_1)
@@ -3466,7 +3468,7 @@ async def handler_message(msg: types.Message):
         result_set = cursor.fetchall()
         for i in result_set:
             if i[0] == msg.from_user.id:
-                await bot.send_message(msg.from_user.id, f"Ваше ФИО: <b>{i[1]}</b>\n"
+                await bot.send_message(msg.from_user.id, f"Ваше имя: <b>{i[1]}</b>\n"
                                                          f"Ваш институт: <i><b>{i[2]}</b></i> 🎓\n"
                                                          f"Ваша группа: <i><b>{i[3]}</b></i> 🎓"
                                        , parse_mode="HTML")
@@ -3587,7 +3589,7 @@ async def handler_message(msg: types.Message):
     elif switch_text == "назад":
         await msg.reply(messages.settings, reply_markup=KeyBoards.setting_kb)
 
-# Изменение имени
+    # Изменение имени
     elif switch_text == "изменить имя":
         conn = sqlite3.connect('db.db')
         cursor = conn.cursor()
