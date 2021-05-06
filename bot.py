@@ -3464,16 +3464,37 @@ async def handler_message(msg: types.Message):
     elif switch_text == "профиль":
         conn = sqlite3.connect('db.db')
         cursor = conn.cursor()
-        cursor.execute(f"SELECT chat_id, real_name, school, user_group FROM users")
+        cursor.execute(f"SELECT chat_id, is_teacher FROM users")
         result_set = cursor.fetchall()
-        for i in result_set:
-            if i[0] == msg.from_user.id:
-                await bot.send_message(msg.from_user.id, f"Ваше имя: <b>{i[1]}</b>\n"
-                                                         f"Ваш институт: <i><b>{i[2]}</b></i> 🎓\n"
-                                                         f"Ваша группа: <i><b>{i[3]}</b></i> 🎓"
-                                       , parse_mode="HTML")
-        conn.commit()
-        conn.close()
+        is_teacher = False
+        for item in result_set:
+            if item[0] == msg.from_user.id:
+                if item[1] == 'True':
+                    is_teacher = True
+        if is_teacher:
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT chat_id, real_name FROM users")
+            result_set = cursor.fetchall()
+            for i in result_set:
+                if i[0] == msg.from_user.id:
+                    await bot.send_message(msg.from_user.id, f"Ваша фамилия: <b>{i[1]}</b>\n"
+                                           , parse_mode="HTML")
+            conn.commit()
+            conn.close()
+        else:
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT chat_id, real_name, school, user_group FROM users")
+            result_set = cursor.fetchall()
+            for i in result_set:
+                if i[0] == msg.from_user.id:
+                    await bot.send_message(msg.from_user.id, f"Ваше имя: <b>{i[1]}</b>\n"
+                                                             f"Ваш институт: <i><b>{i[2]}</b></i> 🎓\n"
+                                                             f"Ваша группа: <i><b>{i[3]}</b></i> 🎓"
+                                           , parse_mode="HTML")
+            conn.commit()
+            conn.close()
     elif switch_text == "настройки":
         await msg.reply(messages.settings, reply_markup=KeyBoards.setting_kb)
 
