@@ -1210,6 +1210,8 @@ async def register_1(message: types.Message):
         state = dp.current_state(user=message.from_user.id)
         await state.set_state(Register.all()[4])
         await message.reply(messages.teacher_surname)
+    else:
+        await bot.send_message(message.from_user.id, messages.what)
 
 
 # name
@@ -1495,7 +1497,7 @@ async def schedule_1(message: types.Message):
                     timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
                 else:
                     timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
-                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Понедельник</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Понедельник</b>\n\t\t➖➖➖➖➖➖➖'
                 for i in adding:
                     if i[0] == '1':
                         if i[4] == '' and i[5] == '':
@@ -1541,7 +1543,7 @@ async def schedule_1(message: types.Message):
                     timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
                 else:
                     timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
-                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Вторник</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Вторник</b>\n\t\t➖➖➖➖➖➖➖'
                 for i in adding:
                     if i[0] == '2':
                         if i[4] == '' and i[5] == '':
@@ -1587,7 +1589,7 @@ async def schedule_1(message: types.Message):
                     timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
                 else:
                     timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
-                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Среда</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Среда</b>\n\t\t➖➖➖➖➖➖➖'
                 for i in adding:
                     if i[0] == '3':
                         if i[4] == '' and i[5] == '':
@@ -1633,7 +1635,7 @@ async def schedule_1(message: types.Message):
                     timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
                 else:
                     timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
-                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Четверг</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Четверг</b>\n\t\t➖➖➖➖➖➖➖'
                 for i in adding:
                     if i[0] == '4':
                         if i[4] == '' and i[5] == '':
@@ -1679,7 +1681,7 @@ async def schedule_1(message: types.Message):
                     timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
                 else:
                     timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
-                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Пятница</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Пятница</b>\n\t\t➖➖➖➖➖➖➖'
                 for i in adding:
                     if i[0] == '5':
                         if i[4] == '' and i[5] == '':
@@ -1725,7 +1727,7 @@ async def schedule_1(message: types.Message):
                     timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
                 else:
                     timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
-                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Суббота</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Суббота</b>\n\t\t➖➖➖➖➖➖➖'
                 for i in adding:
                     if i[0] == '6':
                         if i[4] == '' and i[5] == '':
@@ -1802,7 +1804,7 @@ async def schedule_1(message: types.Message):
                         flag = 1
             if flag == 1:
                 timetable_message += "Вы смотрите расписание на <b>следующую</b> неделю\n"
-                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Понедельник</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Понедельник</b>\n\t\t➖➖➖➖➖➖➖'
                 for i in adding:
                     if i[0] == '1':
                         if i[4] == '' and i[5] == '':
@@ -1843,7 +1845,7 @@ async def schedule_1(message: types.Message):
                         flag = 1
             if flag == 1:
                 timetable_message += "Вы смотрите расписание на <b>следующую</b> неделю\n"
-                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Вторник</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Вторник</b>\n\t\t➖➖➖➖➖➖➖'
                 for i in adding:
                     if i[0] == '2':
                         if i[4] == '' and i[5] == '':
@@ -1884,7 +1886,7 @@ async def schedule_1(message: types.Message):
                         flag = 1
             if flag == 1:
                 timetable_message += "Вы смотрите расписание на <b>следующую</b> неделю\n"
-                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Среда</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Среда</b>\n\t\t➖➖➖➖➖➖➖'
                 for i in adding:
                     if i[0] == '3':
                         if i[4] == '' and i[5] == '':
@@ -1925,7 +1927,7 @@ async def schedule_1(message: types.Message):
                         flag = 1
             if flag == 1:
                 timetable_message += "Вы смотрите расписание на <b>следующую</b> неделю\n"
-                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Четверг</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Четверг</b>\n\t\t➖➖➖➖➖➖➖'
                 for i in adding:
                     if i[0] == '4':
                         if i[4] == '' and i[5] == '':
@@ -1966,7 +1968,7 @@ async def schedule_1(message: types.Message):
                         flag = 1
             if flag == 1:
                 timetable_message += "Вы смотрите расписание на <b>следующую</b> неделю\n"
-                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Пятница</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Пятница</b>\n\t\t➖➖➖➖➖➖➖'
                 for i in adding:
                     if i[0] == '5':
                         if i[4] == '' and i[5] == '':
@@ -2007,7 +2009,7 @@ async def schedule_1(message: types.Message):
                         flag = 1
             if flag == 1:
                 timetable_message += "Вы смотрите расписание на <b>следующую</b> неделю\n"
-                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Суббота</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Суббота</b>\n\t\t➖➖➖➖➖➖➖'
                 for i in adding:
                     if i[0] == '6':
                         if i[4] == '' and i[5] == '':
@@ -2092,7 +2094,7 @@ async def schedule(message: types.Message):
                             flag = 1
                 if flag == 1:
                     timetable_message += "Вы смотрите расписание на <b>следующую</b> неделю\n"
-                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Понедельник</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Понедельник</b>\n\t\t➖➖➖➖➖➖➖'
                     for i in adding:
                         if i[0] == '1':
                             if i[4] == '' and i[5] == '':
@@ -2133,7 +2135,7 @@ async def schedule(message: types.Message):
                             flag = 1
                 if flag == 1:
                     timetable_message += "Вы смотрите расписание на <b>следующую</b> неделю\n"
-                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Вторник</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Вторник</b>\n\t\t➖➖➖➖➖➖➖'
                     for i in adding:
                         if i[0] == '2':
                             if i[4] == '' and i[5] == '':
@@ -2174,7 +2176,7 @@ async def schedule(message: types.Message):
                             flag = 1
                 if flag == 1:
                     timetable_message += "Вы смотрите расписание на <b>следующую</b> неделю\n"
-                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Среда</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Среда</b>\n\t\t➖➖➖➖➖➖➖'
                     for i in adding:
                         if i[0] == '3':
                             if i[4] == '' and i[5] == '':
@@ -2215,7 +2217,7 @@ async def schedule(message: types.Message):
                             flag = 1
                 if flag == 1:
                     timetable_message += "Вы смотрите расписание на <b>следующую</b> неделю\n"
-                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Четверг</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Четверг</b>\n\t\t➖➖➖➖➖➖➖'
                     for i in adding:
                         if i[0] == '4':
                             if i[4] == '' and i[5] == '':
@@ -2256,7 +2258,7 @@ async def schedule(message: types.Message):
                             flag = 1
                 if flag == 1:
                     timetable_message += "Вы смотрите расписание на <b>следующую</b> неделю\n"
-                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Пятница</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Пятница</b>\n\t\t➖➖➖➖➖➖➖'
                     for i in adding:
                         if i[0] == '5':
                             if i[4] == '' and i[5] == '':
@@ -2297,7 +2299,7 @@ async def schedule(message: types.Message):
                             flag = 1
                 if flag == 1:
                     timetable_message += "Вы смотрите расписание на <b>следующую</b> неделю\n"
-                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Суббота</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Суббота</b>\n\t\t➖➖➖➖➖➖➖'
                     for i in adding:
                         if i[0] == '6':
                             if i[4] == '' and i[5] == '':
@@ -2346,7 +2348,7 @@ async def schedule(message: types.Message):
                             flag = 1
                 if flag == 1:
                     timetable_message += "Вы смотрите расписание на <b>следующую</b> неделю\n"
-                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Понедельник</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Понедельник</b>\n\t\t➖➖➖➖➖➖➖'
                     for i in adding:
                         if i[0] == '1':
                             if i[4] == '' and i[5] == '':
@@ -2387,7 +2389,7 @@ async def schedule(message: types.Message):
                             flag = 1
                 if flag == 1:
                     timetable_message += "Вы смотрите расписание на <b>следующую</b> неделю\n"
-                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Вторник</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Вторник</b>\n\t\t➖➖➖➖➖➖➖'
                     for i in adding:
                         if i[0] == '2':
                             if i[4] == '' and i[5] == '':
@@ -2428,7 +2430,7 @@ async def schedule(message: types.Message):
                             flag = 1
                 if flag == 1:
                     timetable_message += "Вы смотрите расписание на <b>следующую</b> неделю\n"
-                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Среда</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Среда</b>\n\t\t➖➖➖➖➖➖➖'
                     for i in adding:
                         if i[0] == '3':
                             if i[4] == '' and i[5] == '':
@@ -2469,7 +2471,7 @@ async def schedule(message: types.Message):
                             flag = 1
                 if flag == 1:
                     timetable_message += "Вы смотрите расписание на <b>следующую</b> неделю\n"
-                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Четверг</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Четверг</b>\n\t\t➖➖➖➖➖➖➖'
                     for i in adding:
                         if i[0] == '4':
                             if i[4] == '' and i[5] == '':
@@ -2510,7 +2512,7 @@ async def schedule(message: types.Message):
                             flag = 1
                 if flag == 1:
                     timetable_message += "Вы смотрите расписание на <b>следующую</b> неделю\n"
-                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Пятница</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Пятница</b>\n\t\t➖➖➖➖➖➖➖'
                     for i in adding:
                         if i[0] == '5':
                             if i[4] == '' and i[5] == '':
@@ -2551,7 +2553,7 @@ async def schedule(message: types.Message):
                             flag = 1
                 if flag == 1:
                     timetable_message += "Вы смотрите расписание на <b>следующую</b> неделю\n"
-                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Суббота</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Суббота</b>\n\t\t➖➖➖➖➖➖➖'
                     for i in adding:
                         if i[0] == '6':
                             if i[4] == '' and i[5] == '':
@@ -2619,7 +2621,7 @@ async def schedule_check(msg: types.Message):
                         timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
                     else:
                         timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
-                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Понедельник</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Понедельник</b>\n\t\t➖➖➖➖➖➖➖'
                     for i in adding:
                         if i[0] == '1':
                             if i[4] == '' and i[5] == '':
@@ -2665,7 +2667,7 @@ async def schedule_check(msg: types.Message):
                         timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
                     else:
                         timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
-                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Вторник</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Вторник</b>\n\t\t➖➖➖➖➖➖➖'
                     for i in adding:
                         if i[0] == '2':
                             if i[4] == '' and i[5] == '':
@@ -2711,7 +2713,7 @@ async def schedule_check(msg: types.Message):
                         timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
                     else:
                         timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
-                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Среда</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Среда</b>\n\t\t➖➖➖➖➖➖➖'
                     for i in adding:
                         if i[0] == '3':
                             if i[4] == '' and i[5] == '':
@@ -2757,7 +2759,7 @@ async def schedule_check(msg: types.Message):
                         timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
                     else:
                         timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
-                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Четверг</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Четверг</b>\n\t\t➖➖➖➖➖➖➖'
                     for i in adding:
                         if i[0] == '4':
                             if i[4] == '' and i[5] == '':
@@ -2803,7 +2805,7 @@ async def schedule_check(msg: types.Message):
                         timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
                     else:
                         timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
-                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Пятница</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Пятница</b>\n\t\t➖➖➖➖➖➖➖'
                     for i in adding:
                         if i[0] == '5':
                             if i[4] == '' and i[5] == '':
@@ -2849,7 +2851,7 @@ async def schedule_check(msg: types.Message):
                         timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
                     else:
                         timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
-                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Суббота</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Суббота</b>\n\t\t➖➖➖➖➖➖➖'
                     for i in adding:
                         if i[0] == '6':
                             if i[4] == '' and i[5] == '':
@@ -2902,7 +2904,7 @@ async def schedule_check(msg: types.Message):
                         timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
                     else:
                         timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
-                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Понедельник</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Понедельник</b>\n\t\t➖➖➖➖➖➖➖'
                     for i in adding:
                         if i[0] == '1':
                             if i[4] == '' and i[5] == '':
@@ -2948,7 +2950,7 @@ async def schedule_check(msg: types.Message):
                         timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
                     else:
                         timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
-                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Вторник</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Вторник</b>\n\t\t➖➖➖➖➖➖➖'
                     for i in adding:
                         if i[0] == '2':
                             if i[4] == '' and i[5] == '':
@@ -2994,7 +2996,7 @@ async def schedule_check(msg: types.Message):
                         timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
                     else:
                         timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
-                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Среда</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Среда</b>\n\t\t➖➖➖➖➖➖➖'
                     for i in adding:
                         if i[0] == '3':
                             if i[4] == '' and i[5] == '':
@@ -3040,7 +3042,7 @@ async def schedule_check(msg: types.Message):
                         timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
                     else:
                         timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
-                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Четверг</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Четверг</b>\n\t\t➖➖➖➖➖➖➖'
                     for i in adding:
                         if i[0] == '4':
                             if i[4] == '' and i[5] == '':
@@ -3086,7 +3088,7 @@ async def schedule_check(msg: types.Message):
                         timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
                     else:
                         timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
-                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Пятница</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Пятница</b>\n\t\t➖➖➖➖➖➖➖'
                     for i in adding:
                         if i[0] == '5':
                             if i[4] == '' and i[5] == '':
@@ -3132,7 +3134,7 @@ async def schedule_check(msg: types.Message):
                         timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
                     else:
                         timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
-                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Суббота</b>\n\t\t~~~~~~~~~~~~~~~~~~~'
+                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Суббота</b>\n\t\t➖➖➖➖➖➖➖'
                     for i in adding:
                         if i[0] == '6':
                             if i[4] == '' and i[5] == '':
@@ -3664,6 +3666,11 @@ async def handler_message(msg: types.Message):
         await msg.reply(messages.choose_inst_change, reply_markup=KeyBoards.institute_kb)
 
     elif switch_text == "посмотреть расписание другой группы":
+        await msg.reply(messages.choose_inst, reply_markup=KeyBoards.institute_kb)
+        state = dp.current_state(user=msg.from_user.id)
+        await state.set_state(ScheduleUser.all()[0])
+
+    elif switch_text == "посмотреть расписание группы":
         await msg.reply(messages.choose_inst, reply_markup=KeyBoards.institute_kb)
         state = dp.current_state(user=msg.from_user.id)
         await state.set_state(ScheduleUser.all()[0])
