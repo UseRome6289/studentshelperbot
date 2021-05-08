@@ -37,26 +37,14 @@ bot = Bot(token=TOKEN)
 dp = Dispatcher(bot, storage=MemoryStorage())
 dp.middleware.setup(LoggingMiddleware())
 
-PRICE100 = types.LabeledPrice(label='Поддержка разработчиков 100 Рублей', amount=10000)
-PRICE250 = types.LabeledPrice(label='Поддержка разработчиков 250 Рублей', amount=25000)
-PRICE500 = types.LabeledPrice(label='Поддержка разработчиков 500 Рублей', amount=50000)
-PRICE1000 = types.LabeledPrice(label='Поддержка разработчиков 1000 Рублей', amount=100000)
-alphabet = {"а", "б", "в", "г", "д", "е", "ё", "ж", "з", "и", "й", "к", "л", "м", "н", "о", "п", "р", "с", "т", "у",
-            "ф", "х", "ц", "ч", "ш", "щ", "ъ", "ы", "ь", "э", "ю", "я", 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i',
-            'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4',
-            '5', '6', '7', '8', '9', '0', '(', ')', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-            'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '.', ',', 'А', 'Б', 'В', 'Г', 'Д', 'Е',
-            'Ё', 'Ж', 'З', 'И', 'Й', 'К', 'Л', 'М', 'Н', 'О', 'П', 'Р', 'С', 'Т', 'У', 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Щ',
-            'Ъ', 'Ы', 'Ь', 'Э', 'Ю', 'Я', '-', '/', ' ', ''}
 incoming_events = {}
 incoming_events2 = {}
 incoming_event3 = {}
 incoming_inst = []
 
-
 def only_letters(tested_string):
     for letter in tested_string:
-        if letter not in alphabet:
+        if letter not in KeyBoards.alphabet:
             return False
     return True
 
@@ -969,7 +957,7 @@ async def process_buy_command01(message: types.Message):
                                photo_width=512,
                                photo_size=512,
                                is_flexible=False,  # True если конечная цена зависит от способа доставки
-                               prices=[PRICE100],
+                               prices=[KeyBoards.PRICE100],
                                start_parameter='developer-support',
                                payload='some-invoice-payload-for-our-internal-use'
                                )
@@ -986,7 +974,7 @@ async def process_buy_command01(message: types.Message):
                                photo_width=512,
                                photo_size=512,
                                is_flexible=False,  # True если конечная цена зависит от способа доставки
-                               prices=[PRICE250],
+                               prices=[KeyBoards.PRICE250],
                                start_parameter='developer-support',
                                payload='some-invoice-payload-for-our-internal-use'
                                )
@@ -1003,7 +991,7 @@ async def process_buy_command01(message: types.Message):
                                photo_width=512,
                                photo_size=512,
                                is_flexible=False,  # True если конечная цена зависит от способа доставки
-                               prices=[PRICE500],
+                               prices=[KeyBoards.PRICE500],
                                start_parameter='developer-support',
                                payload='some-invoice-payload-for-our-internal-use'
                                )
@@ -1020,7 +1008,7 @@ async def process_buy_command01(message: types.Message):
                                photo_width=512,
                                photo_size=512,
                                is_flexible=False,  # True если конечная цена зависит от способа доставки
-                               prices=[PRICE1000],
+                               prices=[KeyBoards.PRICE1000],
                                start_parameter='developer-support',
                                payload='some-invoice-payload-for-our-internal-use'
                                )
@@ -1054,7 +1042,7 @@ async def process_buy_command01(message: types.Message):
                                photo_width=512,
                                photo_size=512,
                                is_flexible=False,  # True если конечная цена зависит от способа доставки
-                               prices=[PRICE100],
+                               prices=[KeyBoards.PRICE100],
                                start_parameter='developer-support',
                                payload='some-invoice-payload-for-our-internal-use'
                                )
@@ -1071,7 +1059,7 @@ async def process_buy_command01(message: types.Message):
                                photo_width=512,
                                photo_size=512,
                                is_flexible=False,  # True если конечная цена зависит от способа доставки
-                               prices=[PRICE250],
+                               prices=[KeyBoards.PRICE250],
                                start_parameter='developer-support',
                                payload='some-invoice-payload-for-our-internal-use'
                                )
@@ -1088,7 +1076,7 @@ async def process_buy_command01(message: types.Message):
                                photo_width=512,
                                photo_size=512,
                                is_flexible=False,  # True если конечная цена зависит от способа доставки
-                               prices=[PRICE500],
+                               prices=[KeyBoards.PRICE500],
                                start_parameter='developer-support',
                                payload='some-invoice-payload-for-our-internal-use'
                                )
@@ -1105,7 +1093,7 @@ async def process_buy_command01(message: types.Message):
                                photo_width=512,
                                photo_size=512,
                                is_flexible=False,  # True если конечная цена зависит от способа доставки
-                               prices=[PRICE1000],
+                               prices=[KeyBoards.PRICE1000],
                                start_parameter='developer-support',
                                payload='some-invoice-payload-for-our-internal-use'
                                )
@@ -2027,6 +2015,11 @@ async def schedule_1(message: types.Message):
             else:
                 timetable_message += 'В следующую субботу у этой группы пар нет!'
             await message.reply(timetable_message, parse_mode="HTML")
+        elif switch_text == 'посмотреть расписание нынешней недели':
+            state = dp.current_state(user=message.from_user.id)
+            await state.set_state(ScheduleUser.all()[2])
+            await message.reply('Выберите день недели 👇\n(Вы будете смотреть нынешнюю неделю)'
+                                , reply=False, reply_markup=KeyBoards.day_of_the_week_kb)
         else:
             await bot.send_message(message.from_user.id, messages.what)
 
@@ -2312,6 +2305,12 @@ async def schedule(message: types.Message):
                 else:
                     timetable_message += 'В следующую субботу пар нет! Отличный повод увидеться с друзьями! 🎉'
                 await message.reply(timetable_message, parse_mode="HTML")
+            elif switch_text == 'посмотреть расписание нынешней недели':
+                state = dp.current_state(user=message.from_user.id)
+                await state.set_state(CheckSchedule.all()[0])
+                await message.reply('Выберите день недели 👇\n(Вы будете смотреть нынешнюю неделю)'
+                                    , reply=False, reply_markup=KeyBoards.day_of_the_week_kb)
+
             else:
                 await bot.send_message(message.from_user.id, messages.what)
         else:
@@ -2560,6 +2559,11 @@ async def schedule(message: types.Message):
                 else:
                     timetable_message += 'В следующую субботу у вас пар нет!'
                 await message.reply(timetable_message, parse_mode="HTML")
+            elif switch_text == 'посмотреть расписание нынешней недели':
+                state = dp.current_state(user=message.from_user.id)
+                await state.set_state(CheckSchedule.all()[0])
+                await message.reply('Выберите день недели 👇\n(Вы будете смотреть нынешнюю неделю)'
+                                , reply=False, reply_markup=KeyBoards.day_of_the_week_kb)
             else:
                 await bot.send_message(message.from_user.id, messages.what)
 
@@ -2853,6 +2857,11 @@ async def schedule_check(msg: types.Message):
                 else:
                     timetable_message += 'В субботу пар нет! Отличный повод увидеться с друзьями! 🎉'
                 await msg.reply(timetable_message, parse_mode="HTML")
+            elif switch_text == 'посмотреть расписание на след. неделю':
+                state = dp.current_state(user=msg.from_user.id)
+                await state.set_state(Schedule.all()[0])
+                await msg.reply('Выберите день недели 👇\n(Вы будете смотреть следующую неделю)'
+                                , reply=False, reply_markup=KeyBoards.day_of_the_week_kb2)
             else:
                 if msg.text != 'Посмотреть расписание на след. неделю':
                     await bot.send_message(msg.from_user.id, messages.what)
@@ -3131,13 +3140,14 @@ async def schedule_check(msg: types.Message):
                 else:
                     timetable_message += 'В субботу у вас пар нет!'
                 await msg.reply(timetable_message, parse_mode="HTML")
+            elif switch_text == 'посмотреть расписание на след. неделю':
+                state = dp.current_state(user=msg.from_user.id)
+                await state.set_state(Schedule.all()[0])
+                await msg.reply('Выберите день недели 👇\n(Вы будете смотреть следующую неделю)'
+                                , reply=False, reply_markup=KeyBoards.day_of_the_week_kb2)
             else:
                 await bot.send_message(msg.from_user.id, messages.what)
-        if switch_text == 'посмотреть расписание на след. неделю':
-            state = dp.current_state(user=msg.from_user.id)
-            await state.set_state(Schedule.all()[0])
-            await msg.reply('Выберите день недели 👇'
-                            , reply=False, reply_markup=KeyBoards.day_of_the_week_kb2)
+
         conn.close()
 
 
@@ -3454,9 +3464,14 @@ async def handler_message(msg: types.Message):
                 if local_time[1] == "Dec":
                     local_time[1] = "Декабря"
 
-                a = a + f" - <b>{item[1]}</b>" + '\n' + \
-                    f'Эта рассылка заканчивается {local_time[3]} {local_time[1]} ' \
-                    f'({local_time[0]}) {local_time[5]} года в {local_time[4]} ' + '\n'
+                if local_time[2] == '':
+                    a = a + f" - <b>{item[1]}</b>" + '\n' + \
+                        f'Это рассылка заканчивается {local_time[3]} {local_time[1]} ' \
+                        f'({local_time[0]}) {local_time[5]} года в {local_time[4]} ' + '\n'
+                else:
+                    a = a + f" - <b>{item[1]}</b>" + '\n' + \
+                        f'Это рассылка заканчивается {local_time[2]} {local_time[1]} ' \
+                        f'({local_time[0]}) {local_time[4]} года в {local_time[3]} ' + '\n'
         if a == "Ваши рассылки: \n":
             a = 'Вам еще не приходили рассылки!'
         await msg.reply(a, reply_markup=KeyBoards.mailing_lists_kb, parse_mode="HTML")
@@ -3548,10 +3563,14 @@ async def handler_message(msg: types.Message):
                     local_time[1] = "Ноября"
                 if local_time[1] == "Dec":
                     local_time[1] = "Декабря"
-
-                a = a + f" - <b>{item[1]}</b>" + '\n' + \
-                    f'Это мероприятие заканчивается {local_time[3]} {local_time[1]} ' \
-                    f'({local_time[0]}) {local_time[5]} года в {local_time[4]} ' + '\n'
+                if local_time[2] == '':
+                    a = a + f" - <b>{item[1]}</b>" + '\n' + \
+                        f'Это мероприятие заканчивается {local_time[3]} {local_time[1]} ' \
+                        f'({local_time[0]}) {local_time[5]} года в {local_time[4]} ' + '\n'
+                else:
+                    a = a + f" - <b>{item[1]}</b>" + '\n' + \
+                        f'Это мероприятие заканчивается {local_time[2]} {local_time[1]} ' \
+                        f'({local_time[0]}) {local_time[4]} года в {local_time[3]} ' + '\n'
         if a == "Ваши мероприятия: \n":
             a = 'У вас нет мероприятий!'
         await msg.reply(a, reply_markup=KeyBoards.events_kb, parse_mode="HTML")

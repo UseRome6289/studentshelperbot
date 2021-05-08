@@ -1,3 +1,4 @@
+from aiogram import types
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
 # Начало
@@ -50,7 +51,7 @@ day_of_the_week_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Понеде
     .add('Посмотреть расписание на след. неделю').add("Меню")
 day_of_the_week_kb2 = ReplyKeyboardMarkup(resize_keyboard=True).add("Понедельник").add("Вторник") \
     .add("Среда").add("Четверг").add("Пятница").add("Суббота") \
-    .add("Меню")
+    .add('Посмотреть расписание нынешней недели').add("Меню")
 # Кнопки выбора института
 institute_kb = ReplyKeyboardMarkup(resize_keyboard=True).add('ИКИТ').add('ВИИ').add('ГИ').add('ИСИ').add('ИАиД') \
     .add('ИГ').add('ИГДГиГ').add('ИИФиРЭ').add('ИМиФИ').add('ИНиГ').add('ИППС').add('ИТиСУ').add('ИУБП').add('ИФКСиТ') \
@@ -85,3 +86,14 @@ time_kb2 = ReplyKeyboardMarkup(resize_keyboard=True).add('Без таймера'
     '4 часа') \
     .add('5 часов').add("6 часов").add("12 часов").add('18 часов').add('24 часа').add('2 дня').add('3 дня') \
     .add('Неделя').add('Меню')
+alphabet = {"а", "б", "в", "г", "д", "е", "ё", "ж", "з", "и", "й", "к", "л", "м", "н", "о", "п", "р", "с", "т", "у",
+            "ф", "х", "ц", "ч", "ш", "щ", "ъ", "ы", "ь", "э", "ю", "я", 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i',
+            'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4',
+            '5', '6', '7', '8', '9', '0', '(', ')', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+            'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '.', ',', 'А', 'Б', 'В', 'Г', 'Д', 'Е',
+            'Ё', 'Ж', 'З', 'И', 'Й', 'К', 'Л', 'М', 'Н', 'О', 'П', 'Р', 'С', 'Т', 'У', 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Щ',
+            'Ъ', 'Ы', 'Ь', 'Э', 'Ю', 'Я', '-', '/', ' ', ''}
+PRICE100 = types.LabeledPrice(label='Поддержка разработчиков 100 Рублей', amount=10000)
+PRICE250 = types.LabeledPrice(label='Поддержка разработчиков 250 Рублей', amount=25000)
+PRICE500 = types.LabeledPrice(label='Поддержка разработчиков 500 Рублей', amount=50000)
+PRICE1000 = types.LabeledPrice(label='Поддержка разработчиков 1000 Рублей', amount=100000)

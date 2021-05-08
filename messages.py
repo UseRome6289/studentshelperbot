@@ -57,7 +57,7 @@ greets_msg = '''Welcome to StudentHelperBot!🔥\n
 \n ➖➖➖➖➖➖
 \n
 \n
-Добро пожаловать в StudentHelperBot, {msg.from_user.username}!🔥\n
+Добро пожаловать в StudentHelperBot!🔥\n
 \n - Здесь всегда можно узнать актуальное расписание 🎓
 \n - Поставить напоминания 🍻
 \n - Рассылки от преподавателей ✉
