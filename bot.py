@@ -1418,6 +1418,8 @@ async def schedule_1(message: types.Message):
                 conn = sqlite3.connect('db.db')
                 cursor = conn.cursor()
                 cursor.execute(
+                    f"INSERT INTO user_table(chat_id) values ({message.from_user.id})")
+                cursor.execute(
                     f"UPDATE user_table SET user_group = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
                 conn.commit()
                 conn.close()

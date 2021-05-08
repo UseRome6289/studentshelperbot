@@ -8,7 +8,7 @@ greet_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add
 # Меню с админ-панелью
 menu_admin_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Расписание").add("Админ-панель").add("Профиль") \
     .add("Рассылки") \
-    .add("Посмотреть расписание другой группы").add("Запланированные мероприятия").add("Настройки") \
+    .add("Посмотреть расписание группы").add("Запланированные мероприятия").add("Настройки") \
     .add("Поддержка разработчиков")
 
 # Меню обычного пользователя
