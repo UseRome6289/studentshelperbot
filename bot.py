@@ -41,6 +41,8 @@ incoming_events = {}
 incoming_events2 = {}
 incoming_event3 = {}
 incoming_inst = []
+incoming_inst2 = []
+
 
 def only_letters(tested_string):
     for letter in tested_string:
@@ -282,11 +284,14 @@ async def process_command0(message: types.Message):
             await state.reset_state()
 
     else:
-        state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Events.all()[1])
-        incoming_events[message.from_user.id] = message.text
-        await message.reply(messages.events
-                            , reply_markup=KeyBoards.time_kb)
+        if only_letters(message.text) == True:
+            state = dp.current_state(user=message.from_user.id)
+            await state.set_state(Events.all()[1])
+            incoming_events[message.from_user.id] = message.text
+            await message.reply(messages.events
+                                , reply_markup=KeyBoards.time_kb)
+        else:
+            await bot.send_message(message.from_user.id, messages.message_error9)
 
 
 @dp.message_handler(state=Events.EVENTS_USER_1)
@@ -2567,7 +2572,7 @@ async def schedule(message: types.Message):
                 state = dp.current_state(user=message.from_user.id)
                 await state.set_state(CheckSchedule.all()[0])
                 await message.reply('Выберите день недели 👇\n(Вы будете смотреть нынешнюю неделю)'
-                                , reply=False, reply_markup=KeyBoards.day_of_the_week_kb)
+                                    , reply=False, reply_markup=KeyBoards.day_of_the_week_kb)
             else:
                 await bot.send_message(message.from_user.id, messages.what)
 
@@ -3190,11 +3195,22 @@ async def schedule(message: types.Message):
         await message.reply(messages.events_write, reply_markup=KeyBoards.universal_kb)
 
     else:
-        state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Delete.all()[3])
-        incoming_events2[message.from_user.id] = message.text
-        await message.reply(messages.events_del
-                            , reply=False, reply_markup=KeyBoards.yes_or_no_keyboard2)
+        a = False
+        for i in incoming_inst2:
+            if i == message.text:
+                a = True
+        if only_letters(message.text) == True:
+            if a == True:
+                incoming_inst2.clear()
+                state = dp.current_state(user=message.from_user.id)
+                await state.set_state(Delete.all()[3])
+                incoming_events2[message.from_user.id] = message.text
+                await message.reply(messages.events_del
+                                    , reply=False, reply_markup=KeyBoards.yes_or_no_keyboard2)
+            else:
+                await bot.send_message(message.from_user.id, messages.message_error7)
+        else:
+            await bot.send_message(message.from_user.id, messages.message_error7)
 
 
 @dp.message_handler(state=Delete.DELETE_EVENTS_1)
@@ -3226,11 +3242,22 @@ async def schedule(message: types.Message):
             state = dp.current_state(user=message.from_user.id)
             await state.reset_state()
     else:
-        state = dp.current_state(user=message.from_user.id)
-        incoming_events2[message.from_user.id] = message.text
-        await state.set_state(Delete.all()[2])
-        await message.reply(messages.mailing_del
-                            , reply=False, reply_markup=KeyBoards.yes_or_no_keyboard2)
+        a = False
+        for i in incoming_inst2:
+            if i == message.text:
+                a = True
+        if only_letters(message.text) == True:
+            if a == True:
+                incoming_inst2.clear()
+                state = dp.current_state(user=message.from_user.id)
+                incoming_events2[message.from_user.id] = message.text
+                await state.set_state(Delete.all()[2])
+                await message.reply(messages.mailing_del
+                                    , reply=False, reply_markup=KeyBoards.yes_or_no_keyboard2)
+            else:
+                await bot.send_message(message.from_user.id, messages.message_error8)
+        else:
+            await bot.send_message(message.from_user.id, messages.message_error8)
 
 
 @dp.message_handler(state=Delete.DELETE_EVENTS_2)
@@ -3293,6 +3320,8 @@ async def schedule(message: types.Message):
             conn.close()
             state = dp.current_state(user=message.from_user.id)
             await state.reset_state()
+    else:
+        await bot.send_message(message.from_user.id, messages.what)
 
 
 @dp.message_handler(state=Delete.DELETE_EVENTS_3)
@@ -3355,6 +3384,8 @@ async def schedule(message: types.Message):
             conn.close()
             state = dp.current_state(user=message.from_user.id)
             await state.reset_state()
+    else:
+        await bot.send_message(message.from_user.id, messages.what)
 
 
 @dp.message_handler(state='*', content_types=["text"])
@@ -3605,6 +3636,7 @@ async def handler_message(msg: types.Message):
         await msg.reply(messages.events_write, reply_markup=KeyBoards.universal_kb)
 
     elif switch_text == "удалить мероприятие":
+        a = False
         conn = sqlite3.connect('db.db')
         cursor = conn.cursor()
         cursor.execute(f"SELECT * FROM times")
@@ -3613,11 +3645,17 @@ async def handler_message(msg: types.Message):
         for item in result_set:
             if item[0] == msg.from_user.id:
                 keyboard.add(item[1])
-        state = dp.current_state(user=msg.from_user.id)
-        await state.set_state(Delete.all()[0])
-        await msg.reply(messages.choose_event_del, reply_markup=keyboard)
+                incoming_inst2.append(item[1])
+                a = True
+        if a == True:
+            state = dp.current_state(user=msg.from_user.id)
+            await state.set_state(Delete.all()[0])
+            await msg.reply(messages.choose_event_del, reply_markup=keyboard)
+        else:
+            await bot.send_message(msg.from_user.id, messages.event_not)
 
     elif switch_text == "удалить рассылку":
+        a = False
         conn = sqlite3.connect('db.db')
         cursor = conn.cursor()
         cursor.execute(f"SELECT * FROM mail")
@@ -3626,9 +3664,14 @@ async def handler_message(msg: types.Message):
         for item in result_set:
             if item[0] == msg.from_user.id:
                 keyboard.add(item[1])
-        state = dp.current_state(user=msg.from_user.id)
-        await state.set_state(Delete.all()[1])
-        await msg.reply(messages.choose_mail_del, reply_markup=keyboard)
+                incoming_inst2.append(item[1])
+                a = True
+        if a == True:
+            state = dp.current_state(user=msg.from_user.id)
+            await state.set_state(Delete.all()[1])
+            await msg.reply(messages.choose_mail_del, reply_markup=keyboard)
+        else:
+            await bot.send_message(msg.from_user.id, messages.mail_not)
 
     elif switch_text == "назад":
         await msg.reply(messages.settings, reply_markup=KeyBoards.setting_kb)
@@ -3724,4 +3767,4 @@ if __name__ == "__main__":
     thread2.start()
     executor.start_polling(dp, on_shutdown=shutdown, skip_updates=shutdown)
 
-#  тестовый платеж убрать, визуализация, защита от sql инъекций
+#  тестовый платеж убрать
