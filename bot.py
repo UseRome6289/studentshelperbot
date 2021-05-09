@@ -12,8 +12,10 @@ from aiogram import Bot, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.contrib.middlewares.logging import LoggingMiddleware
 from aiogram.dispatcher import Dispatcher
-from aiogram.types import ContentType, ReplyKeyboardMarkup
+from aiogram.types import ContentType, ReplyKeyboardMarkup, ParseMode
 from aiogram.utils import executor
+from aiogram.utils.markdown import text, italic, code
+from emoji import emojize
 
 import KeyBoards
 import messages
@@ -3756,6 +3758,12 @@ async def process_start2_command(message: types.Message):
                             ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
     else:
         await message.reply(messages.greets_msg, reply_markup=KeyBoards.greet_kb)
+
+
+@dp.message_handler(content_types=ContentType.ANY)
+async def unknown_message(msg: types.Message):
+    message_text = text(messages.what)
+    await msg.reply(message_text, parse_mode=ParseMode.MARKDOWN)
 
 
 if __name__ == "__main__":
