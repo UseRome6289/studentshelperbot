@@ -14,8 +14,8 @@ from aiogram.contrib.middlewares.logging import LoggingMiddleware
 from aiogram.dispatcher import Dispatcher
 from aiogram.types import ContentType, ReplyKeyboardMarkup, ParseMode
 from aiogram.utils import executor
-from aiogram.utils.markdown import text, italic, code
-from emoji import emojize
+from aiogram.utils.markdown import text
+
 
 import KeyBoards
 import messages
@@ -148,7 +148,7 @@ class MyThread2(Thread):
 
     def run(self):
         global adding
-        while not self.stopped.wait(60):
+        while not self.stopped.wait(50):
             url = 'https://edu.sfu-kras.ru/timetable'
             response = requests.get(url).text
             match = re.search(r'Идёт\s\w{8}\sнеделя', response)
@@ -222,36 +222,71 @@ class MyThread2(Thread):
 
 @dp.message_handler(state='*', commands='start')
 async def process_start_command(message: types.Message):
+    is_succeed = False
     conn = sqlite3.connect('db.db')
     cursor = conn.cursor()
     cursor.execute(f"INSERT INTO users(chat_id, name) values ({message.from_user.id}, '{message.from_user.username}')")
     conn.commit()
     conn.close()
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT is_teacher FROM admins WHERE user_id = '{message.from_user.id}'")
+    result_set = cursor.fetchall()
+    cursor.close()
+    if result_set[0][0] == 'True':
+        is_succeed = True
     if message.from_user.username != None:
-        await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
-                            '\n - Here you can always find the current schedule 🎓'
-                            '\n - Set reminders 🍻'
-                            '\n - Mailing lists from teachers ✉'
-                            '\n - View the current schedule of another group ✌'
-                            '\n - Support developers 👌'
-                            '\n - We have our own PevCoin (currency in development) 💵'
-                            '\n'
-                            '\n  Registering? ✨'
-                            '\n'
-                            '\n ➖➖➖➖➖➖'
-                            '\n'
-                            '\n'
-                            f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
-                            '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                            '\n - Поставить напоминания 🍻'
-                            '\n - Рассылки от преподавателей ✉'
-                            '\n - Посмотреть актуальное расписание другой группы ✌'
-                            '\n - Поддержать разработчиков 👌'
-                            '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                            '\n'
-                            ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+        if is_succeed == True:
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+        else:
+            await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Here you can always find the current schedule 🎓'
+                                '\n - Set reminders 🍻'
+                                '\n - Mailing lists from teachers ✉'
+                                '\n - View the current schedule of another group ✌'
+                                '\n - Support developers 👌'
+                                '\n - We have our own PevCoin (currency in development) 💵'
+                                '\n'
+                                '\n  Registering? ✨'
+                                '\n'
+                                '\n ➖➖➖➖➖➖'
+                                '\n'
+                                '\n'
+                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
+                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
+                                '\n - Поставить напоминания 🍻'
+                                '\n - Рассылки от преподавателей ✉'
+                                '\n - Посмотреть актуальное расписание другой группы ✌'
+                                '\n - Поддержать разработчиков 👌'
+                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
+                                '\n'
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb2)
     else:
-        await message.reply(messages.greets_msg, reply_markup=KeyBoards.greet_kb)
+        if is_succeed == True:
+            await message.reply(messages.greets_msg, reply_markup=KeyBoards.greet_kb)
+        else:
+            await message.reply(messages.greets_msg, reply_markup=KeyBoards.greet_kb2)
     state = dp.current_state(user=message.from_user.id)
     await state.set_state(Register.all()[0])
 
@@ -661,12 +696,11 @@ async def process_admin_command1(message: types.Message):
             group_users = cursor.fetchall()
             cursor.close()
             if group_users == group:
-                try:
+
                     a = f'Рассылка от пользователя: <b>{name[0][0]}</b>\n' + f'<i>{content[0][0]}</i>'
                     if incoming_event3[message.from_user.id] == 'Без таймера':
-                        incoming_event3.pop(message.from_user.id)
+                        pass
                     else:
-                        incoming_event3.pop(message.from_user.id)
                         conn = sqlite3.connect('db.db')
                         cursor = conn.cursor()
                         cursor.execute(
@@ -675,8 +709,7 @@ async def process_admin_command1(message: types.Message):
                         conn.commit()
                         conn.close()
                     await dp.bot.send_message(user[0], a, parse_mode='HTML')
-                except:
-                    pass
+        incoming_event3.pop(message.from_user.id)
         await dp.bot.send_message(message.from_user.id,
                                   f'Ваша рассылка: <b>{content[0][0]}</b>\nУспешно отправлена группе '
                                   f'<b>{group[0][0]}</b>', parse_mode='HTML')
@@ -3468,7 +3501,7 @@ async def handler_message(msg: types.Message):
                 if local_time[0] == "Wed":
                     local_time[0] = "Среда"
                 if local_time[0] == "Thu":
-                    local_time[0] = "Чеверг"
+                    local_time[0] = "Четверг"
                 if local_time[0] == "Fri":
                     local_time[0] = "Пятница"
                 if local_time[0] == "Sat":
@@ -3568,7 +3601,7 @@ async def handler_message(msg: types.Message):
                 if local_time[0] == "Wed":
                     local_time[0] = "Среда"
                 if local_time[0] == "Thu":
-                    local_time[0] = "Чеверг"
+                    local_time[0] = "Четверг"
                 if local_time[0] == "Fri":
                     local_time[0] = "Пятница"
                 if local_time[0] == "Sat":
@@ -3775,4 +3808,4 @@ if __name__ == "__main__":
     thread2.start()
     executor.start_polling(dp, on_shutdown=shutdown, skip_updates=shutdown)
 
-#  тестовый платеж убрать
+#  тестовый платеж убрать + добавить подтверждение преподов
