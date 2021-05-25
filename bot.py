@@ -15,7 +15,7 @@ from aiogram.dispatcher import Dispatcher
 from aiogram.types import ContentType, ReplyKeyboardMarkup, ParseMode
 from aiogram.utils import executor
 from aiogram.utils.markdown import text
-
+from emoji import emojize
 
 import KeyBoards
 import messages
@@ -696,7 +696,6 @@ async def process_admin_command1(message: types.Message):
             group_users = cursor.fetchall()
             cursor.close()
             if group_users == group:
-
                     a = f'Рассылка от пользователя: <b>{name[0][0]}</b>\n' + f'<i>{content[0][0]}</i>'
                     if incoming_event3[message.from_user.id] == 'Без таймера':
                         pass
