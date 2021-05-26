@@ -147,7 +147,7 @@ class MyThread2(Thread):
 
     def run(self):
         global adding
-        while not self.stopped.wait(5):
+        while not self.stopped.wait(1):
             url = 'https://edu.sfu-kras.ru/timetable'
             response = requests.get(url).text
             match = re.search(r'Идёт\s\w{8}\sнеделя', response)
@@ -176,7 +176,7 @@ class MyThread2(Thread):
                 for n in date_split:
                     n = int(n)
                     listing_date_split.append(n)
-                listing_date_sum = listing_date_split[0] * 60 - 7 * 60 + listing_date_split[1]
+                listing_date_sum = listing_date_split[0] * 60 + listing_date_split[1]
                 for item in response["timetable"]:
                     if item["week"] == current_week:
                         adding.append(
@@ -186,7 +186,13 @@ class MyThread2(Thread):
                 for j in adding:
                     if int(j[0]) == now:
                         a = j[1].split('-')
-                        if date_date == a[0]:
+                        date_kur = a[0].split(':')
+                        listing_date = []
+                        for n in date_kur:
+                            n = int(n)
+                            listing_date.append(n)
+                        listing_date_sum2 = listing_date[0] * 60 - 7 * 60 + listing_date[1]
+                        if listing_date_sum == listing_date_sum2:
                             conn = sqlite3.connect('db.db')
                             cursor = conn.cursor()
                             cursor.execute(f"SELECT chat_id, real_name FROM users WHERE user_group = '{i[0]}'")
@@ -197,12 +203,6 @@ class MyThread2(Thread):
                                     bot2.send_message(k[0], f'{k[1]}, у вас начался {j[2]}')
                                 else:
                                     bot2.send_message(k[0], f'{k[1]}, у вас начался {j[2]} в {j[5]}')
-                        date_kur = a[0].split(':')
-                        listing_date = []
-                        for n in date_kur:
-                            n = int(n)
-                            listing_date.append(n)
-                        listing_date_sum2 = listing_date[0] * 60 + listing_date[1]
                         if listing_date_sum == listing_date_sum2 - 5:
                             conn = sqlite3.connect('db.db')
                             cursor = conn.cursor()
