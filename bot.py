@@ -232,8 +232,11 @@ async def process_start_command(message: types.Message):
     cursor.execute(f"SELECT is_teacher FROM admins WHERE user_id = '{message.from_user.id}'")
     result_set = cursor.fetchall()
     cursor.close()
-    if result_set[0][0] == 'True':
-        is_succeed = True
+    try:
+        if result_set[0][0] == 'True' and result_set[0][0] != None:
+            is_succeed = True
+    except:
+         pass
     if message.from_user.username != None:
         if is_succeed == True:
             await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
