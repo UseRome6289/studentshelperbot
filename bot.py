@@ -3641,13 +3641,17 @@ async def handler_message(msg: types.Message):
                     local_time[1] = "Декабря"
 
                 if local_time[2] == '':
+                    list = local_time[4].split(':')
+                    k = int(list[0]) + 7
                     a = a + f" - <b>{item[1]}</b>" + '\n' + \
                         f'Это рассылка заканчивается {local_time[3]} {local_time[1]} ' \
-                        f'({local_time[0]}) {local_time[5]} года в {local_time[4]} + 7 часов' + '\n'
+                        f'({local_time[0]}) {local_time[5]} года в {k}:{list[1]}' + '\n'
                 else:
+                    list = local_time[3].split(':')
+                    k = int(list[0]) + 7
                     a = a + f" - <b>{item[1]}</b>" + '\n' + \
                         f'Это рассылка заканчивается {local_time[2]} {local_time[1]} ' \
-                        f'({local_time[0]}) {local_time[4]} года в {local_time[3]} + 7 часов' + '\n'
+                        f'({local_time[0]}) {local_time[4]} года в {k}:{list[1]}' + '\n'
         if a == "Ваши рассылки: \n":
             a = 'Вам еще не приходили рассылки!'
         await msg.reply(a, reply_markup=KeyBoards.mailing_lists_kb, parse_mode="HTML")
@@ -3740,13 +3744,18 @@ async def handler_message(msg: types.Message):
                 if local_time[1] == "Dec":
                     local_time[1] = "Декабря"
                 if local_time[2] == '':
+                    list = local_time[4].split(':')
+                    k = int(list[0]) + 7
                     a = a + f" - <b>{item[1]}</b>" + '\n' + \
                         f'Это мероприятие заканчивается {local_time[3]} {local_time[1]} ' \
-                        f'({local_time[0]}) {local_time[5]} года в {local_time[4]} + 7 часов' + '\n'
+                        f'({local_time[0]}) {local_time[5]} года в {k}:{list[1]}\n'
+
                 else:
+                    list = local_time[3].split(':')
+                    k = int(list[0]) + 7
                     a = a + f" - <b>{item[1]}</b>" + '\n' + \
                         f'Это мероприятие заканчивается {local_time[2]} {local_time[1]} ' \
-                        f'({local_time[0]}) {local_time[4]} года в {local_time[3]} + 7 часов  ' + '\n'
+                        f'({local_time[0]}) {local_time[4]} года в {k}:{list[1]}\n'
         if a == "Ваши мероприятия: \n":
             a = 'У вас нет мероприятий!'
         await msg.reply(a, reply_markup=KeyBoards.events_kb, parse_mode="HTML")
