@@ -15,7 +15,6 @@ from aiogram.dispatcher import Dispatcher
 from aiogram.types import ContentType, ReplyKeyboardMarkup, ParseMode
 from aiogram.utils import executor
 from aiogram.utils.markdown import text
-from emoji import emojize
 
 import KeyBoards
 import messages
@@ -696,18 +695,18 @@ async def process_admin_command1(message: types.Message):
             group_users = cursor.fetchall()
             cursor.close()
             if group_users == group:
-                    a = f'Рассылка от пользователя: <b>{name[0][0]}</b>\n' + f'<i>{content[0][0]}</i>'
-                    if incoming_event3[message.from_user.id] == 'Без таймера':
-                        pass
-                    else:
-                        conn = sqlite3.connect('db.db')
-                        cursor = conn.cursor()
-                        cursor.execute(
-                            f"INSERT INTO mail(`chat_id`, `event1`, `time`, `30min`, `5min`) values ({user[0]}, '{content[0][0]}', {time2[0][0]}, {1}, {1})")
+                a = f'Рассылка от пользователя: <b>{name[0][0]}</b>\n' + f'<i>{content[0][0]}</i>'
+                if incoming_event3[message.from_user.id] == 'Без таймера':
+                    pass
+                else:
+                    conn = sqlite3.connect('db.db')
+                    cursor = conn.cursor()
+                    cursor.execute(
+                        f"INSERT INTO mail(`chat_id`, `event1`, `time`, `30min`, `5min`) values ({user[0]}, '{content[0][0]}', {time2[0][0]}, {1}, {1})")
 
-                        conn.commit()
-                        conn.close()
-                    await dp.bot.send_message(user[0], a, parse_mode='HTML')
+                    conn.commit()
+                    conn.close()
+                await dp.bot.send_message(user[0], a, parse_mode='HTML')
         incoming_event3.pop(message.from_user.id)
         await dp.bot.send_message(message.from_user.id,
                                   f'Ваша рассылка: <b>{content[0][0]}</b>\nУспешно отправлена группе '
@@ -3807,4 +3806,4 @@ if __name__ == "__main__":
     thread2.start()
     executor.start_polling(dp, on_shutdown=shutdown, skip_updates=shutdown)
 
-#  тестовый платеж убрать + добавить подтверждение преподов
+
