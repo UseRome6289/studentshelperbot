@@ -3643,12 +3643,20 @@ async def handler_message(msg: types.Message):
                 if local_time[2] == '':
                     list = local_time[4].split(':')
                     k = int(list[0]) + 7
+                    if k > 24:
+                        k = k - 24
+                    elif k == 24:
+                        k = "0"
                     a = a + f" - <b>{item[1]}</b>" + '\n' + \
                         f'Это рассылка заканчивается {local_time[3]} {local_time[1]} ' \
                         f'({local_time[0]}) {local_time[5]} года в {k}:{list[1]}' + '\n'
                 else:
                     list = local_time[3].split(':')
                     k = int(list[0]) + 7
+                    if k > 24:
+                        k = k - 24
+                    elif k == 24:
+                        k = "0"
                     a = a + f" - <b>{item[1]}</b>" + '\n' + \
                         f'Это рассылка заканчивается {local_time[2]} {local_time[1]} ' \
                         f'({local_time[0]}) {local_time[4]} года в {k}:{list[1]}' + '\n'
@@ -3746,6 +3754,10 @@ async def handler_message(msg: types.Message):
                 if local_time[2] == '':
                     list = local_time[4].split(':')
                     k = int(list[0]) + 7
+                    if k > 24:
+                        k = k - 24
+                    elif k == 24:
+                        k = "0"
                     a = a + f" - <b>{item[1]}</b>" + '\n' + \
                         f'Это мероприятие заканчивается {local_time[3]} {local_time[1]} ' \
                         f'({local_time[0]}) {local_time[5]} года в {k}:{list[1]}\n'
@@ -3753,6 +3765,10 @@ async def handler_message(msg: types.Message):
                 else:
                     list = local_time[3].split(':')
                     k = int(list[0]) + 7
+                    if k > 24:
+                        k = k - 24
+                    elif k == 24:
+                        k = "0"
                     a = a + f" - <b>{item[1]}</b>" + '\n' + \
                         f'Это мероприятие заканчивается {local_time[2]} {local_time[1]} ' \
                         f'({local_time[0]}) {local_time[4]} года в {k}:{list[1]}\n'
