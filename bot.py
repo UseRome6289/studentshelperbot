@@ -3538,11 +3538,11 @@ async def handler_message(msg: types.Message):
                 if local_time[2] == '':
                     a = a + f" - <b>{item[1]}</b>" + '\n' + \
                         f'Это рассылка заканчивается {local_time[3]} {local_time[1]} ' \
-                        f'({local_time[0]}) {local_time[5]} года в {local_time[4]} ' + '\n'
+                        f'({local_time[0]}) {local_time[5]} года в {local_time[4]} + 7 часов' + '\n'
                 else:
                     a = a + f" - <b>{item[1]}</b>" + '\n' + \
                         f'Это рассылка заканчивается {local_time[2]} {local_time[1]} ' \
-                        f'({local_time[0]}) {local_time[4]} года в {local_time[3]} ' + '\n'
+                        f'({local_time[0]}) {local_time[4]} года в {local_time[3]} + 7 часов' + '\n'
         if a == "Ваши рассылки: \n":
             a = 'Вам еще не приходили рассылки!'
         await msg.reply(a, reply_markup=KeyBoards.mailing_lists_kb, parse_mode="HTML")
@@ -3637,11 +3637,11 @@ async def handler_message(msg: types.Message):
                 if local_time[2] == '':
                     a = a + f" - <b>{item[1]}</b>" + '\n' + \
                         f'Это мероприятие заканчивается {local_time[3]} {local_time[1]} ' \
-                        f'({local_time[0]}) {local_time[5]} года в {local_time[4]} ' + '\n'
+                        f'({local_time[0]}) {local_time[5]} года в {local_time[4]} + 7 часов' + '\n'
                 else:
                     a = a + f" - <b>{item[1]}</b>" + '\n' + \
                         f'Это мероприятие заканчивается {local_time[2]} {local_time[1]} ' \
-                        f'({local_time[0]}) {local_time[4]} года в {local_time[3]} ' + '\n'
+                        f'({local_time[0]}) {local_time[4]} года в {local_time[3]} + 7 часов  ' + '\n'
         if a == "Ваши мероприятия: \n":
             a = 'У вас нет мероприятий!'
         await msg.reply(a, reply_markup=KeyBoards.events_kb, parse_mode="HTML")
