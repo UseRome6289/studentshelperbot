@@ -216,8 +216,113 @@ class MyThread2(Thread):
                                     bot2.send_message(k[0], f'{k[1]}, у вас начнется {j[2]} через 5 минут в {j[5]}')
 
 
-# endregions
+class MyThread3(Thread):
+    def __init__(self, event):
+        Thread.__init__(self)
+        self.stopped = event
 
+    def run(self):
+        global adding2, a
+        while not self.stopped.wait(1):
+            url = 'https://edu.sfu-kras.ru/timetable'
+            response = requests.get(url).text
+            match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+            if match:
+                current_week = "1"
+            else:
+                current_week = "2"
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_group FROM users")
+            result_set = cursor.fetchall()
+            cursor.close()
+            listing = []
+            for i in result_set:
+                listing.append(i)
+            listing = list(set(listing))
+            for i in listing:
+                url = f'http://edu.sfu-kras.ru/api/timetable/get?target={i[0]}'
+                response = requests.get(url).json()
+                adding2 = []
+                for item in response["timetable"]:
+                    if item["week"] == current_week:
+                        adding2.append(
+                            [item['day'], item['time'], item['subject'], item['type'], "", item['place']])
+                date = datetime.datetime.today()
+                date_date = date.strftime('%H:%M')
+                date_split = date_date.split(':')
+                listing_date_split = []
+                for n in date_split:
+                    n = int(n)
+                    listing_date_split.append(n)
+                listing_date_sum = listing_date_split[0] * 60 + listing_date_split[1]
+                state_time = 0
+                local_time_now = time.time()
+                local_time = time.ctime(local_time_now)
+                local_time = local_time.split(' ')
+                a = '0'
+                if local_time[0] == "Mon":
+                    a = '1'
+                    local_time[0] = "понедельник"
+                if local_time[0] == "Tue":
+                    a = '2'
+                    local_time[0] = "вторник"
+                if local_time[0] == "Wed":
+                    a = '3'
+                    local_time[0] = "среда"
+                if local_time[0] == "Thu":
+                    a = '4'
+                    local_time[0] = "четверг"
+                if local_time[0] == "Fri":
+                    a = '5'
+                    local_time[0] = "пятница"
+                if local_time[0] == "Sat":
+                    a = '6'
+                    local_time[0] = "суббота"
+                if local_time[0] == "Sun":
+                    a = '7'
+                    local_time[0] = "воскресенье"
+                if listing_date_sum == state_time:
+                    conn = sqlite3.connect('db.db')
+                    cursor = conn.cursor()
+                    cursor.execute(f"SELECT chat_id, real_name FROM users WHERE user_group = '{i[0]}'")
+                    id_group = cursor.fetchall()
+                    cursor.close()
+                    timetable_message = ""
+                    url = 'https://edu.sfu-kras.ru/timetable'
+                    response = requests.get(url).text
+                    match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+                    if match:
+                        current_week = "1"
+                    else:
+                        current_week = "2"
+                    url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={i[0]}')
+                    response = requests.get(url).json()
+                    adding = []
+                    for item in response["timetable"]:
+                        if item["week"] == current_week:
+                            adding.append(
+                                [item['day'], item['time'], item['subject'], item['type'], item['teacher'],
+                                 item['place']])
+                    flag = 0
+                    for p in adding:
+                        if p[0] == a:
+                            if p[2] != '':
+                                flag = 1
+                    if flag == 1:
+                        for l in adding:
+                            if l[0] == a:
+                                if l[4] == '' and l[5] == '':
+                                    timetable_message += f'\n{l[1]}\n{l[2]} ({l[3]})\n'
+                                else:
+                                    timetable_message += f'\n{l[1]}\n{l[2]} ({l[3]}) \n{l[4]}\n{l[5]}\n'
+                    else:
+                        timetable_message += 'пар нет! Отличный повод увидеться с друзьями! 🎉'
+
+                    for k in id_group:
+                        bot2.send_message(k[0], f"Доброе утро, {k[1]}!\nСегодня {local_time[0]} и у вас сегодня\n{timetable_message}", parse_mode = "HTML")
+
+# endregions
 
 @dp.message_handler(state='*', commands='start')
 async def process_start_command(message: types.Message):
@@ -3426,7 +3531,7 @@ async def schedule(message: types.Message):
 
 @dp.message_handler(state='*', content_types=["text"])
 async def handler_message(msg: types.Message):
-    global adding
+    global adding, message
     global group
     switch_text = msg.text.lower()
     if switch_text == "расписание":
@@ -3761,6 +3866,35 @@ async def handler_message(msg: types.Message):
                         , reply_markup=KeyBoards.developer_support_kb)
     elif switch_text == "test":
         await msg.reply(f"{messages.greets_msg}")
+    elif switch_text == "выгрузить всю базу данных":
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT user_id FROM admins")
+        result_set = cursor.fetchall()
+        cursor.close()
+        is_succeed = False
+        for item in result_set:
+            if item[0] == msg.from_user.id:
+                is_succeed = True
+        if is_succeed:
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT * FROM users")
+            result_set = cursor.fetchall()
+            message = "<b>ID, имя пользователя и имя в боте и группа:</b>\n"
+            for i in result_set:
+                message += str(i[0])
+                message += ", "
+                message += str(i[1])
+                message += ", "
+                message += str(i[2])
+                message += ", "
+                message += str(i[3])
+                message += "\n"
+                message += "\n"
+            await bot.send_message(msg.from_user.id, message, parse_mode= "HTML")
+        else:
+            await msg.reply(messages.not_admin, reply_markup=KeyBoards.menu_admin_kb)
     else:
         await bot.send_message(msg.from_user.id, messages.what)
 
@@ -3807,6 +3941,9 @@ if __name__ == "__main__":
     stopFlag2 = threading.Event()
     thread2 = MyThread2(stopFlag2)
     thread2.start()
+    stopFlag3 = threading.Event()
+    thread3 = MyThread3(stopFlag3)
+    thread3.start()
     executor.start_polling(dp, on_shutdown=shutdown, skip_updates=shutdown)
 
 

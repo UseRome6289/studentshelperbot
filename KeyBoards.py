@@ -10,7 +10,7 @@ greet_kb2 = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).ad
 menu_admin_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Расписание").add("Админ-панель").add("Профиль") \
     .add("Рассылки") \
     .add("Посмотреть расписание группы").add("Запланированные мероприятия").add("Настройки") \
-    .add("Поддержка разработчиков")
+    .add("Поддержка разработчиков").add("Выгрузить всю базу данных")
 
 # Меню обычного пользователя
 menu_user_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Расписание").add("Профиль").add("Рассылки") \
