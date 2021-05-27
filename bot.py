@@ -147,7 +147,7 @@ class MyThread2(Thread):
 
     def run(self):
         global adding
-        while not self.stopped.wait(50):
+        while not self.stopped.wait(5):
             url = 'https://edu.sfu-kras.ru/timetable'
             response = requests.get(url).text
             match = re.search(r'Идёт\s\w{8}\sнеделя', response)
@@ -176,7 +176,7 @@ class MyThread2(Thread):
                 for n in date_split:
                     n = int(n)
                     listing_date_split.append(n)
-                listing_date_sum = listing_date_split[0] * 60 + listing_date_split[1]
+                listing_date_sum = listing_date_split[0] * 60 - 7 * 60 + listing_date_split[1]
                 for item in response["timetable"]:
                     if item["week"] == current_week:
                         adding.append(
