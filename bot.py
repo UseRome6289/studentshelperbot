@@ -223,7 +223,7 @@ class MyThread3(Thread):
 
     def run(self):
         global adding2, a
-        while not self.stopped.wait(3):
+        while not self.stopped.wait(50):
             url = 'https://edu.sfu-kras.ru/timetable'
             response = requests.get(url).text
             match = re.search(r'Идёт\s\w{8}\sнеделя', response)
