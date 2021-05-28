@@ -44,7 +44,6 @@ incoming_event3 = {}
 incoming_inst = []
 incoming_inst2 = []
 
-
 def only_letters(tested_string):
     for letter in tested_string:
         if letter not in KeyBoards.alphabet:
@@ -222,7 +221,7 @@ class MyThread3(Thread):
         self.stopped = event
 
     def run(self):
-        global adding2, a, data
+        global adding2, a, data, mes
         while not self.stopped.wait(50):
             url = 'https://edu.sfu-kras.ru/timetable'
             response = requests.get(url).text
@@ -291,15 +290,58 @@ class MyThread3(Thread):
                                            params={'q': s_city, 'type': 'like', 'units': 'metric', 'APPID': appid})
                         data = res.json()
                         city_id = data['list'][0]['id']
-                    except Exception as e:
+                    except Exception:
                         pass
                     try:
                         res = requests.get("http://api.openweathermap.org/data/2.5/weather",
                                            params={'id': city_id, 'units': 'metric', 'lang': 'ru', 'APPID': appid})
                         data = res.json()
-                    except Exception as e:
+                    except Exception:
                         pass
+                    try:
+                        listik = []
+                        res = requests.get("http://api.openweathermap.org/data/2.5/forecast",
+                                           params={'id': city_id, 'units': 'metric', 'lang': 'ru', 'APPID': appid})
+                        kaka = res.json()
+                        for t in kaka['list']:
+                            q = t['dt_txt'].split(" ")
+                            if q[1] == '21:00:00':
+                                q[1] = "21:00"
+                            if q[1] == '18:00:00':
+                                q[1] = "18:00"
+                            if q[1] == '15:00:00':
+                                q[1] = "15:00"
+                            if q[1] == '12:00:00':
+                                q[1] = "12:00"
+                            if q[1] == '9:00:00':
+                                q[1] = "09:00"
+                            if q[1] == '09:00:00':
+                                q[1] = "09:00"
+                            if q[1] == '06:00:00':
+                                q[1] = "06:00"
+                            if q[1] == '6:00:00':
+                                q[1] = "06:00"
 
+                            listik.append(q[1])
+                            listik.append('{0:+3.0f}°'.format(t['main']['temp']))
+                            listik.append(t['weather'][0]['description'])
+                            if q[1] == "21:00":
+                                break
+                        mes = ''
+                        j = 0
+                        for s in listik:
+                            if j == 0:
+                                mes += "В "
+                            mes += s
+                            j += 1
+                            if j != 3:
+                                mes += ", "
+                            if j == 3:
+                                mes += "\n"
+                                j = 0
+
+                    except Exception:
+                        pass
                     conn = sqlite3.connect('db.db')
                     cursor = conn.cursor()
                     cursor.execute(f"SELECT chat_id, real_name FROM users WHERE user_group = '{i[0]}'")
@@ -338,8 +380,8 @@ class MyThread3(Thread):
 
                     for k in id_group:
                         bot2.send_message(k[0], f"Доброе утро, {k[1]}!\n\nСегодня {local_time[0]}, "
-                                                f"сейчас {data['weather'][0]['description']}\nТемпература в Красноярске "
-                                                f"{round(int(data['main']['temp']))}°.\n\nУ вас сегодня\n{timetable_message}")
+                                                f"сейчас {data['weather'][0]['description']}\n\nТемпература в Красноярске "
+                                                f"{round(int(data['main']['temp']))}°.\n\nПрогноз погоды на сегодня:\n\n{mes}\nУ вас сегодня\n{timetable_message}")
 
 # endregions
 
