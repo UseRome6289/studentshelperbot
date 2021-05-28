@@ -223,7 +223,7 @@ class MyThread3(Thread):
 
     def run(self):
         global adding2, a
-        while not self.stopped.wait(50):
+        while not self.stopped.wait(3):
             url = 'https://edu.sfu-kras.ru/timetable'
             response = requests.get(url).text
             match = re.search(r'Идёт\s\w{8}\sнеделя', response)
@@ -320,7 +320,7 @@ class MyThread3(Thread):
                         timetable_message += 'пар нет! Отличный повод увидеться с друзьями! 🎉'
 
                     for k in id_group:
-                        bot2.send_message(k[0], f"Доброе утро, {k[1]}!\nСегодня {local_time[0]} и у вас сегодня\n{timetable_message}", parse_mode = "HTML")
+                        bot2.send_message(k[0], f"Доброе утро, {k[1]}!\nСегодня {local_time[0]} и у вас сегодня\n{timetable_message}")
 
 # endregions
 
