@@ -200,9 +200,9 @@ class MyThread2(Thread):
                             cursor.close()
                             for k in id_group:
                                 if j[5] == "":
-                                    bot2.send_message(k[0], f'{k[1]}, у вас начался {j[2]}')
+                                    bot2.send_message(k[0], f'{k[1]}, у вас начинается {j[2]}')
                                 else:
-                                    bot2.send_message(k[0], f'{k[1]}, у вас начался {j[2]} в {j[5]}')
+                                    bot2.send_message(k[0], f'{k[1]}, у вас начинается {j[2]} в {j[5]}')
                         if listing_date_sum == listing_date_sum2 - 5:
                             conn = sqlite3.connect('db.db')
                             cursor = conn.cursor()
@@ -222,7 +222,7 @@ class MyThread3(Thread):
         self.stopped = event
 
     def run(self):
-        global adding2, a
+        global adding2, a, data
         while not self.stopped.wait(50):
             url = 'https://edu.sfu-kras.ru/timetable'
             response = requests.get(url).text
@@ -283,6 +283,23 @@ class MyThread3(Thread):
                     a = '7'
                     local_time[0] = "воскресенье"
                 if listing_date_sum == state_time:
+                    s_city = "Красноярск,RU"
+                    city_id = 0
+                    appid = "8fb0b9a76ed0af2c84d8fae4a6f61133"
+                    try:
+                        res = requests.get("http://api.openweathermap.org/data/2.5/find?",
+                                           params={'q': s_city, 'type': 'like', 'units': 'metric', 'APPID': appid})
+                        data = res.json()
+                        city_id = data['list'][0]['id']
+                    except Exception as e:
+                        pass
+                    try:
+                        res = requests.get("http://api.openweathermap.org/data/2.5/weather",
+                                           params={'id': city_id, 'units': 'metric', 'lang': 'ru', 'APPID': appid})
+                        data = res.json()
+                    except Exception as e:
+                        pass
+
                     conn = sqlite3.connect('db.db')
                     cursor = conn.cursor()
                     cursor.execute(f"SELECT chat_id, real_name FROM users WHERE user_group = '{i[0]}'")
@@ -320,7 +337,9 @@ class MyThread3(Thread):
                         timetable_message += 'пар нет! Отличный повод увидеться с друзьями! 🎉'
 
                     for k in id_group:
-                        bot2.send_message(k[0], f"Доброе утро, {k[1]}!\nСегодня {local_time[0]} и у вас сегодня\n{timetable_message}")
+                        bot2.send_message(k[0], f"Доброе утро, {k[1]}!\n\nСегодня {local_time[0]}, "
+                                                f"сейчас {data['weather'][0]['description']}\nТемпература в Красноярске "
+                                                f"{round(int(data['main']['temp']))}°.\n\nУ вас сегодня\n{timetable_message}")
 
 # endregions
 
@@ -1315,6 +1334,8 @@ async def name_change(message: types.Message):
         conn = sqlite3.connect('db.db')
         cursor = conn.cursor()
         cursor.execute(f"UPDATE users SET real_name = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
+        conn.commit()
+        conn.close()
         is_succeed = False
         conn = sqlite3.connect('db.db')
         cursor = conn.cursor()
