@@ -328,7 +328,7 @@ class MyThread3(Thread):
                             listik.append(q[1])
                             listik.append('{0:+3.0f}°'.format(t['main']['temp']))
                             listik.append(t['weather'][0]['description'])
-                            if q[1] == "21:00":
+                            if q[1] == "15:00":
                                 break
                         mes = ''
                         j = 0
