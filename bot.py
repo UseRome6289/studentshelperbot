@@ -44,6 +44,7 @@ incoming_event3 = {}
 incoming_inst = []
 incoming_inst2 = []
 
+
 def only_letters(tested_string):
     for letter in tested_string:
         if letter not in KeyBoards.alphabet:
@@ -305,6 +306,8 @@ class MyThread3(Thread):
                         kaka = res.json()
                         for t in kaka['list']:
                             q = t['dt_txt'].split(" ")
+                            if q[1] == '03:00:00':
+                                q[1] = "03:00"
                             if q[1] == '21:00:00':
                                 q[1] = "21:00"
                             if q[1] == '18:00:00':
@@ -383,6 +386,7 @@ class MyThread3(Thread):
                                                 f"сейчас {data['weather'][0]['description']}\n\nТемпература в Красноярске "
                                                 f"{round(int(data['main']['temp']))}°.\n\nПрогноз погоды на сегодня:\n\n{mes}\nУ вас сегодня\n{timetable_message}")
 
+
 # endregions
 
 @dp.message_handler(state='*', commands='start')
@@ -402,7 +406,7 @@ async def process_start_command(message: types.Message):
         if result_set[0][0] == 'True' and result_set[0][0] != None:
             is_succeed = True
     except:
-         pass
+        pass
     if message.from_user.username != None:
         if is_succeed == True:
             await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
@@ -3980,7 +3984,7 @@ async def handler_message(msg: types.Message):
                 message += str(i[3])
                 message += "\n"
                 message += "\n"
-            await bot.send_message(msg.from_user.id, message, parse_mode= "HTML")
+            await bot.send_message(msg.from_user.id, message, parse_mode="HTML")
         else:
             await msg.reply(messages.not_admin, reply_markup=KeyBoards.menu_admin_kb)
     else:
@@ -4033,5 +4037,3 @@ if __name__ == "__main__":
     thread3 = MyThread3(stopFlag3)
     thread3.start()
     executor.start_polling(dp, on_shutdown=shutdown, skip_updates=shutdown)
-
-
