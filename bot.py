@@ -4036,7 +4036,4 @@ if __name__ == "__main__":
     stopFlag3 = threading.Event()
     thread3 = MyThread3(stopFlag3)
     thread3.start()
-    stopFlag4 = threading.Event()
-    thread4 = MyThread4(stopFlag4)
-    thread4.start()
     executor.start_polling(dp, on_shutdown=shutdown, skip_updates=shutdown)
