@@ -387,24 +387,6 @@ class MyThread3(Thread):
                                                 f"{round(int(data['main']['temp']))}°.\n\nПрогноз погоды на сегодня:\n\n{mes}\nУ вас сегодня\n{timetable_message}")
 
 
-class MyThread4(Thread):
-    def __init__(self, event):
-        Thread.__init__(self)
-        self.stopped = event
-
-    def run(self):
-        global adding2, a, data, mes
-        while not self.stopped.wait(3600):
-            date = datetime.datetime.today()
-            date_date = date.strftime('%H:%M')
-            date_split = date_date.split(':')
-            listing_date_split = []
-            for n in date_split:
-                n = int(n)
-                listing_date_split.append(n)
-            listing_date_sum = listing_date_split[0] * 60 + listing_date_split[1]
-            bot2.send_message(1008740088, f"Время на сервере: {listing_date_sum}")
-
 # endregions
 
 @dp.message_handler(state='*', commands='start')
