@@ -2895,10 +2895,29 @@ async def schedule(message: types.Message):
 async def schedule_check(msg: types.Message):
     global group
     if msg.text.lower() == "меню":
-        await msg.reply(messages.menu
-                        , reply=False, reply_markup=KeyBoards.menu_admin_kb)
-        state = dp.current_state(user=msg.from_user.id)
-        await state.reset_state()
+        is_succeed = False
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT user_id FROM admins")
+        result_set = cursor.fetchall()
+        cursor.close()
+        for item in result_set:
+            if item[0] == msg.from_user.id:
+                is_succeed = True
+        if is_succeed:
+            await msg.reply(messages.menu
+                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=msg.from_user.id)
+            await state.reset_state()
+        else:
+            await msg.reply(messages.menu
+                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=msg.from_user.id)
+            await state.reset_state()
     else:
         conn = sqlite3.connect('db.db')
         cursor = conn.cursor()
