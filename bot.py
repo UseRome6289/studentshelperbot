@@ -223,274 +223,277 @@ class MyThread3(Thread):
 
     def run(self):
         global adding2, a, data, mes
-        while not self.stopped.wait(50):
-            url = 'https://edu.sfu-kras.ru/timetable'
-            response = requests.get(url).text
-            match = re.search(r'Идёт\s\w{8}\sнеделя', response)
-            if match:
-                current_week = "1"
-            else:
-                current_week = "2"
-            conn = sqlite3.connect('db.db')
-            cursor = conn.cursor()
-            cursor.execute(f"SELECT user_group FROM users")
-            result_set = cursor.fetchall()
-            cursor.close()
-            listing = []
-            for i in result_set:
-                listing.append(i)
-            listing = list(set(listing))
-            for i in listing:
-                url = f'http://edu.sfu-kras.ru/api/timetable/get?target={i[0]}'
-                response = requests.get(url).json()
-                adding2 = []
-                for item in response["timetable"]:
-                    if item["week"] == current_week:
-                        adding2.append(
-                            [item['day'], item['time'], item['subject'], item['type'], "", item['place']])
-                date = datetime.datetime.today()
-                date_date = date.strftime('%H:%M')
-                date_split = date_date.split(':')
-                listing_date_split = []
-                for n in date_split:
-                    n = int(n)
-                    listing_date_split.append(n)
-                listing_date_sum = listing_date_split[0] * 60 + listing_date_split[1]
-                state_time = 0
-                local_time_now = time.time()
-                local_time = time.ctime(local_time_now)
-                local_time = local_time.split(' ')
-                a = '0'
-                if local_time[0] == "Mon":
-                    a = '1'
-                    local_time[0] = "понедельник"
-                if local_time[0] == "Tue":
-                    a = '2'
-                    local_time[0] = "вторник"
-                if local_time[0] == "Wed":
-                    a = '3'
-                    local_time[0] = "среда"
-                if local_time[0] == "Thu":
-                    a = '4'
-                    local_time[0] = "четверг"
-                if local_time[0] == "Fri":
-                    a = '5'
-                    local_time[0] = "пятница"
-                if local_time[0] == "Sat":
-                    a = '6'
-                    local_time[0] = "суббота"
-                if local_time[0] == "Sun":
-                    a = '7'
-                    local_time[0] = "воскресенье"
-                g = 0
-                if listing_date_sum == state_time:
-                    bot2.send_message(1008740088, "Прошел в 7 утра")
-                    g = 1
-                    s_city = "Красноярск,RU"
-                    city_id = 0
-                    appid = "8fb0b9a76ed0af2c84d8fae4a6f61133"
-                    try:
-                        res = requests.get("http://api.openweathermap.org/data/2.5/find?",
-                                           params={'q': s_city, 'type': 'like', 'units': 'metric', 'APPID': appid})
-                        data = res.json()
-                        city_id = data['list'][0]['id']
-                    except Exception:
-                        pass
-                    try:
-                        res = requests.get("http://api.openweathermap.org/data/2.5/weather",
-                                           params={'id': city_id, 'units': 'metric', 'lang': 'ru', 'APPID': appid})
-                        data = res.json()
-                    except Exception:
-                        pass
-                    try:
-                        listik = []
-                        res = requests.get("http://api.openweathermap.org/data/2.5/forecast",
-                                           params={'id': city_id, 'units': 'metric', 'lang': 'ru', 'APPID': appid})
-                        kaka = res.json()
-                        for t in kaka['list']:
-                            q = t['dt_txt'].split(" ")
-                            if q[1] == '03:00:00':
-                                q[1] = "03:00"
-                            if q[1] == '21:00:00':
-                                q[1] = "21:00"
-                            if q[1] == '18:00:00':
-                                q[1] = "18:00"
-                            if q[1] == '15:00:00':
-                                q[1] = "15:00"
-                            if q[1] == '12:00:00':
-                                q[1] = "12:00"
-                            if q[1] == '9:00:00':
-                                q[1] = "09:00"
-                            if q[1] == '09:00:00':
-                                q[1] = "09:00"
-                            if q[1] == '06:00:00':
-                                q[1] = "06:00"
-                            if q[1] == '6:00:00':
-                                q[1] = "06:00"
-
-                            listik.append(q[1])
-                            listik.append('{0:+3.0f}°'.format(t['main']['temp']))
-                            listik.append(t['weather'][0]['description'])
-                            if q[1] == "15:00":
-                                break
-                        mes = ''
-                        j = 0
-                        for s in listik:
-                            if j == 0:
-                                mes += "В "
-                            mes += s
-                            j += 1
-                            if j != 3:
-                                mes += ", "
-                            if j == 3:
-                                mes += "\n"
-                                j = 0
-
-                    except Exception:
-                        pass
-                    conn = sqlite3.connect('db.db')
-                    cursor = conn.cursor()
-                    cursor.execute(f"SELECT chat_id, real_name FROM users WHERE user_group = '{i[0]}'")
-                    id_group = cursor.fetchall()
-                    cursor.close()
-                    timetable_message = ""
-                    url = 'https://edu.sfu-kras.ru/timetable'
-                    response = requests.get(url).text
-                    match = re.search(r'Идёт\s\w{8}\sнеделя', response)
-                    if match:
-                        current_week = "1"
-                    else:
-                        current_week = "2"
-                    url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={i[0]}')
+        while not self.stopped.wait(40):
+            try:
+                url = 'https://edu.sfu-kras.ru/timetable'
+                response = requests.get(url).text
+                match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+                if match:
+                    current_week = "1"
+                else:
+                    current_week = "2"
+                conn = sqlite3.connect('db.db')
+                cursor = conn.cursor()
+                cursor.execute(f"SELECT user_group FROM users")
+                result_set = cursor.fetchall()
+                cursor.close()
+                listing = []
+                for i in result_set:
+                    listing.append(i)
+                listing = list(set(listing))
+                for i in listing:
+                    url = f'http://edu.sfu-kras.ru/api/timetable/get?target={i[0]}'
                     response = requests.get(url).json()
-                    adding = []
+                    adding2 = []
                     for item in response["timetable"]:
                         if item["week"] == current_week:
-                            adding.append(
-                                [item['day'], item['time'], item['subject'], item['type'], item['teacher'],
-                                 item['place']])
-                    flag = 0
-                    for p in adding:
-                        if p[0] == a:
-                            if p[2] != '':
-                                flag = 1
-                    if flag == 1:
-                        for l in adding:
-                            if l[0] == a:
-                                if l[4] == '' and l[5] == '':
-                                    timetable_message += f'\n{l[1]}\n{l[2]} ({l[3]})\n'
-                                else:
-                                    timetable_message += f'\n{l[1]}\n{l[2]} ({l[3]}) \n{l[4]}\n{l[5]}\n'
-                    else:
-                        timetable_message += 'пар нет! Отличный повод увидеться с друзьями! 🎉'
+                            adding2.append(
+                                [item['day'], item['time'], item['subject'], item['type'], "", item['place']])
+                    date = datetime.datetime.today()
+                    date_date = date.strftime('%H:%M')
+                    date_split = date_date.split(':')
+                    listing_date_split = []
+                    for n in date_split:
+                        n = int(n)
+                        listing_date_split.append(n)
+                    listing_date_sum = listing_date_split[0] * 60 + listing_date_split[1]
+                    state_time = 0
+                    local_time_now = time.time()
+                    local_time = time.ctime(local_time_now)
+                    local_time = local_time.split(' ')
+                    a = '0'
+                    if local_time[0] == "Mon":
+                        a = '1'
+                        local_time[0] = "понедельник"
+                    if local_time[0] == "Tue":
+                        a = '2'
+                        local_time[0] = "вторник"
+                    if local_time[0] == "Wed":
+                        a = '3'
+                        local_time[0] = "среда"
+                    if local_time[0] == "Thu":
+                        a = '4'
+                        local_time[0] = "четверг"
+                    if local_time[0] == "Fri":
+                        a = '5'
+                        local_time[0] = "пятница"
+                    if local_time[0] == "Sat":
+                        a = '6'
+                        local_time[0] = "суббота"
+                    if local_time[0] == "Sun":
+                        a = '7'
+                        local_time[0] = "воскресенье"
+                    g = 0
+                    if listing_date_sum == state_time:
 
-                    for k in id_group:
-                        bot2.send_message(k[0], f"Доброе утро, {k[1]}!\n\nСегодня {local_time[0]}, "
-                                                f"сейчас {data['weather'][0]['description']}\n\nТемпература в Красноярске "
-                                                f"{round(int(data['main']['temp']))}°.\n\nПрогноз погоды на сегодня:\n\n{mes}\nУ вас сегодня\n{timetable_message}")
-                if listing_date_sum == 1 & g != 1:
-                    s_city = "Красноярск,RU"
-                    city_id = 0
-                    appid = "8fb0b9a76ed0af2c84d8fae4a6f61133"
-                    try:
-                        res = requests.get("http://api.openweathermap.org/data/2.5/find?",
-                                           params={'q': s_city, 'type': 'like', 'units': 'metric', 'APPID': appid})
-                        data = res.json()
-                        city_id = data['list'][0]['id']
-                    except Exception:
-                        pass
-                    try:
-                        res = requests.get("http://api.openweathermap.org/data/2.5/weather",
-                                           params={'id': city_id, 'units': 'metric', 'lang': 'ru', 'APPID': appid})
-                        data = res.json()
-                    except Exception:
-                        pass
-                    try:
-                        listik = []
-                        res = requests.get("http://api.openweathermap.org/data/2.5/forecast",
-                                           params={'id': city_id, 'units': 'metric', 'lang': 'ru', 'APPID': appid})
-                        kaka = res.json()
-                        for t in kaka['list']:
-                            q = t['dt_txt'].split(" ")
-                            if q[1] == '03:00:00':
-                                q[1] = "03:00"
-                            if q[1] == '21:00:00':
-                                q[1] = "21:00"
-                            if q[1] == '18:00:00':
-                                q[1] = "18:00"
-                            if q[1] == '15:00:00':
-                                q[1] = "15:00"
-                            if q[1] == '12:00:00':
-                                q[1] = "12:00"
-                            if q[1] == '9:00:00':
-                                q[1] = "09:00"
-                            if q[1] == '09:00:00':
-                                q[1] = "09:00"
-                            if q[1] == '06:00:00':
-                                q[1] = "06:00"
-                            if q[1] == '6:00:00':
-                                q[1] = "06:00"
+                        g = 1
+                        s_city = "Красноярск,RU"
+                        city_id = 0
+                        appid = "8fb0b9a76ed0af2c84d8fae4a6f61133"
+                        try:
+                            res = requests.get("http://api.openweathermap.org/data/2.5/find?",
+                                               params={'q': s_city, 'type': 'like', 'units': 'metric', 'APPID': appid})
+                            data = res.json()
+                            city_id = data['list'][0]['id']
+                        except Exception:
+                            pass
+                        try:
+                            res = requests.get("http://api.openweathermap.org/data/2.5/weather",
+                                               params={'id': city_id, 'units': 'metric', 'lang': 'ru', 'APPID': appid})
+                            data = res.json()
+                        except Exception:
+                            pass
+                        try:
+                            listik = []
+                            res = requests.get("http://api.openweathermap.org/data/2.5/forecast",
+                                               params={'id': city_id, 'units': 'metric', 'lang': 'ru', 'APPID': appid})
+                            kaka = res.json()
+                            for t in kaka['list']:
+                                q = t['dt_txt'].split(" ")
+                                if q[1] == '03:00:00':
+                                    q[1] = "03:00"
+                                if q[1] == '21:00:00':
+                                    q[1] = "21:00"
+                                if q[1] == '18:00:00':
+                                    q[1] = "18:00"
+                                if q[1] == '15:00:00':
+                                    q[1] = "15:00"
+                                if q[1] == '12:00:00':
+                                    q[1] = "12:00"
+                                if q[1] == '9:00:00':
+                                    q[1] = "09:00"
+                                if q[1] == '09:00:00':
+                                    q[1] = "09:00"
+                                if q[1] == '06:00:00':
+                                    q[1] = "06:00"
+                                if q[1] == '6:00:00':
+                                    q[1] = "06:00"
 
-                            listik.append(q[1])
-                            listik.append('{0:+3.0f}°'.format(t['main']['temp']))
-                            listik.append(t['weather'][0]['description'])
-                            if q[1] == "15:00":
-                                break
-                        mes = ''
-                        j = 0
-                        for s in listik:
-                            if j == 0:
-                                mes += "В "
-                            mes += s
-                            j += 1
-                            if j != 3:
-                                mes += ", "
-                            if j == 3:
-                                mes += "\n"
-                                j = 0
+                                listik.append(q[1])
+                                listik.append('{0:+3.0f}°'.format(t['main']['temp']))
+                                listik.append(t['weather'][0]['description'])
+                                if q[1] == "15:00":
+                                    break
+                            mes = ''
+                            j = 0
+                            for s in listik:
+                                if j == 0:
+                                    mes += "В "
+                                mes += s
+                                j += 1
+                                if j != 3:
+                                    mes += ", "
+                                if j == 3:
+                                    mes += "\n"
+                                    j = 0
 
-                    except Exception:
-                        pass
-                    conn = sqlite3.connect('db.db')
-                    cursor = conn.cursor()
-                    cursor.execute(f"SELECT chat_id, real_name FROM users WHERE user_group = '{i[0]}'")
-                    id_group = cursor.fetchall()
-                    cursor.close()
-                    timetable_message = ""
-                    url = 'https://edu.sfu-kras.ru/timetable'
-                    response = requests.get(url).text
-                    match = re.search(r'Идёт\s\w{8}\sнеделя', response)
-                    if match:
-                        current_week = "1"
-                    else:
-                        current_week = "2"
-                    url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={i[0]}')
-                    response = requests.get(url).json()
-                    adding = []
-                    for item in response["timetable"]:
-                        if item["week"] == current_week:
-                            adding.append(
-                                [item['day'], item['time'], item['subject'], item['type'], item['teacher'],
-                                 item['place']])
-                    flag = 0
-                    for p in adding:
-                        if p[0] == a:
-                            if p[2] != '':
-                                flag = 1
-                    if flag == 1:
-                        for l in adding:
-                            if l[0] == a:
-                                if l[4] == '' and l[5] == '':
-                                    timetable_message += f'\n{l[1]}\n{l[2]} ({l[3]})\n'
-                                else:
-                                    timetable_message += f'\n{l[1]}\n{l[2]} ({l[3]}) \n{l[4]}\n{l[5]}\n'
-                    else:
-                        timetable_message += 'пар нет! Отличный повод увидеться с друзьями! 🎉'
+                        except Exception:
+                            pass
+                        conn = sqlite3.connect('db.db')
+                        cursor = conn.cursor()
+                        cursor.execute(f"SELECT chat_id, real_name FROM users WHERE user_group = '{i[0]}'")
+                        id_group = cursor.fetchall()
+                        cursor.close()
+                        timetable_message = ""
+                        url = 'https://edu.sfu-kras.ru/timetable'
+                        response = requests.get(url).text
+                        match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+                        if match:
+                            current_week = "1"
+                        else:
+                            current_week = "2"
+                        url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={i[0]}')
+                        response = requests.get(url).json()
+                        adding = []
+                        for item in response["timetable"]:
+                            if item["week"] == current_week:
+                                adding.append(
+                                    [item['day'], item['time'], item['subject'], item['type'], item['teacher'],
+                                     item['place']])
+                        flag = 0
+                        for p in adding:
+                            if p[0] == a:
+                                if p[2] != '':
+                                    flag = 1
+                        if flag == 1:
+                            for l in adding:
+                                if l[0] == a:
+                                    if l[4] == '' and l[5] == '':
+                                        timetable_message += f'\n{l[1]}\n{l[2]} ({l[3]})\n'
+                                    else:
+                                        timetable_message += f'\n{l[1]}\n{l[2]} ({l[3]}) \n{l[4]}\n{l[5]}\n'
+                        else:
+                            timetable_message += 'пар нет! Отличный повод увидеться с друзьями! 🎉'
 
-                    for k in id_group:
-                        bot2.send_message(k[0], f"Доброе утро, {k[1]}!\n\nСегодня {local_time[0]}, "
-                                                f"сейчас {data['weather'][0]['description']}\n\nТемпература в Красноярске "
-                                                f"{round(int(data['main']['temp']))}°.\n\nПрогноз погоды на сегодня:\n\n{mes}\nУ вас сегодня\n{timetable_message}")
+                        for k in id_group:
+                            bot2.send_message(k[0], f"Доброе утро, {k[1]}!\n\nСегодня {local_time[0]}, "
+                                                    f"сейчас {data['weather'][0]['description']}\n\nТемпература в Красноярске "
+                                                    f"{round(int(data['main']['temp']))}°.\n\nПрогноз погоды на сегодня:\n\n{mes}\nУ вас сегодня\n{timetable_message}")
+                    if listing_date_sum == 1 & g != 1:
+                        s_city = "Красноярск,RU"
+                        city_id = 0
+                        appid = "8fb0b9a76ed0af2c84d8fae4a6f61133"
+                        try:
+                            res = requests.get("http://api.openweathermap.org/data/2.5/find?",
+                                               params={'q': s_city, 'type': 'like', 'units': 'metric', 'APPID': appid})
+                            data = res.json()
+                            city_id = data['list'][0]['id']
+                        except Exception:
+                            pass
+                        try:
+                            res = requests.get("http://api.openweathermap.org/data/2.5/weather",
+                                               params={'id': city_id, 'units': 'metric', 'lang': 'ru', 'APPID': appid})
+                            data = res.json()
+                        except Exception:
+                            pass
+                        try:
+                            listik = []
+                            res = requests.get("http://api.openweathermap.org/data/2.5/forecast",
+                                               params={'id': city_id, 'units': 'metric', 'lang': 'ru', 'APPID': appid})
+                            kaka = res.json()
+                            for t in kaka['list']:
+                                q = t['dt_txt'].split(" ")
+                                if q[1] == '03:00:00':
+                                    q[1] = "03:00"
+                                if q[1] == '21:00:00':
+                                    q[1] = "21:00"
+                                if q[1] == '18:00:00':
+                                    q[1] = "18:00"
+                                if q[1] == '15:00:00':
+                                    q[1] = "15:00"
+                                if q[1] == '12:00:00':
+                                    q[1] = "12:00"
+                                if q[1] == '9:00:00':
+                                    q[1] = "09:00"
+                                if q[1] == '09:00:00':
+                                    q[1] = "09:00"
+                                if q[1] == '06:00:00':
+                                    q[1] = "06:00"
+                                if q[1] == '6:00:00':
+                                    q[1] = "06:00"
+
+                                listik.append(q[1])
+                                listik.append('{0:+3.0f}°'.format(t['main']['temp']))
+                                listik.append(t['weather'][0]['description'])
+                                if q[1] == "15:00":
+                                    break
+                            mes = ''
+                            j = 0
+                            for s in listik:
+                                if j == 0:
+                                    mes += "В "
+                                mes += s
+                                j += 1
+                                if j != 3:
+                                    mes += ", "
+                                if j == 3:
+                                    mes += "\n"
+                                    j = 0
+
+                        except Exception:
+                            pass
+                        conn = sqlite3.connect('db.db')
+                        cursor = conn.cursor()
+                        cursor.execute(f"SELECT chat_id, real_name FROM users WHERE user_group = '{i[0]}'")
+                        id_group = cursor.fetchall()
+                        cursor.close()
+                        timetable_message = ""
+                        url = 'https://edu.sfu-kras.ru/timetable'
+                        response = requests.get(url).text
+                        match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+                        if match:
+                            current_week = "1"
+                        else:
+                            current_week = "2"
+                        url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={i[0]}')
+                        response = requests.get(url).json()
+                        adding = []
+                        for item in response["timetable"]:
+                            if item["week"] == current_week:
+                                adding.append(
+                                    [item['day'], item['time'], item['subject'], item['type'], item['teacher'],
+                                     item['place']])
+                        flag = 0
+                        for p in adding:
+                            if p[0] == a:
+                                if p[2] != '':
+                                    flag = 1
+                        if flag == 1:
+                            for l in adding:
+                                if l[0] == a:
+                                    if l[4] == '' and l[5] == '':
+                                        timetable_message += f'\n{l[1]}\n{l[2]} ({l[3]})\n'
+                                    else:
+                                        timetable_message += f'\n{l[1]}\n{l[2]} ({l[3]}) \n{l[4]}\n{l[5]}\n'
+                        else:
+                            timetable_message += 'пар нет! Отличный повод увидеться с друзьями! 🎉'
+
+                        for k in id_group:
+                            bot2.send_message(k[0], f"Доброе утро, {k[1]}!\n\nСегодня {local_time[0]}, "
+                                                    f"сейчас {data['weather'][0]['description']}\n\nТемпература в Красноярске "
+                                                    f"{round(int(data['main']['temp']))}°.\n\nПрогноз погоды на сегодня:\n\n{mes}\nУ вас сегодня\n{timetable_message}")
+            except Exception as e:
+                bot2.send_message(1008740088, e)
 
 
 # endregions
@@ -2906,14 +2909,14 @@ async def schedule_check(msg: types.Message):
                 is_succeed = True
         if is_succeed:
             await msg.reply(messages.menu
-                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+                            , reply=False, reply_markup=KeyBoards.menu_admin_kb)
             conn.commit()
             conn.close()
             state = dp.current_state(user=msg.from_user.id)
             await state.reset_state()
         else:
             await msg.reply(messages.menu
-                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
+                            , reply=False, reply_markup=KeyBoards.menu_user_kb)
             conn.commit()
             conn.close()
             state = dp.current_state(user=msg.from_user.id)
