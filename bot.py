@@ -223,8 +223,8 @@ class MyThread3(Thread):
 
     def run(self):
         global adding2, a, data, mes
-        while not self.stopped.wait(40):
-            try:
+        while not self.stopped.wait(50):
+
                 url = 'https://edu.sfu-kras.ru/timetable'
                 response = requests.get(url).text
                 match = re.search(r'Идёт\s\w{8}\sнеделя', response)
@@ -283,10 +283,7 @@ class MyThread3(Thread):
                     if local_time[0] == "Sun":
                         a = '7'
                         local_time[0] = "воскресенье"
-                    g = 0
-                    if listing_date_sum == state_time:
-
-                        g = 1
+                    if listing_date_sum == state_time | listing_date_sum == 1:
                         s_city = "Красноярск,RU"
                         city_id = 0
                         appid = "8fb0b9a76ed0af2c84d8fae4a6f61133"
@@ -389,111 +386,8 @@ class MyThread3(Thread):
                             bot2.send_message(k[0], f"Доброе утро, {k[1]}!\n\nСегодня {local_time[0]}, "
                                                     f"сейчас {data['weather'][0]['description']}\n\nТемпература в Красноярске "
                                                     f"{round(int(data['main']['temp']))}°.\n\nПрогноз погоды на сегодня:\n\n{mes}\nУ вас сегодня\n{timetable_message}")
-                    if listing_date_sum == 1 & g != 1:
-                        s_city = "Красноярск,RU"
-                        city_id = 0
-                        appid = "8fb0b9a76ed0af2c84d8fae4a6f61133"
-                        try:
-                            res = requests.get("http://api.openweathermap.org/data/2.5/find?",
-                                               params={'q': s_city, 'type': 'like', 'units': 'metric', 'APPID': appid})
-                            data = res.json()
-                            city_id = data['list'][0]['id']
-                        except Exception:
-                            pass
-                        try:
-                            res = requests.get("http://api.openweathermap.org/data/2.5/weather",
-                                               params={'id': city_id, 'units': 'metric', 'lang': 'ru', 'APPID': appid})
-                            data = res.json()
-                        except Exception:
-                            pass
-                        try:
-                            listik = []
-                            res = requests.get("http://api.openweathermap.org/data/2.5/forecast",
-                                               params={'id': city_id, 'units': 'metric', 'lang': 'ru', 'APPID': appid})
-                            kaka = res.json()
-                            for t in kaka['list']:
-                                q = t['dt_txt'].split(" ")
-                                if q[1] == '03:00:00':
-                                    q[1] = "03:00"
-                                if q[1] == '21:00:00':
-                                    q[1] = "21:00"
-                                if q[1] == '18:00:00':
-                                    q[1] = "18:00"
-                                if q[1] == '15:00:00':
-                                    q[1] = "15:00"
-                                if q[1] == '12:00:00':
-                                    q[1] = "12:00"
-                                if q[1] == '9:00:00':
-                                    q[1] = "09:00"
-                                if q[1] == '09:00:00':
-                                    q[1] = "09:00"
-                                if q[1] == '06:00:00':
-                                    q[1] = "06:00"
-                                if q[1] == '6:00:00':
-                                    q[1] = "06:00"
 
-                                listik.append(q[1])
-                                listik.append('{0:+3.0f}°'.format(t['main']['temp']))
-                                listik.append(t['weather'][0]['description'])
-                                if q[1] == "15:00":
-                                    break
-                            mes = ''
-                            j = 0
-                            for s in listik:
-                                if j == 0:
-                                    mes += "В "
-                                mes += s
-                                j += 1
-                                if j != 3:
-                                    mes += ", "
-                                if j == 3:
-                                    mes += "\n"
-                                    j = 0
 
-                        except Exception:
-                            pass
-                        conn = sqlite3.connect('db.db')
-                        cursor = conn.cursor()
-                        cursor.execute(f"SELECT chat_id, real_name FROM users WHERE user_group = '{i[0]}'")
-                        id_group = cursor.fetchall()
-                        cursor.close()
-                        timetable_message = ""
-                        url = 'https://edu.sfu-kras.ru/timetable'
-                        response = requests.get(url).text
-                        match = re.search(r'Идёт\s\w{8}\sнеделя', response)
-                        if match:
-                            current_week = "1"
-                        else:
-                            current_week = "2"
-                        url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={i[0]}')
-                        response = requests.get(url).json()
-                        adding = []
-                        for item in response["timetable"]:
-                            if item["week"] == current_week:
-                                adding.append(
-                                    [item['day'], item['time'], item['subject'], item['type'], item['teacher'],
-                                     item['place']])
-                        flag = 0
-                        for p in adding:
-                            if p[0] == a:
-                                if p[2] != '':
-                                    flag = 1
-                        if flag == 1:
-                            for l in adding:
-                                if l[0] == a:
-                                    if l[4] == '' and l[5] == '':
-                                        timetable_message += f'\n{l[1]}\n{l[2]} ({l[3]})\n'
-                                    else:
-                                        timetable_message += f'\n{l[1]}\n{l[2]} ({l[3]}) \n{l[4]}\n{l[5]}\n'
-                        else:
-                            timetable_message += 'пар нет! Отличный повод увидеться с друзьями! 🎉'
-
-                        for k in id_group:
-                            bot2.send_message(k[0], f"Доброе утро, {k[1]}!\n\nСегодня {local_time[0]}, "
-                                                    f"сейчас {data['weather'][0]['description']}\n\nТемпература в Красноярске "
-                                                    f"{round(int(data['main']['temp']))}°.\n\nПрогноз погоды на сегодня:\n\n{mes}\nУ вас сегодня\n{timetable_message}")
-            except Exception as e:
-                bot2.send_message(1008740088, e)
 
 
 # endregions
