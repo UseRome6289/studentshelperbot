@@ -15,6 +15,7 @@ from aiogram.dispatcher import Dispatcher
 from aiogram.types import ContentType, ReplyKeyboardMarkup, ParseMode
 from aiogram.utils import executor
 from aiogram.utils.markdown import text
+from google_trans_new import google_translator
 
 import KeyBoards
 import messages
@@ -31,7 +32,7 @@ async def shutdown(dispatcher: Dispatcher):
     await dispatcher.storage.close()
     await dispatcher.storage.wait_closed()
 
-
+translator = google_translator()
 bot2 = telebot.TeleBot(__name__)
 bot2.config['api_key'] = TOKEN
 bot = Bot(token=TOKEN)
@@ -50,6 +51,11 @@ def only_letters(tested_string):
         if letter not in KeyBoards.alphabet:
             return False
     return True
+
+
+def translate(translate_text):
+    translate_text = translator.translate(translate_text, lang_src='ru', lang_tgt='en')
+    return translate_text
 
 
 class MyThread(Thread):
@@ -268,7 +274,7 @@ class MyThread2(Thread):
                                     if is_ru == True:
                                         bot2.send_message(k[0], f'{k[1]}, у вас начинается {j[2]}')
                                     else:
-                                        bot2.send_message(k[0], f"{k[1]}, you're starting to {j[2]}")
+                                        bot2.send_message(k[0], f"{k[1]}, you're starting to {translate(j[2])}")
                                 else:
                                     conn = sqlite3.connect('db.db')
                                     cursor = conn.cursor()
@@ -280,7 +286,7 @@ class MyThread2(Thread):
                                     if is_ru == True:
                                         bot2.send_message(k[0], f'{k[1]}, у вас начинается {j[2]} в {j[5]}')
                                     else:
-                                        bot2.send_message(k[0], f"{k[1]}, you're starting to {j[2]} in {j[5]}")
+                                        bot2.send_message(k[0], f"{k[1]}, you're starting to {translate(j[2])} in {j[5]}")
                         if listing_date_sum == listing_date_sum2 - 5:
                             conn = sqlite3.connect('db.db')
                             cursor = conn.cursor()
@@ -299,7 +305,7 @@ class MyThread2(Thread):
                                     if is_ru == True:
                                         bot2.send_message(k[0], f'{k[1]}, у вас через 5 минут начнется {j[2]}')
                                     else:
-                                        bot2.send_message(k[0], f'{k[1]}, you will start in 5 minutes {j[2]}')
+                                        bot2.send_message(k[0], f'{k[1]}, you will start in 5 minutes {translate(j[2])}')
                                 else:
                                     conn = sqlite3.connect('db.db')
                                     cursor = conn.cursor()
@@ -311,7 +317,7 @@ class MyThread2(Thread):
                                     if is_ru == True:
                                         bot2.send_message(k[0], f'{k[1]}, у вас начнется {j[2]} через 5 минут в {j[5]}')
                                     else:
-                                        bot2.send_message(k[0], f'{k[1]}, you will start {j[2]} after 5 minutes in the {j[5]}')
+                                        bot2.send_message(k[0], f'{k[1]}, you will start {translate(j[2])} after 5 minutes in the {j[5]}')
 
 
 class MyThread3(Thread):
@@ -381,7 +387,7 @@ class MyThread3(Thread):
                     if local_time[0] == "Sun":
                         a = '7'
                         local_time[0] = "воскресенье"
-                    if listing_date_sum == state_time | listing_date_sum == 1:
+                    if listing_date_sum == state_time or listing_date_sum == 1:
                         s_city = "Красноярск,RU"
                         city_id = 0
                         appid = "8fb0b9a76ed0af2c84d8fae4a6f61133"
@@ -477,8 +483,6 @@ class MyThread3(Thread):
                                         timetable_message += f'\n{l[1]}\n{l[2]} ({l[3]})\n'
                                     else:
                                         timetable_message += f'\n{l[1]}\n{l[2]} ({l[3]}) \n{l[4]}\n{l[5]}\n'
-
-
                         for k in id_group:
                             conn = sqlite3.connect('db.db')
                             cursor = conn.cursor()
@@ -493,18 +497,18 @@ class MyThread3(Thread):
                                                         f"сейчас {data['weather'][0]['description']}\n\nТемпература в Красноярске "
                                                         f"{round(int(data['main']['temp']))}°.\n\nПрогноз погоды на сегодня:\n\n{mes}\nУ вас сегодня\n{timetable_message}")
                                 else:
-                                    bot2.send_message(k[0], f"Good morning, {k[1]}!\n\nToday {local_time[0]}, "
-                                                            f"now {data['weather'][0]['description']}\n\nTemperature in Krasnoyarsk "
-                                                            f"{round(int(data['main']['temp']))}°.\n\nToday's weather forecast:\n\n{mes}\nYou have today\n{timetable_message}")
+                                    bot2.send_message(k[0], f"Good morning, {k[1]}!\n\nToday {translate(local_time[0])}, "
+                                                            f"now {translate(data['weather'][0]['description'])}\n\nTemperature in Krasnoyarsk "
+                                                            f"{round(int(data['main']['temp']))}°.\n\nToday's weather forecast:\n\n{translate(mes)}\nYou have today\n{timetable_message}")
                             else:
                                 if is_ru == True:
                                     bot2.send_message(k[0], f"Доброе утро, {k[1]}!\n\nСегодня {local_time[0]}, "
                                                         f"сейчас {data['weather'][0]['description']}\n\nТемпература в Красноярске "
                                                         f"{round(int(data['main']['temp']))}°.\n\nПрогноз погоды на сегодня:\n\n{mes}\nУ вас сегодня пар нет! Отличный повод увидеться с друзьями! 🎉'")
                                 else:
-                                    bot2.send_message(k[0], f"Good morning, {k[1]}!\n\nToday {local_time[0]}, "
-                                                            f"now {data['weather'][0]['description']}\n\nTemperature in Krasnoyarsk "
-                                                            f"{round(int(data['main']['temp']))}°.\n\nToday's weather forecast:\n\n{mes}\nYou have today no couples, a great reason to see your friends! 🎉")
+                                    bot2.send_message(k[0], f"Good morning, {k[1]}!\n\nToday {translate(local_time[0])}, "
+                                                            f"now {translate(data['weather'][0]['description'])}\n\nTemperature in Krasnoyarsk "
+                                                            f"{round(int(data['main']['temp']))}°.\n\nToday's weather forecast:\n\n{translate(mes)}\nYou have today no couples, a great reason to see your friends! 🎉")
 
 
 
