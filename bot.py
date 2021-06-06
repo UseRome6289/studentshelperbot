@@ -706,531 +706,1137 @@ async def process_command1(message: types.Message):
 @dp.message_handler(state=AdminPanel.ADMIN_0)
 async def process_admin_command2(message: types.Message):
     switch_text = message.text.lower()
-    if switch_text == 'меню':
-        is_succeed = False
-        conn = sqlite3.connect('db.db')
-        cursor = conn.cursor()
-        cursor.execute(f"SELECT user_id FROM admins")
-        result_set = cursor.fetchall()
-        cursor.close()
-        for item in result_set:
-            if item[0] == message.from_user.id:
-                is_succeed = True
-        if is_succeed:
-            await message.reply(messages.menu
-                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
-            conn.commit()
-            conn.close()
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{message.from_user.id}'")
+    result_set = cursor.fetchall()
+    cursor.close()
+    is_ru = False
+    if result_set[0][0] == 1:
+        is_ru = True
+    switch_text = message.text.lower()
+    if is_ru == True:
+        if switch_text == 'меню':
+            is_succeed = False
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_id FROM admins")
+            result_set = cursor.fetchall()
+            cursor.close()
+            for item in result_set:
+                if item[0] == message.from_user.id:
+                    is_succeed = True
+            if is_succeed:
+                await message.reply(messages.menu
+                                    , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+            else:
+                await message.reply(messages.menu
+                                    , reply=False, reply_markup=KeyBoards.menu_user_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+        elif switch_text == 'отправить рассылку':
             state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
+            await state.set_state(AdminPanel.all()[1])
+            await message.reply(messages.write_mail, reply_markup=KeyBoards.return_keyboard)
+        elif switch_text == 'отправить рассылку всем пользователям':
+            state = dp.current_state(user=message.from_user.id)
+            await state.set_state(AdminPanel.all()[6])
+            await message.reply(messages.write_mail, reply_markup=KeyBoards.return_keyboard)
         else:
-            await message.reply(messages.menu
-                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
-            conn.commit()
-            conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
-
-    elif switch_text == 'отправить рассылку':
-        state = dp.current_state(user=message.from_user.id)
-        await state.set_state(AdminPanel.all()[1])
-        await message.reply(messages.write_mail, reply_markup=KeyBoards.return_keyboard)
-    elif switch_text == 'отправить рассылку всем пользователям':
-        state = dp.current_state(user=message.from_user.id)
-        await state.set_state(AdminPanel.all()[6])
-        await message.reply(messages.write_mail, reply_markup=KeyBoards.return_keyboard)
+            await bot.send_message(message.from_user.id, messages.what)
     else:
-        await bot.send_message(message.from_user.id, messages.what)
+        #english
+        if switch_text == 'меню':
+            is_succeed = False
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_id FROM admins")
+            result_set = cursor.fetchall()
+            cursor.close()
+            for item in result_set:
+                if item[0] == message.from_user.id:
+                    is_succeed = True
+            if is_succeed:
+                await message.reply(messages.menu_en
+                                    , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+            else:
+                await message.reply(messages.menu_en
+                                    , reply=False, reply_markup=KeyBoards.menu_user_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+        elif switch_text == 'отправить рассылку':
+            state = dp.current_state(user=message.from_user.id)
+            await state.set_state(AdminPanel.all()[1])
+            await message.reply(messages.write_mail_en, reply_markup=KeyBoards.return_keyboard)
+        elif switch_text == 'отправить рассылку всем пользователям':
+            state = dp.current_state(user=message.from_user.id)
+            await state.set_state(AdminPanel.all()[6])
+            await message.reply(messages.write_mail_en, reply_markup=KeyBoards.return_keyboard)
+        else:
+            await bot.send_message(message.from_user.id, messages.what_en)
 
 
 @dp.message_handler(state=AdminPanel.ADMIN_1)
 async def process_admin_command1(message: types.Message):
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{message.from_user.id}'")
+    result_set = cursor.fetchall()
+    cursor.close()
+    is_ru = False
+    if result_set[0][0] == 1:
+        is_ru = True
     switch_text = message.text.lower()
-    if switch_text == 'меню':
-        is_succeed = False
-        conn = sqlite3.connect('db.db')
-        cursor = conn.cursor()
-        cursor.execute(f"SELECT user_id FROM admins")
-        result_set = cursor.fetchall()
-        cursor.close()
-        for item in result_set:
-            if item[0] == message.from_user.id:
-                is_succeed = True
-        if is_succeed:
-            await message.reply(messages.menu
-                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
-            conn.commit()
-            conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
+    if is_ru == True:
+        if switch_text == 'меню':
+            is_succeed = False
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_id FROM admins")
+            result_set = cursor.fetchall()
+            cursor.close()
+            for item in result_set:
+                if item[0] == message.from_user.id:
+                    is_succeed = True
+            if is_succeed:
+                await message.reply(messages.menu
+                                    , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+            else:
+                await message.reply(messages.menu
+                                    , reply=False, reply_markup=KeyBoards.menu_user_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
         else:
-            await message.reply(messages.menu
-                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
-            conn.commit()
-            conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            if only_letters(message.text) == True:
+                cursor.execute(
+                    f"UPDATE admins SET last_content = '{message.text}' WHERE user_id = '{message.from_user.id}'")
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.set_state(AdminPanel.all()[2])
+                await message.reply(messages.university, reply_markup=KeyBoards.institute_kb)
+            else:
+                await bot.send_message(message.from_user.id, messages.message_error5)
     else:
-        conn = sqlite3.connect('db.db')
-        cursor = conn.cursor()
-        if only_letters(message.text) == True:
-            cursor.execute(
-                f"UPDATE admins SET last_content = '{message.text}' WHERE user_id = '{message.from_user.id}'")
-            conn.commit()
-            conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.set_state(AdminPanel.all()[2])
-            await message.reply(messages.university, reply_markup=KeyBoards.institute_kb)
+        # english
+        if switch_text == 'меню':
+            is_succeed = False
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_id FROM admins")
+            result_set = cursor.fetchall()
+            cursor.close()
+            for item in result_set:
+                if item[0] == message.from_user.id:
+                    is_succeed = True
+            if is_succeed:
+                await message.reply(messages.menu_en
+                                    , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+            else:
+                await message.reply(messages.menu_en
+                                    , reply=False, reply_markup=KeyBoards.menu_user_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
         else:
-            await bot.send_message(message.from_user.id, messages.message_error5)
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            if only_letters(message.text) == True:
+                cursor.execute(
+                    f"UPDATE admins SET last_content = '{message.text}' WHERE user_id = '{message.from_user.id}'")
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.set_state(AdminPanel.all()[2])
+                await message.reply(messages.university_en, reply_markup=KeyBoards.institute_kb)
+            else:
+                await bot.send_message(message.from_user.id, messages.message_error5_en)
 
 
 @dp.message_handler(state=AdminPanel.ADMIN_2)
 async def process_admin_command4(message: types.Message):
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{message.from_user.id}'")
+    result_set = cursor.fetchall()
+    cursor.close()
+    is_ru = False
+    if result_set[0][0] == 1:
+        is_ru = True
     switch_text = message.text.lower()
-    if switch_text == 'меню':
-        is_succeed = False
-        conn = sqlite3.connect('db.db')
-        cursor = conn.cursor()
-        cursor.execute(f"SELECT user_id FROM admins")
-        result_set = cursor.fetchall()
-        cursor.close()
-        for item in result_set:
-            if item[0] == message.from_user.id:
-                is_succeed = True
-        if is_succeed:
-            await message.reply(messages.menu
-                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
-            conn.commit()
-            conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
+    if is_ru == True:
+        if switch_text == 'меню':
+            is_succeed = False
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_id FROM admins")
+            result_set = cursor.fetchall()
+            cursor.close()
+            for item in result_set:
+                if item[0] == message.from_user.id:
+                    is_succeed = True
+            if is_succeed:
+                await message.reply(messages.menu
+                                    , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+            else:
+                await message.reply(messages.menu
+                                    , reply=False, reply_markup=KeyBoards.menu_user_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
         else:
-            await message.reply(messages.menu
-                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
-            conn.commit()
-            conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
+            try:
+                if messages.institutes[message.text]:
+                    if only_letters(message.text) == True:
+                        conn = sqlite3.connect('db.db')
+                        cursor = conn.cursor()
+                        cursor.execute(
+                            f"UPDATE admins SET inst = '{messages.institutes[message.text]}' WHERE user_id = '{message.from_user.id}'")
+                        conn.commit()
+                        cursor.execute(f"SELECT inst FROM admins WHERE user_id = '{message.from_user.id}'")
+                        inst = cursor.fetchall()[0][0]
+                        keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
+                        url = 'https://edu.sfu-kras.ru/api/timetable/groups'
+                        response = requests.get(url).json()
+                        for item in response:
+                            if item['institute'] == inst:
+                                keyboard.add(item['name'])
+                                incoming_inst.append(item['name'])
+                        await message.reply(messages.group_message, reply_markup=keyboard)
+                        state = dp.current_state(user=message.from_user.id)
+                        await state.set_state(AdminPanel.all()[3])
+                    else:
+                        await bot.send_message(message.from_user.id, messages.message_error)
+            except KeyError:
+                await bot.send_message(message.from_user.id, messages.message_error)
     else:
-        try:
-            if messages.institutes[message.text]:
-                if only_letters(message.text) == True:
-                    conn = sqlite3.connect('db.db')
-                    cursor = conn.cursor()
-                    cursor.execute(
-                        f"UPDATE admins SET inst = '{messages.institutes[message.text]}' WHERE user_id = '{message.from_user.id}'")
-                    conn.commit()
-                    cursor.execute(f"SELECT inst FROM admins WHERE user_id = '{message.from_user.id}'")
-                    inst = cursor.fetchall()[0][0]
-                    keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
-                    url = 'https://edu.sfu-kras.ru/api/timetable/groups'
-                    response = requests.get(url).json()
-                    for item in response:
-                        if item['institute'] == inst:
-                            keyboard.add(item['name'])
-                            incoming_inst.append(item['name'])
-                    await message.reply(messages.group_message, reply_markup=keyboard)
-                    state = dp.current_state(user=message.from_user.id)
-                    await state.set_state(AdminPanel.all()[3])
-                else:
-                    await bot.send_message(message.from_user.id, messages.message_error)
-        except KeyError:
-            await bot.send_message(message.from_user.id, messages.message_error)
+        #english
+        if switch_text == 'меню':
+            is_succeed = False
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_id FROM admins")
+            result_set = cursor.fetchall()
+            cursor.close()
+            for item in result_set:
+                if item[0] == message.from_user.id:
+                    is_succeed = True
+            if is_succeed:
+                await message.reply(messages.menu_en
+                                    , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+            else:
+                await message.reply(messages.menu_en
+                                    , reply=False, reply_markup=KeyBoards.menu_user_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+        else:
+            try:
+                if messages.institutes[message.text]:
+                    if only_letters(message.text) == True:
+                        conn = sqlite3.connect('db.db')
+                        cursor = conn.cursor()
+                        cursor.execute(
+                            f"UPDATE admins SET inst = '{messages.institutes[message.text]}' WHERE user_id = '{message.from_user.id}'")
+                        conn.commit()
+                        cursor.execute(f"SELECT inst FROM admins WHERE user_id = '{message.from_user.id}'")
+                        inst = cursor.fetchall()[0][0]
+                        keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
+                        url = 'https://edu.sfu-kras.ru/api/timetable/groups'
+                        response = requests.get(url).json()
+                        for item in response:
+                            if item['institute'] == inst:
+                                keyboard.add(item['name'])
+                                incoming_inst.append(item['name'])
+                        await message.reply(messages.group_message_en, reply_markup=keyboard)
+                        state = dp.current_state(user=message.from_user.id)
+                        await state.set_state(AdminPanel.all()[3])
+                    else:
+                        await bot.send_message(message.from_user.id, messages.message_error_en)
+            except KeyError:
+                await bot.send_message(message.from_user.id, messages.message_error_en)
 
 
 @dp.message_handler(state=AdminPanel.ADMIN_3)
 async def process_admin_command4(message: types.Message):
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{message.from_user.id}'")
+    result_set = cursor.fetchall()
+    cursor.close()
+    is_ru = False
+    if result_set[0][0] == 1:
+        is_ru = True
     switch_text = message.text.lower()
-    if switch_text == 'меню':
-        is_succeed = False
-        conn = sqlite3.connect('db.db')
-        cursor = conn.cursor()
-        cursor.execute(f"SELECT user_id FROM admins")
-        result_set = cursor.fetchall()
-        cursor.close()
-        for item in result_set:
-            if item[0] == message.from_user.id:
-                is_succeed = True
-        if is_succeed:
-            await message.reply(messages.menu
-                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
-            conn.commit()
-            conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
-        else:
-            await message.reply(messages.menu
-                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
-            conn.commit()
-            conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
-    else:
-        a = False
-        for i in incoming_inst:
-            if i == message.text:
-                a = True
-        if only_letters(message.text) == True:
-            if a == True:
-                incoming_inst.clear()
-                conn = sqlite3.connect('db.db')
-                cursor = conn.cursor()
-                cursor.execute(f"UPDATE admins SET `group` = '{message.text}' WHERE user_id = '{message.from_user.id}'")
+    if is_ru == True:
+        if switch_text == 'меню':
+            is_succeed = False
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_id FROM admins")
+            result_set = cursor.fetchall()
+            cursor.close()
+            for item in result_set:
+                if item[0] == message.from_user.id:
+                    is_succeed = True
+            if is_succeed:
+                await message.reply(messages.menu
+                                    , reply=False, reply_markup=KeyBoards.menu_admin_kb)
                 conn.commit()
                 conn.close()
                 state = dp.current_state(user=message.from_user.id)
-                await state.set_state(AdminPanel.all()[4])
-                await message.reply(messages.timer, reply=False, reply_markup=KeyBoards.time_kb2)
+                await state.reset_state()
+            else:
+                await message.reply(messages.menu
+                                    , reply=False, reply_markup=KeyBoards.menu_user_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+        else:
+            a = False
+            for i in incoming_inst:
+                if i == message.text:
+                    a = True
+            if only_letters(message.text) == True:
+                if a == True:
+                    incoming_inst.clear()
+                    conn = sqlite3.connect('db.db')
+                    cursor = conn.cursor()
+                    cursor.execute(f"UPDATE admins SET `group` = '{message.text}' WHERE user_id = '{message.from_user.id}'")
+                    conn.commit()
+                    conn.close()
+                    state = dp.current_state(user=message.from_user.id)
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.timer, reply=False, reply_markup=KeyBoards.time_kb2)
+                else:
+                    await bot.send_message(message.from_user.id, messages.message_error6)
             else:
                 await bot.send_message(message.from_user.id, messages.message_error6)
+    else:
+        #english
+        if switch_text == 'меню':
+            is_succeed = False
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_id FROM admins")
+            result_set = cursor.fetchall()
+            cursor.close()
+            for item in result_set:
+                if item[0] == message.from_user.id:
+                    is_succeed = True
+            if is_succeed:
+                await message.reply(messages.menu_en
+                                    , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+            else:
+                await message.reply(messages.menu_en
+                                    , reply=False, reply_markup=KeyBoards.menu_user_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
         else:
-            await bot.send_message(message.from_user.id, messages.message_error6)
+            a = False
+            for i in incoming_inst:
+                if i == message.text:
+                    a = True
+            if only_letters(message.text) == True:
+                if a == True:
+                    incoming_inst.clear()
+                    conn = sqlite3.connect('db.db')
+                    cursor = conn.cursor()
+                    cursor.execute(f"UPDATE admins SET `group` = '{message.text}' WHERE user_id = '{message.from_user.id}'")
+                    conn.commit()
+                    conn.close()
+                    state = dp.current_state(user=message.from_user.id)
+                    await state.set_state(AdminPanel.all()[4])
+                    await message.reply(messages.timer_en, reply=False, reply_markup=KeyBoards.time_kb2)
+                else:
+                    await bot.send_message(message.from_user.id, messages.message_error6_en)
+            else:
+                await bot.send_message(message.from_user.id, messages.message_error6_en)
 
 
 @dp.message_handler(state=AdminPanel.ADMIN_4)
 async def process_admin_command4(message: types.Message):
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{message.from_user.id}'")
+    result_set = cursor.fetchall()
+    cursor.close()
+    is_ru = False
+    if result_set[0][0] == 1:
+        is_ru = True
     switch_text = message.text.lower()
-    if switch_text == 'меню':
-        is_succeed = False
-        conn = sqlite3.connect('db.db')
-        cursor = conn.cursor()
-        cursor.execute(f"SELECT user_id FROM admins")
-        result_set = cursor.fetchall()
-        cursor.close()
-        for item in result_set:
-            if item[0] == message.from_user.id:
-                is_succeed = True
-        if is_succeed:
-            await message.reply(messages.menu
-                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
-            conn.commit()
-            conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
-        else:
-            await message.reply(messages.menu
-                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
-            conn.commit()
-            conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
-    else:
-        m = {'Без таймера': 10, '1 час': 60 * 60, "2 часа": 60 * 60 * 2, "3 часа": 60 * 60 * 3, "4 часа": 60 * 60 * 4,
-             "5 часов": 60 * 60 * 5,
-             "18 часов": 60 * 60 * 18, "6 часов": 60 * 60 * 6, "12 часов": 60 * 60 * 12,
-             "24 часа": 60 * 60 * 24,
-             "2 дня": 60 * 60 * 48, "3 дня": 60 * 60 * 24 * 3, "Неделя": 60 * 60 * 24 * 7}
-        try:
-            if m[message.text]:
-                conn = sqlite3.connect('db.db')
-                cursor = conn.cursor()
-                if message.text != 'Без таймера':
-                    cursor.execute(
-                        f"UPDATE admins SET `time` = '{round(time.time() + m[message.text])}' WHERE user_id = '{message.from_user.id}'")
-                    incoming_event3[message.from_user.id] = message.text
-                else:
-                    cursor.execute(
-                        f"UPDATE admins SET `time` = '{10}' WHERE user_id = '{message.from_user.id}'")
-                    incoming_event3[message.from_user.id] = message.text
+    if is_ru == True:
+        if switch_text == 'меню':
+            is_succeed = False
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_id FROM admins")
+            result_set = cursor.fetchall()
+            cursor.close()
+            for item in result_set:
+                if item[0] == message.from_user.id:
+                    is_succeed = True
+            if is_succeed:
+                await message.reply(messages.menu
+                                    , reply=False, reply_markup=KeyBoards.menu_admin_kb)
                 conn.commit()
                 conn.close()
                 state = dp.current_state(user=message.from_user.id)
-                await state.set_state(AdminPanel.all()[5])
-                await message.reply(messages.mailing, reply=False, reply_markup=KeyBoards.
-                                    yes_or_no_keyboard)
-        except KeyError:
-            await bot.send_message(message.from_user.id, messages.message_error4)
+                await state.reset_state()
+            else:
+                await message.reply(messages.menu
+                                    , reply=False, reply_markup=KeyBoards.menu_user_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+        else:
+            m = {'Без таймера': 10, '1 час': 60 * 60, "2 часа": 60 * 60 * 2, "3 часа": 60 * 60 * 3, "4 часа": 60 * 60 * 4,
+                 "5 часов": 60 * 60 * 5,
+                 "18 часов": 60 * 60 * 18, "6 часов": 60 * 60 * 6, "12 часов": 60 * 60 * 12,
+                 "24 часа": 60 * 60 * 24,
+                 "2 дня": 60 * 60 * 48, "3 дня": 60 * 60 * 24 * 3, "Неделя": 60 * 60 * 24 * 7}
+            try:
+                if m[message.text]:
+                    conn = sqlite3.connect('db.db')
+                    cursor = conn.cursor()
+                    if message.text != 'Без таймера':
+                        cursor.execute(
+                            f"UPDATE admins SET `time` = '{round(time.time() + m[message.text])}' WHERE user_id = '{message.from_user.id}'")
+                        incoming_event3[message.from_user.id] = message.text
+                    else:
+                        cursor.execute(
+                            f"UPDATE admins SET `time` = '{10}' WHERE user_id = '{message.from_user.id}'")
+                        incoming_event3[message.from_user.id] = message.text
+                    conn.commit()
+                    conn.close()
+                    state = dp.current_state(user=message.from_user.id)
+                    await state.set_state(AdminPanel.all()[5])
+                    await message.reply(messages.mailing, reply=False, reply_markup=KeyBoards.
+                                        yes_or_no_keyboard)
+            except KeyError:
+                await bot.send_message(message.from_user.id, messages.message_error4)
+    else:
+        #english
+        if switch_text == 'меню':
+            is_succeed = False
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_id FROM admins")
+            result_set = cursor.fetchall()
+            cursor.close()
+            for item in result_set:
+                if item[0] == message.from_user.id:
+                    is_succeed = True
+            if is_succeed:
+                await message.reply(messages.menu_en
+                                    , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+            else:
+                await message.reply(messages.menu_en
+                                    , reply=False, reply_markup=KeyBoards.menu_user_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+        else:
+            m = {'Без таймера': 10, '1 час': 60 * 60, "2 часа": 60 * 60 * 2, "3 часа": 60 * 60 * 3, "4 часа": 60 * 60 * 4,
+                 "5 часов": 60 * 60 * 5,
+                 "18 часов": 60 * 60 * 18, "6 часов": 60 * 60 * 6, "12 часов": 60 * 60 * 12,
+                 "24 часа": 60 * 60 * 24,
+                 "2 дня": 60 * 60 * 48, "3 дня": 60 * 60 * 24 * 3, "Неделя": 60 * 60 * 24 * 7}
+            try:
+                if m[message.text]:
+                    conn = sqlite3.connect('db.db')
+                    cursor = conn.cursor()
+                    if message.text != 'Без таймера':
+                        cursor.execute(
+                            f"UPDATE admins SET `time` = '{round(time.time() + m[message.text])}' WHERE user_id = '{message.from_user.id}'")
+                        incoming_event3[message.from_user.id] = message.text
+                    else:
+                        cursor.execute(
+                            f"UPDATE admins SET `time` = '{10}' WHERE user_id = '{message.from_user.id}'")
+                        incoming_event3[message.from_user.id] = message.text
+                    conn.commit()
+                    conn.close()
+                    state = dp.current_state(user=message.from_user.id)
+                    await state.set_state(AdminPanel.all()[5])
+                    await message.reply(messages.mailing_en, reply=False, reply_markup=KeyBoards.
+                                        yes_or_no_keyboard)
+            except KeyError:
+                await bot.send_message(message.from_user.id, messages.message_error4_en)
 
 
 @dp.message_handler(state=AdminPanel.ADMIN_5)
 async def process_admin_command1(message: types.Message):
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{message.from_user.id}'")
+    result_set = cursor.fetchall()
+    cursor.close()
+    is_ru = False
+    if result_set[0][0] == 1:
+        is_ru = True
     switch_text = message.text.lower()
-    if switch_text == 'меню':
-        is_succeed = False
-        conn = sqlite3.connect('db.db')
-        cursor = conn.cursor()
-        cursor.execute(f"SELECT user_id FROM admins")
-        result_set = cursor.fetchall()
-        cursor.close()
-        for item in result_set:
-            if item[0] == message.from_user.id:
-                is_succeed = True
-        if is_succeed:
-            await message.reply(messages.menu
-                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
-            conn.commit()
-            conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
-        else:
-            await message.reply(messages.menu
-                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
-            conn.commit()
-            conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
-    elif switch_text == 'да':
-        conn = sqlite3.connect('db.db')
-        cursor = conn.cursor()
-        cursor.execute(f"SELECT chat_id FROM users")
-        id_users = cursor.fetchall()
-        cursor.close()
-        conn = sqlite3.connect('db.db')
-        cursor = conn.cursor()
-        cursor.execute(f"SELECT last_content FROM admins WHERE user_id = '{message.from_user.id}'")
-        content = cursor.fetchall()
-        cursor.execute(f"SELECT `group` FROM admins WHERE user_id = '{message.from_user.id}'")
-        group = cursor.fetchall()
-        cursor.execute(f"SELECT `real_name` FROM users WHERE chat_id = '{message.from_user.id}'")
-        name = cursor.fetchall()
-        cursor.execute(f"SELECT `time` FROM admins WHERE user_id = '{message.from_user.id}'")
-        time2 = cursor.fetchall()
-        cursor.close()
-        for user in id_users:
+    if is_ru == True:
+        if switch_text == 'меню':
+            is_succeed = False
             conn = sqlite3.connect('db.db')
             cursor = conn.cursor()
-            cursor.execute(f"SELECT `user_group` FROM users WHERE chat_id = '{user[0]}'")
-            group_users = cursor.fetchall()
+            cursor.execute(f"SELECT user_id FROM admins")
+            result_set = cursor.fetchall()
             cursor.close()
-            if group_users == group:
-                a = f'Рассылка от пользователя: <b>{name[0][0]}</b>\n' + f'<i>{content[0][0]}</i>'
-                if incoming_event3[message.from_user.id] == 'Без таймера':
-                    pass
-                else:
-                    conn = sqlite3.connect('db.db')
-                    cursor = conn.cursor()
-                    cursor.execute(
-                        f"INSERT INTO mail(`chat_id`, `event1`, `time`, `30min`, `5min`) values ({user[0]}, '{content[0][0]}', {time2[0][0]}, {1}, {1})")
-
-                    conn.commit()
-                    conn.close()
-                await dp.bot.send_message(user[0], a, parse_mode='HTML')
-        incoming_event3.pop(message.from_user.id)
-        await dp.bot.send_message(message.from_user.id,
-                                  f'Ваша рассылка: <b>{content[0][0]}</b>\nУспешно отправлена группе '
-                                  f'<b>{group[0][0]}</b>', parse_mode='HTML')
-        state = dp.current_state(user=message.from_user.id)
-        await state.set_state(AdminPanel.all()[2])
-        is_succeed = False
-        conn = sqlite3.connect('db.db')
-        cursor = conn.cursor()
-        cursor.execute(f"SELECT user_id FROM admins")
-        result_set = cursor.fetchall()
-        cursor.close()
-        for item in result_set:
-            if item[0] == message.from_user.id:
-                is_succeed = True
-        if is_succeed:
-            await message.reply(messages.successfully
-                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
-            conn.commit()
-            conn.close()
+            for item in result_set:
+                if item[0] == message.from_user.id:
+                    is_succeed = True
+            if is_succeed:
+                await message.reply(messages.menu
+                                    , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+            else:
+                await message.reply(messages.menu
+                                    , reply=False, reply_markup=KeyBoards.menu_user_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+        elif switch_text == 'да':
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT chat_id FROM users")
+            id_users = cursor.fetchall()
+            cursor.close()
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT last_content FROM admins WHERE user_id = '{message.from_user.id}'")
+            content = cursor.fetchall()
+            cursor.execute(f"SELECT `group` FROM admins WHERE user_id = '{message.from_user.id}'")
+            group = cursor.fetchall()
+            cursor.execute(f"SELECT `real_name` FROM users WHERE chat_id = '{message.from_user.id}'")
+            name = cursor.fetchall()
+            cursor.execute(f"SELECT `time` FROM admins WHERE user_id = '{message.from_user.id}'")
+            time2 = cursor.fetchall()
+            cursor.close()
+            for user in id_users:
+                conn = sqlite3.connect('db.db')
+                cursor = conn.cursor()
+                cursor.execute(f"SELECT `user_group` FROM users WHERE chat_id = '{user[0]}'")
+                group_users = cursor.fetchall()
+                cursor.execute(f"SELECT `ru` FROM users WHERE chat_id = '{user[0]}'")
+                rus = cursor.fetchall()
+                cursor.close()
+                if group_users == group:
+                    if rus[0][0] == 1:
+                        a = f'Рассылка от пользователя: {name[0][0]}\n' + f'{content[0][0]}'
+                    else:
+                        a = f'Mailing list from the user: {name[0][0]}\n' + f'{content[0][0]}'
+                    if incoming_event3[message.from_user.id] == 'Без таймера':
+                        pass
+                    else:
+                        conn = sqlite3.connect('db.db')
+                        cursor = conn.cursor()
+                        cursor.execute(
+                            f"INSERT INTO mail(`chat_id`, `event1`, `time`, `30min`, `5min`) values ({user[0]}, '{content[0][0]}', {time2[0][0]}, {1}, {1})")
+                        conn.commit()
+                        conn.close()
+                    bot2.send_message(user[0], a)
+            incoming_event3.pop(message.from_user.id)
+            await dp.bot.send_message(message.from_user.id,
+                                      f'Ваша рассылка: <b>{content[0][0]}</b>\nУспешно отправлена группе '
+                                      f'<b>{group[0][0]}</b>', parse_mode='HTML')
             state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
-        else:
-            await message.reply(messages.successfully
-                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
-            conn.commit()
-            conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
+            await state.set_state(AdminPanel.all()[2])
+            is_succeed = False
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_id FROM admins")
+            result_set = cursor.fetchall()
+            cursor.close()
+            for item in result_set:
+                if item[0] == message.from_user.id:
+                    is_succeed = True
+            if is_succeed:
+                await message.reply(messages.successfully
+                                    , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+            else:
+                await message.reply(messages.successfully
+                                    , reply=False, reply_markup=KeyBoards.menu_user_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
 
-    elif switch_text == 'изменить':
-        state = dp.current_state(user=message.from_user.id)
-        await state.set_state(AdminPanel.all()[0])
-        await message.reply("Выберите действие ✨", reply_markup=KeyBoards.admin_panel)
+        elif switch_text == 'изменить':
+            state = dp.current_state(user=message.from_user.id)
+            await state.set_state(AdminPanel.all()[0])
+            await message.reply("Выберите действие ✨", reply_markup=KeyBoards.admin_panel)
+    else:
+        #english
+        if switch_text == 'меню':
+            is_succeed = False
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_id FROM admins")
+            result_set = cursor.fetchall()
+            cursor.close()
+            for item in result_set:
+                if item[0] == message.from_user.id:
+                    is_succeed = True
+            if is_succeed:
+                await message.reply(messages.menu_en
+                                    , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+            else:
+                await message.reply(messages.menu_en
+                                    , reply=False, reply_markup=KeyBoards.menu_user_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+        elif switch_text == 'да':
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT chat_id FROM users")
+            id_users = cursor.fetchall()
+            cursor.close()
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT last_content FROM admins WHERE user_id = '{message.from_user.id}'")
+            content = cursor.fetchall()
+            cursor.execute(f"SELECT `group` FROM admins WHERE user_id = '{message.from_user.id}'")
+            group = cursor.fetchall()
+            cursor.execute(f"SELECT `real_name` FROM users WHERE chat_id = '{message.from_user.id}'")
+            name = cursor.fetchall()
+            cursor.execute(f"SELECT `time` FROM admins WHERE user_id = '{message.from_user.id}'")
+            time2 = cursor.fetchall()
+            cursor.close()
+            for user in id_users:
+                conn = sqlite3.connect('db.db')
+                cursor = conn.cursor()
+                cursor.execute(f"SELECT `user_group` FROM users WHERE chat_id = '{user[0]}'")
+                group_users = cursor.fetchall()
+                cursor.execute(f"SELECT `ru` FROM users WHERE chat_id = '{user[0]}'")
+                rus = cursor.fetchall()
+                cursor.close()
+                if group_users == group:
+                    if rus[0][0] == 1:
+                        a = f'Рассылка от пользователя: {name[0][0]}\n' + f'{content[0][0]}'
+                    else:
+                        a = f'Mailing list from the user: {name[0][0]}\n' + f'{content[0][0]}'
+                    if incoming_event3[message.from_user.id] == 'Без таймера':
+                        bot2.send_message(user[0], a)
+                    else:
+                        conn = sqlite3.connect('db.db')
+                        cursor = conn.cursor()
+                        cursor.execute(
+                            f"INSERT INTO mail(`chat_id`, `event1`, `time`, `30min`, `5min`) values ({user[0]}, '{content[0][0]}', {time2[0][0]}, {1}, {1})")
+                        bot2.send_message(user[0], a)
+                        conn.commit()
+                        conn.close()
+
+            incoming_event3.pop(message.from_user.id)
+            await dp.bot.send_message(message.from_user.id,
+                                      f'Your newsletter: <b>{content[0][0]}</b>\nSuccessfully sent to the group '
+                                      f'<b>{group[0][0]}</b>', parse_mode='HTML')
+            state = dp.current_state(user=message.from_user.id)
+            await state.set_state(AdminPanel.all()[2])
+            is_succeed = False
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_id FROM admins")
+            result_set = cursor.fetchall()
+            cursor.close()
+            for item in result_set:
+                if item[0] == message.from_user.id:
+                    is_succeed = True
+            if is_succeed:
+                await message.reply(messages.successfully_en
+                                    , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+            else:
+                await message.reply(messages.successfully_en
+                                    , reply=False, reply_markup=KeyBoards.menu_user_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+
+        elif switch_text == 'изменить':
+            state = dp.current_state(user=message.from_user.id)
+            await state.set_state(AdminPanel.all()[0])
+            await message.reply("Select an action ✨", reply_markup=KeyBoards.admin_panel)
 
 
 @dp.message_handler(state=AdminPanel.ADMIN_6)
 async def process_admin_command1(message: types.Message):
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{message.from_user.id}'")
+    result_set = cursor.fetchall()
+    cursor.close()
+    is_ru = False
+    if result_set[0][0] == 1:
+        is_ru = True
     switch_text = message.text.lower()
-    if switch_text == 'меню':
-        is_succeed = False
-        conn = sqlite3.connect('db.db')
-        cursor = conn.cursor()
-        cursor.execute(f"SELECT user_id FROM admins")
-        result_set = cursor.fetchall()
-        cursor.close()
-        for item in result_set:
-            if item[0] == message.from_user.id:
-                is_succeed = True
-        if is_succeed:
-            await message.reply(messages.menu
-                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
-            conn.commit()
-            conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
-        else:
-            await message.reply(messages.menu
-                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
-            conn.commit()
-            conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
-    else:
-        if only_letters(message.text) == True:
+    if is_ru == True:
+        if switch_text == 'меню':
+            is_succeed = False
             conn = sqlite3.connect('db.db')
             cursor = conn.cursor()
-            cursor.execute(
-                f"UPDATE admins SET last_content = '{message.text}' WHERE user_id = '{message.from_user.id}'")
-            conn.commit()
-            conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.set_state(AdminPanel.all()[7])
-            await message.reply(messages.timer, reply_markup=KeyBoards.time_kb2)
+            cursor.execute(f"SELECT user_id FROM admins")
+            result_set = cursor.fetchall()
+            cursor.close()
+            for item in result_set:
+                if item[0] == message.from_user.id:
+                    is_succeed = True
+            if is_succeed:
+                await message.reply(messages.menu
+                                    , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+            else:
+                await message.reply(messages.menu
+                                    , reply=False, reply_markup=KeyBoards.menu_user_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
         else:
-            await bot.send_message(message.from_user.id, messages.message_error5)
+            if only_letters(message.text) == True:
+                conn = sqlite3.connect('db.db')
+                cursor = conn.cursor()
+                cursor.execute(
+                    f"UPDATE admins SET last_content = '{message.text}' WHERE user_id = '{message.from_user.id}'")
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.set_state(AdminPanel.all()[7])
+                await message.reply(messages.timer, reply_markup=KeyBoards.time_kb2)
+            else:
+                await bot.send_message(message.from_user.id, messages.message_error5)
+    else:
+        #english
+        if switch_text == 'меню':
+            is_succeed = False
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_id FROM admins")
+            result_set = cursor.fetchall()
+            cursor.close()
+            for item in result_set:
+                if item[0] == message.from_user.id:
+                    is_succeed = True
+            if is_succeed:
+                await message.reply(messages.menu_en
+                                    , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+            else:
+                await message.reply(messages.menu_en
+                                    , reply=False, reply_markup=KeyBoards.menu_user_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+        else:
+            if only_letters(message.text) == True:
+                conn = sqlite3.connect('db.db')
+                cursor = conn.cursor()
+                cursor.execute(
+                    f"UPDATE admins SET last_content = '{message.text}' WHERE user_id = '{message.from_user.id}'")
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.set_state(AdminPanel.all()[7])
+                await message.reply(messages.timer_en, reply_markup=KeyBoards.time_kb2)
+            else:
+                await bot.send_message(message.from_user.id, messages.message_error5_en)
 
 
 @dp.message_handler(state=AdminPanel.ADMIN_7)
 async def process_admin_command4(message: types.Message):
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{message.from_user.id}'")
+    result_set = cursor.fetchall()
+    cursor.close()
+    is_ru = False
+    if result_set[0][0] == 1:
+        is_ru = True
     switch_text = message.text.lower()
-    if switch_text == 'меню':
-        is_succeed = False
-        conn = sqlite3.connect('db.db')
-        cursor = conn.cursor()
-        cursor.execute(f"SELECT user_id FROM admins")
-        result_set = cursor.fetchall()
-        cursor.close()
-        for item in result_set:
-            if item[0] == message.from_user.id:
-                is_succeed = True
-        if is_succeed:
-            await message.reply(messages.menu
-                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
-            conn.commit()
-            conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
-        else:
-            await message.reply(messages.menu
-                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
-            conn.commit()
-            conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
-    else:
-        m = {'Без таймера': 10, '1 час': 60 * 60, "2 часа": 60 * 60 * 2, "3 часа": 60 * 60 * 3, "4 часа": 60 * 60 * 4,
-             "5 часов": 60 * 60 * 5,
-             "18 часов": 60 * 60 * 18, "6 часов": 60 * 60 * 6, "12 часов": 60 * 60 * 12,
-             "24 часа": 60 * 60 * 24,
-             "2 дня": 60 * 60 * 48, "3 дня": 60 * 60 * 24 * 3, "Неделя": 60 * 60 * 24 * 7}
-        try:
-            if m[message.text]:
-                conn = sqlite3.connect('db.db')
-                cursor = conn.cursor()
-                if message.text != 'Без таймера':
-                    cursor.execute(
-                        f"UPDATE admins SET `time` = '{round(time.time() + m[message.text])}' WHERE user_id = '{message.from_user.id}'")
-                    incoming_event3[message.from_user.id] = message.text
-                else:
-                    cursor.execute(
-                        f"UPDATE admins SET `time` = '{0}' WHERE user_id = '{message.from_user.id}'")
-                    incoming_event3[message.from_user.id] = message.text
+    if is_ru == True:
+        if switch_text == 'меню':
+            is_succeed = False
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_id FROM admins")
+            result_set = cursor.fetchall()
+            cursor.close()
+            for item in result_set:
+                if item[0] == message.from_user.id:
+                    is_succeed = True
+            if is_succeed:
+                await message.reply(messages.menu
+                                    , reply=False, reply_markup=KeyBoards.menu_admin_kb)
                 conn.commit()
                 conn.close()
                 state = dp.current_state(user=message.from_user.id)
-                await state.set_state(AdminPanel.all()[8])
-                await message.reply(messages.mailing, reply=False, reply_markup=KeyBoards.
-                                    yes_or_no_keyboard)
-        except KeyError:
-            await bot.send_message(message.from_user.id, messages.message_error4)
+                await state.reset_state()
+            else:
+                await message.reply(messages.menu
+                                    , reply=False, reply_markup=KeyBoards.menu_user_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+        else:
+            m = {'Без таймера': 10, '1 час': 60 * 60, "2 часа": 60 * 60 * 2, "3 часа": 60 * 60 * 3, "4 часа": 60 * 60 * 4,
+                 "5 часов": 60 * 60 * 5,
+                 "18 часов": 60 * 60 * 18, "6 часов": 60 * 60 * 6, "12 часов": 60 * 60 * 12,
+                 "24 часа": 60 * 60 * 24,
+                 "2 дня": 60 * 60 * 48, "3 дня": 60 * 60 * 24 * 3, "Неделя": 60 * 60 * 24 * 7}
+            try:
+                if m[message.text]:
+                    conn = sqlite3.connect('db.db')
+                    cursor = conn.cursor()
+                    if message.text != 'Без таймера':
+                        cursor.execute(
+                            f"UPDATE admins SET `time` = '{round(time.time() + m[message.text])}' WHERE user_id = '{message.from_user.id}'")
+                        incoming_event3[message.from_user.id] = message.text
+                    else:
+                        cursor.execute(
+                            f"UPDATE admins SET `time` = '{0}' WHERE user_id = '{message.from_user.id}'")
+                        incoming_event3[message.from_user.id] = message.text
+                    conn.commit()
+                    conn.close()
+                    state = dp.current_state(user=message.from_user.id)
+                    await state.set_state(AdminPanel.all()[8])
+                    await message.reply(messages.mailing, reply=False, reply_markup=KeyBoards.
+                                        yes_or_no_keyboard)
+            except KeyError:
+                await bot.send_message(message.from_user.id, messages.message_error4)
+    else:
+        #english
+        if switch_text == 'меню':
+            is_succeed = False
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_id FROM admins")
+            result_set = cursor.fetchall()
+            cursor.close()
+            for item in result_set:
+                if item[0] == message.from_user.id:
+                    is_succeed = True
+            if is_succeed:
+                await message.reply(messages.menu_en
+                                    , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+            else:
+                await message.reply(messages.menu_en
+                                    , reply=False, reply_markup=KeyBoards.menu_user_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+        else:
+            m = {'Без таймера': 10, '1 час': 60 * 60, "2 часа": 60 * 60 * 2, "3 часа": 60 * 60 * 3, "4 часа": 60 * 60 * 4,
+                 "5 часов": 60 * 60 * 5,
+                 "18 часов": 60 * 60 * 18, "6 часов": 60 * 60 * 6, "12 часов": 60 * 60 * 12,
+                 "24 часа": 60 * 60 * 24,
+                 "2 дня": 60 * 60 * 48, "3 дня": 60 * 60 * 24 * 3, "Неделя": 60 * 60 * 24 * 7}
+            try:
+                if m[message.text]:
+                    conn = sqlite3.connect('db.db')
+                    cursor = conn.cursor()
+                    if message.text != 'Без таймера':
+                        cursor.execute(
+                            f"UPDATE admins SET `time` = '{round(time.time() + m[message.text])}' WHERE user_id = '{message.from_user.id}'")
+                        incoming_event3[message.from_user.id] = message.text
+                    else:
+                        cursor.execute(
+                            f"UPDATE admins SET `time` = '{0}' WHERE user_id = '{message.from_user.id}'")
+                        incoming_event3[message.from_user.id] = message.text
+                    conn.commit()
+                    conn.close()
+                    state = dp.current_state(user=message.from_user.id)
+                    await state.set_state(AdminPanel.all()[8])
+                    await message.reply(messages.mailing_en, reply=False, reply_markup=KeyBoards.
+                                        yes_or_no_keyboard)
+            except KeyError:
+                await bot.send_message(message.from_user.id, messages.message_error4_en)
 
 
 @dp.message_handler(state=AdminPanel.ADMIN_8)
 async def process_admin_command1(message: types.Message):
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{message.from_user.id}'")
+    result_set = cursor.fetchall()
+    cursor.close()
+    is_ru = False
+    if result_set[0][0] == 1:
+        is_ru = True
     switch_text = message.text.lower()
-    if switch_text == 'меню':
-        is_succeed = False
-        conn = sqlite3.connect('db.db')
-        cursor = conn.cursor()
-        cursor.execute(f"SELECT user_id FROM admins")
-        result_set = cursor.fetchall()
-        cursor.close()
-        for item in result_set:
-            if item[0] == message.from_user.id:
-                is_succeed = True
-        if is_succeed:
-            await message.reply(messages.menu
-                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
-            conn.commit()
-            conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
-        else:
-            await message.reply(messages.menu
-                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
-            conn.commit()
-            conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
-    elif switch_text == 'да':
-        conn = sqlite3.connect('db.db')
-        cursor = conn.cursor()
-        cursor.execute(f"SELECT chat_id FROM users")
-        id_users = cursor.fetchall()
-        cursor.close()
-        conn = sqlite3.connect('db.db')
-        cursor = conn.cursor()
-        cursor.execute(f"SELECT last_content FROM admins WHERE user_id = '{message.from_user.id}'")
-        content = cursor.fetchall()
-        cursor.execute(f"SELECT `real_name` FROM users WHERE chat_id = '{message.from_user.id}'")
-        name = cursor.fetchall()
-        cursor.execute(f"SELECT `time` FROM admins WHERE user_id = '{message.from_user.id}'")
-        time2 = cursor.fetchall()
-        cursor.close()
-        for user in id_users:
-            try:
-                a = f'Рассылка от пользователя: <b>{name[0][0]}</b>\n' + '\n ➖➖➖➖➖➖ \n\n' + f'<i>{content[0][0]}</i>'
-                if incoming_event3[message.from_user.id] != 'Без таймера':
+    if is_ru == True:
+        if switch_text == 'меню':
+            is_succeed = False
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_id FROM admins")
+            result_set = cursor.fetchall()
+            cursor.close()
+            for item in result_set:
+                if item[0] == message.from_user.id:
+                    is_succeed = True
+            if is_succeed:
+                await message.reply(messages.menu
+                                    , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+            else:
+                await message.reply(messages.menu
+                                    , reply=False, reply_markup=KeyBoards.menu_user_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+        elif switch_text == 'да':
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT chat_id FROM users")
+            id_users = cursor.fetchall()
+            cursor.close()
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT last_content FROM admins WHERE user_id = '{message.from_user.id}'")
+            content = cursor.fetchall()
+            cursor.execute(f"SELECT `real_name` FROM users WHERE chat_id = '{message.from_user.id}'")
+            name = cursor.fetchall()
+            cursor.execute(f"SELECT `time` FROM admins WHERE user_id = '{message.from_user.id}'")
+            time2 = cursor.fetchall()
+            cursor.close()
+            for user in id_users:
+                try:
                     conn = sqlite3.connect('db.db')
                     cursor = conn.cursor()
-                    cursor.execute(
-                        f"INSERT INTO mail(`chat_id`, `event1`, `time`, `30min`, `5min`) values ({user[0]}, "
-                        f"'{content[0][0]}', {time2[0][0]}, {1}, {1})")
+                    cursor.execute(f"SELECT `ru` FROM users WHERE chat_id = '{message.from_user.id}'")
+                    rus = cursor.fetchall()
+                    cursor.close()
+                    if rus[0][0]:
+                        a = f'Рассылка от пользователя: <b>{name[0][0]}</b>\n' + '\n ➖➖➖➖➖➖ \n\n' + f'<i>{content[0][0]}</i>'
+                    else:
+                        a = f'Mailing list from the user: <b>{name[0][0]}</b>\n' + '\n ➖➖➖➖➖➖ \n\n' + f'<i>{content[0][0]}</i>'
+                    if incoming_event3[message.from_user.id] != 'Без таймера':
+                        conn = sqlite3.connect('db.db')
+                        cursor = conn.cursor()
+                        cursor.execute(
+                            f"INSERT INTO mail(`chat_id`, `event1`, `time`, `30min`, `5min`) values ({user[0]}, "
+                            f"'{content[0][0]}', {time2[0][0]}, {1}, {1})")
 
-                    conn.commit()
-                    conn.close()
-                await dp.bot.send_message(user[0], a, parse_mode='HTML')
-            except:
-                pass
-        incoming_event3.pop(message.from_user.id)
-        await dp.bot.send_message(message.from_user.id,
-                                  f'Ваша рассылка: <b>{content[0][0]}</b>\nУспешно отправлена всем!'
-                                  , parse_mode='HTML')
-        state = dp.current_state(user=message.from_user.id)
-        await state.set_state(AdminPanel.all()[2])
-        is_succeed = False
-        conn = sqlite3.connect('db.db')
-        cursor = conn.cursor()
-        cursor.execute(f"SELECT user_id FROM admins")
-        result_set = cursor.fetchall()
-        cursor.close()
-        for item in result_set:
-            if item[0] == message.from_user.id:
-                is_succeed = True
-        if is_succeed:
-            await message.reply(messages.successfully
-                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
-            conn.commit()
-            conn.close()
+                        conn.commit()
+                        conn.close()
+                    await dp.bot.send_message(user[0], a, parse_mode='HTML')
+                except:
+                    pass
+            incoming_event3.pop(message.from_user.id)
+            await dp.bot.send_message(message.from_user.id,
+                                      f'Ваша рассылка: <b>{content[0][0]}</b>\nУспешно отправлена всем!'
+                                      , parse_mode='HTML')
             state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
-        else:
-            await message.reply(messages.successfully
-                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
-            conn.commit()
-            conn.close()
+            await state.set_state(AdminPanel.all()[2])
+            is_succeed = False
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_id FROM admins")
+            result_set = cursor.fetchall()
+            cursor.close()
+            for item in result_set:
+                if item[0] == message.from_user.id:
+                    is_succeed = True
+            if is_succeed:
+                await message.reply(messages.successfully
+                                    , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+            else:
+                await message.reply(messages.successfully
+                                    , reply=False, reply_markup=KeyBoards.menu_user_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+
+        elif switch_text == 'изменить':
             state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
+            await state.set_state(AdminPanel.all()[0])
+            await message.reply(messages.choose_action, reply_markup=KeyBoards.admin_panel)
+    else:
+        #english
+        if switch_text == 'меню':
+            is_succeed = False
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_id FROM admins")
+            result_set = cursor.fetchall()
+            cursor.close()
+            for item in result_set:
+                if item[0] == message.from_user.id:
+                    is_succeed = True
+            if is_succeed:
+                await message.reply(messages.menu_en
+                                    , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+            else:
+                await message.reply(messages.menu_en
+                                    , reply=False, reply_markup=KeyBoards.menu_user_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+        elif switch_text == 'да':
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT chat_id FROM users")
+            id_users = cursor.fetchall()
+            cursor.close()
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT last_content FROM admins WHERE user_id = '{message.from_user.id}'")
+            content = cursor.fetchall()
+            cursor.execute(f"SELECT `real_name` FROM users WHERE chat_id = '{message.from_user.id}'")
+            name = cursor.fetchall()
+            cursor.execute(f"SELECT `time` FROM admins WHERE user_id = '{message.from_user.id}'")
+            time2 = cursor.fetchall()
+            cursor.close()
+            for user in id_users:
+                try:
+                    conn = sqlite3.connect('db.db')
+                    cursor = conn.cursor()
+                    cursor.execute(f"SELECT `ru` FROM users WHERE chat_id = '{message.from_user.id}'")
+                    rus = cursor.fetchall()
+                    cursor.close()
+                    if rus[0][0]:
+                        a = f'Рассылка от пользователя: <b>{name[0][0]}</b>\n' + '\n ➖➖➖➖➖➖ \n\n' + f'<i>{content[0][0]}</i>'
+                    else:
+                        a = f'Mailing list from the user: <b>{name[0][0]}</b>\n' + '\n ➖➖➖➖➖➖ \n\n' + f'<i>{content[0][0]}</i>'
+                    if incoming_event3[message.from_user.id] != 'Без таймера':
+                        conn = sqlite3.connect('db.db')
+                        cursor = conn.cursor()
+                        cursor.execute(
+                            f"INSERT INTO mail(`chat_id`, `event1`, `time`, `30min`, `5min`) values ({user[0]}, "
+                            f"'{content[0][0]}', {time2[0][0]}, {1}, {1})")
 
-    elif switch_text == 'изменить':
-        state = dp.current_state(user=message.from_user.id)
-        await state.set_state(AdminPanel.all()[0])
-        await message.reply(messages.choose_action, reply_markup=KeyBoards.admin_panel)
+                        conn.commit()
+                        conn.close()
+                    await dp.bot.send_message(user[0], a, parse_mode='HTML')
+                except:
+                    pass
+            incoming_event3.pop(message.from_user.id)
+            await dp.bot.send_message(message.from_user.id,
+                                      f'Your newsletter: <b>{content[0][0]}</b>\nSuccessfully sent to everyone!'
+                                      , parse_mode='HTML')
+            state = dp.current_state(user=message.from_user.id)
+            await state.set_state(AdminPanel.all()[2])
+            is_succeed = False
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_id FROM admins")
+            result_set = cursor.fetchall()
+            cursor.close()
+            for item in result_set:
+                if item[0] == message.from_user.id:
+                    is_succeed = True
+            if is_succeed:
+                await message.reply(messages.successfully_en
+                                    , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+            else:
+                await message.reply(messages.successfully_en
+                                    , reply=False, reply_markup=KeyBoards.menu_user_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
 
+        elif switch_text == 'изменить':
+            state = dp.current_state(user=message.from_user.id)
+            await state.set_state(AdminPanel.all()[0])
+            await message.reply(messages.choose_action_en, reply_markup=KeyBoards.admin_panel)
 
 # endregion
 
