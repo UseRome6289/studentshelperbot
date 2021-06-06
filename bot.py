@@ -1277,7 +1277,7 @@ async def process_admin_command1(message: types.Message):
                     if rus[0][0] == 1:
                         a = f'Рассылка от пользователя: {name[0][0]}\n' + f'{content[0][0]}'
                     else:
-                        a = f'Mailing list from the user: {name[0][0]}\n' + f'{content[0][0]}'
+                        a = f'Mailing list from the user: {name[0][0]}\n' + f'{translate(content[0][0])}'
                     if incoming_event3[message.from_user.id] == 'Без таймера':
                         pass
                     else:
@@ -1377,7 +1377,7 @@ async def process_admin_command1(message: types.Message):
                     if rus[0][0] == 1:
                         a = f'Рассылка от пользователя: {name[0][0]}\n' + f'{content[0][0]}'
                     else:
-                        a = f'Mailing list from the user: {name[0][0]}\n' + f'{content[0][0]}'
+                        a = f'Mailing list from the user: {name[0][0]}\n' + f'{translate(content[0][0])}'
                     if incoming_event3[message.from_user.id] == 'Без таймера':
                         bot2.send_message(user[0], a)
                     else:
@@ -1692,7 +1692,7 @@ async def process_admin_command1(message: types.Message):
                     if rus[0][0]:
                         a = f'Рассылка от пользователя: <b>{name[0][0]}</b>\n' + '\n ➖➖➖➖➖➖ \n\n' + f'<i>{content[0][0]}</i>'
                     else:
-                        a = f'Mailing list from the user: <b>{name[0][0]}</b>\n' + '\n ➖➖➖➖➖➖ \n\n' + f'<i>{content[0][0]}</i>'
+                        a = f'Mailing list from the user: <b>{name[0][0]}</b>\n' + '\n ➖➖➖➖➖➖ \n\n' + f'<i>{translate(content[0][0])}</i>'
                     if incoming_event3[message.from_user.id] != 'Без таймера':
                         conn = sqlite3.connect('db.db')
                         cursor = conn.cursor()
@@ -1790,7 +1790,7 @@ async def process_admin_command1(message: types.Message):
                     if rus[0][0]:
                         a = f'Рассылка от пользователя: <b>{name[0][0]}</b>\n' + '\n ➖➖➖➖➖➖ \n\n' + f'<i>{content[0][0]}</i>'
                     else:
-                        a = f'Mailing list from the user: <b>{name[0][0]}</b>\n' + '\n ➖➖➖➖➖➖ \n\n' + f'<i>{content[0][0]}</i>'
+                        a = f'Mailing list from the user: <b>{name[0][0]}</b>\n' + '\n ➖➖➖➖➖➖ \n\n' + f'<i>{translate(content[0][0])}</i>'
                     if incoming_event3[message.from_user.id] != 'Без таймера':
                         conn = sqlite3.connect('db.db')
                         cursor = conn.cursor()
