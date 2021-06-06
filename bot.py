@@ -71,9 +71,20 @@ class MyThread(Thread):
                 cursor.execute(f"SELECT `30min` FROM `times` WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
                 state = cursor.fetchall()
                 if state[0][0] == 1:
-                    cursor.execute(
-                        f"UPDATE `times` SET `30min`= {0} WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
-                    bot2.send_message(item[0], f'{real_name[0][0]}! Мероприятие: {item[1]} состоится через пол часа')
+                    cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{item[0]}'")
+                    result_set = cursor.fetchall()
+                    is_ru = False
+                    if result_set[0][0] == 1:
+                        is_ru = True
+                    if is_ru == True:
+                        cursor.execute(
+                            f"UPDATE `times` SET `30min`= {0} WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
+                        bot2.send_message(item[0], f'{real_name[0][0]}! Мероприятие: {item[1]} состоится через пол часа')
+                    else:
+                        cursor.execute(
+                            f"UPDATE `times` SET `30min`= {0} WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
+                        bot2.send_message(item[0],
+                                          f'{real_name[0][0]}! Event: {item[1]} it will take place in half an hour')
 
             cursor = conn.cursor()
             cursor.execute(f"SELECT * FROM `times` WHERE `time` <=  strftime('%s', 'now') + 300;")
@@ -84,9 +95,20 @@ class MyThread(Thread):
                 cursor.execute(f"SELECT `5min` FROM `times` WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
                 state = cursor.fetchall()
                 if state[0][0] == 1:
-                    cursor.execute(
-                        f"UPDATE `times` SET `5min`= {0} WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
-                    bot2.send_message(item[0], f'{real_name[0][0]}! Мероприятие: {item[1]} состоится через пять минут')
+                    cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{item[0]}'")
+                    result_set = cursor.fetchall()
+                    is_ru = False
+                    if result_set[0][0] == 1:
+                        is_ru = True
+                    if is_ru == True:
+                        cursor.execute(
+                            f"UPDATE `times` SET `5min`= {0} WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
+                        bot2.send_message(item[0], f'{real_name[0][0]}! Мероприятие: {item[1]} состоится через пять минут')
+                    else:
+                        cursor.execute(
+                            f"UPDATE `times` SET `5min`= {0} WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
+                        bot2.send_message(item[0],
+                                          f'{real_name[0][0]}! Event: {item[1]} it will take place in five minutes')
 
             cursor = conn.cursor()
             cursor.execute(f"SELECT * FROM `times` WHERE `time` <=  strftime('%s', 'now');")
@@ -96,7 +118,15 @@ class MyThread(Thread):
             for item in result_set:
                 cursor.execute(f"SELECT `real_name` FROM `users` WHERE `chat_id` = {item[0]}")
                 real_name = cursor.fetchall()
-                bot2.send_message(item[0], f'{real_name[0][0]}! Ваше мероприятие: {item[1]}\nокончено')
+                cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{item[0]}'")
+                result_set = cursor.fetchall()
+                is_ru = False
+                if result_set[0][0] == 1:
+                    is_ru = True
+                if is_ru == True:
+                    bot2.send_message(item[0], f'{real_name[0][0]}! Ваше мероприятие: {item[1]}\nокончено')
+                else:
+                    bot2.send_message(item[0], f'{real_name[0][0]}! Your event: {item[1]}\nfinished')
 
             cursor = conn.cursor()
             cursor.execute(f"SELECT * FROM `mail` WHERE `time` <=  strftime('%s', 'now') + 1800;")
@@ -107,9 +137,19 @@ class MyThread(Thread):
                 cursor.execute(f"SELECT `30min` FROM `mail` WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
                 state = cursor.fetchall()
                 if state[0][0] == 1:
-                    cursor.execute(
-                        f"UPDATE `mail` SET `30min`= {0} WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
-                    bot2.send_message(item[0], f'{real_name[0][0]}! Рассылка: {item[1]} состоится через пол часа')
+                    cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{item[0]}'")
+                    result_set = cursor.fetchall()
+                    is_ru = False
+                    if result_set[0][0] == 1:
+                        is_ru = True
+                    if is_ru == True:
+                        cursor.execute(
+                            f"UPDATE `mail` SET `30min`= {0} WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
+                        bot2.send_message(item[0], f'{real_name[0][0]}! Рассылка: {item[1]} состоится через пол часа')
+                    else:
+                        cursor.execute(
+                            f"UPDATE `mail` SET `30min`= {0} WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
+                        bot2.send_message(item[0], f'{real_name[0][0]}! Mailing: {item[1]} it will take place in half an hour')
 
             cursor = conn.cursor()
             cursor.execute(f"SELECT * FROM `mail` WHERE `time` <=  strftime('%s', 'now') + 300;")
@@ -120,9 +160,19 @@ class MyThread(Thread):
                 cursor.execute(f"SELECT `5min` FROM `mail` WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
                 state = cursor.fetchall()
                 if state[0][0] == 1:
-                    cursor.execute(
-                        f"UPDATE `mail` SET `5min`= {0} WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
-                    bot2.send_message(item[0], f'{real_name[0][0]}! Рассылка: {item[1]} состоится через пять минут')
+                    cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{item[0]}'")
+                    result_set = cursor.fetchall()
+                    is_ru = False
+                    if result_set[0][0] == 1:
+                        is_ru = True
+                    if is_ru == True:
+                        cursor.execute(
+                            f"UPDATE `mail` SET `5min`= {0} WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
+                        bot2.send_message(item[0], f'{real_name[0][0]}! Рассылка: {item[1]} состоится через пять минут')
+                    else:
+                        cursor.execute(
+                            f"UPDATE `mail` SET `5min`= {0} WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
+                        bot2.send_message(item[0], f'{real_name[0][0]}! Mailing: {item[1]} it will take place in five minutes')
 
             cursor = conn.cursor()
             cursor.execute(f"SELECT * FROM `mail` WHERE `time` <=  strftime('%s', 'now');")
@@ -135,9 +185,17 @@ class MyThread(Thread):
                 cursor = conn.cursor()
                 cursor.execute(f"SELECT `real_name` FROM `users` WHERE `chat_id` = {item[0]}")
                 real_name = cursor.fetchall()
+                cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{item[0]}'")
+                result_set = cursor.fetchall()
+                is_ru = False
+                if result_set[0][0] == 1:
+                    is_ru = True
+                if is_ru == True:
+                    bot2.send_message(item[0], f'{real_name[0][0]}! Рассылка: {item[1]} закончилась')
+                else:
+                    bot2.send_message(item[0], f'{real_name[0][0]}! Mailing: {item[1]} ended')
                 conn.commit()
                 conn.close()
-                bot2.send_message(item[0], f'{real_name[0][0]}! Рассылка: {item[1]} закончилась')
 
 
 class MyThread2(Thread):
@@ -200,9 +258,29 @@ class MyThread2(Thread):
                             cursor.close()
                             for k in id_group:
                                 if j[5] == "":
-                                    bot2.send_message(k[0], f'{k[1]}, у вас начинается {j[2]}')
+                                    conn = sqlite3.connect('db.db')
+                                    cursor = conn.cursor()
+                                    cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{k[0]}'")
+                                    result_set = cursor.fetchall()
+                                    is_ru = False
+                                    if result_set[0][0] == 1:
+                                        is_ru = True
+                                    if is_ru == True:
+                                        bot2.send_message(k[0], f'{k[1]}, у вас начинается {j[2]}')
+                                    else:
+                                        bot2.send_message(k[0], f"{k[1]}, you're starting to {j[2]}")
                                 else:
-                                    bot2.send_message(k[0], f'{k[1]}, у вас начинается {j[2]} в {j[5]}')
+                                    conn = sqlite3.connect('db.db')
+                                    cursor = conn.cursor()
+                                    cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{k[0]}'")
+                                    result_set = cursor.fetchall()
+                                    is_ru = False
+                                    if result_set[0][0] == 1:
+                                        is_ru = True
+                                    if is_ru == True:
+                                        bot2.send_message(k[0], f'{k[1]}, у вас начинается {j[2]} в {j[5]}')
+                                    else:
+                                        bot2.send_message(k[0], f"{k[1]}, you're starting to {j[2]} in {j[5]}")
                         if listing_date_sum == listing_date_sum2 - 5:
                             conn = sqlite3.connect('db.db')
                             cursor = conn.cursor()
@@ -211,9 +289,29 @@ class MyThread2(Thread):
                             cursor.close()
                             for k in id_group:
                                 if j[5] == "":
-                                    bot2.send_message(k[0], f'{k[1]}, у вас через 5 минут начнется {j[2]}')
+                                    conn = sqlite3.connect('db.db')
+                                    cursor = conn.cursor()
+                                    cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{k[0]}'")
+                                    result_set = cursor.fetchall()
+                                    is_ru = False
+                                    if result_set[0][0] == 1:
+                                        is_ru = True
+                                    if is_ru == True:
+                                        bot2.send_message(k[0], f'{k[1]}, у вас через 5 минут начнется {j[2]}')
+                                    else:
+                                        bot2.send_message(k[0], f'{k[1]}, you will start in 5 minutes {j[2]}')
                                 else:
-                                    bot2.send_message(k[0], f'{k[1]}, у вас начнется {j[2]} через 5 минут в {j[5]}')
+                                    conn = sqlite3.connect('db.db')
+                                    cursor = conn.cursor()
+                                    cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{k[0]}'")
+                                    result_set = cursor.fetchall()
+                                    is_ru = False
+                                    if result_set[0][0] == 1:
+                                        is_ru = True
+                                    if is_ru == True:
+                                        bot2.send_message(k[0], f'{k[1]}, у вас начнется {j[2]} через 5 минут в {j[5]}')
+                                    else:
+                                        bot2.send_message(k[0], f'{k[1]}, you will start {j[2]} after 5 minutes in the {j[5]}')
 
 
 class MyThread3(Thread):
@@ -355,6 +453,8 @@ class MyThread3(Thread):
                         url = 'https://edu.sfu-kras.ru/timetable'
                         response = requests.get(url).text
                         match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+                        k_ru = False
+                        k_en = False
                         if match:
                             current_week = "1"
                         else:
@@ -380,12 +480,39 @@ class MyThread3(Thread):
                                     else:
                                         timetable_message += f'\n{l[1]}\n{l[2]} ({l[3]}) \n{l[4]}\n{l[5]}\n'
                         else:
-                            timetable_message += 'пар нет! Отличный повод увидеться с друзьями! 🎉'
+
+                            conn = sqlite3.connect('db.db')
+                            cursor = conn.cursor()
+                            cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{k[0]}'")
+                            result_set = cursor.fetchall()
+                            is_ru = False
+                            if result_set[0][0] == 1:
+                                is_ru = True
+                            if is_ru == True:
+                                k_ru = True
+                            else:
+                                k_en = True
 
                         for k in id_group:
-                            bot2.send_message(k[0], f"Доброе утро, {k[1]}!\n\nСегодня {local_time[0]}, "
+                            if k_ru:
+                                timetable_message += 'пар нет! Отличный повод увидеться с друзьями! 🎉'
+                            if k_en:
+                                timetable_message += 'no couples, a great reason to see your friends! 🎉'
+                            conn = sqlite3.connect('db.db')
+                            cursor = conn.cursor()
+                            cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{k[0]}'")
+                            result_set = cursor.fetchall()
+                            is_ru = False
+                            if result_set[0][0] == 1:
+                                is_ru = True
+                            if is_ru == True:
+                                bot2.send_message(k[0], f"Доброе утро, {k[1]}!\n\nСегодня {local_time[0]}, "
                                                     f"сейчас {data['weather'][0]['description']}\n\nТемпература в Красноярске "
                                                     f"{round(int(data['main']['temp']))}°.\n\nПрогноз погоды на сегодня:\n\n{mes}\nУ вас сегодня\n{timetable_message}")
+                            else:
+                                bot2.send_message(k[0], f"Good morning, {k[1]}!\n\nToday {local_time[0]}, "
+                                                        f"now {data['weather'][0]['description']}\n\nTemperature in Krasnoyarsk "
+                                                        f"{round(int(data['main']['temp']))}°.\n\nToday's weather forecast:\n\n{mes}\nYou have today\n{timetable_message}")
 
 
 
