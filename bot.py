@@ -433,7 +433,7 @@ async def process_start_command(message: types.Message):
                                 '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
                                 '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.select_RU_EN)
         else:
             await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
                                 '\n - Here you can always find the current schedule 🎓'
@@ -456,12 +456,12 @@ async def process_start_command(message: types.Message):
                                 '\n - Поддержать разработчиков 👌'
                                 '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
                                 '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb2)
+                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.select_RU_EN)
     else:
         if is_succeed == True:
-            await message.reply(messages.greets_msg, reply_markup=KeyBoards.greet_kb)
+            await message.reply(messages.greets_msg, reply_markup=KeyBoards.select_RU_EN)
         else:
-            await message.reply(messages.greets_msg, reply_markup=KeyBoards.greet_kb2)
+            await message.reply(messages.greets_msg, reply_markup=KeyBoards.select_RU_EN)
     state = dp.current_state(user=message.from_user.id)
     await state.set_state(Register.all()[0])
 
@@ -1418,158 +1418,419 @@ async def name_change(message: types.Message):
 @dp.message_handler(state=Register.REGISTER_0)
 async def register_1(message: types.Message):
     switch_text = message.text.lower()
-    if switch_text == "я студент":
-        state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[1])
-        await message.reply(messages.student_name)
-    elif switch_text == "я преподаватель":
-        state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[4])
-        await message.reply(messages.teacher_surname)
+    is_succeed = False
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
+    cursor.execute(f"INSERT INTO users(chat_id, name) values ({message.from_user.id}, '{message.from_user.username}')")
+    conn.commit()
+    conn.close()
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT is_teacher FROM admins WHERE user_id = '{message.from_user.id}'")
+    result_set = cursor.fetchall()
+    cursor.close()
+    try:
+        if result_set[0][0] == 'True' and result_set[0][0] != None:
+            is_succeed = True
+    except:
+        pass
+    if message.from_user.username != None:
+        if is_succeed == True:
+            if switch_text == "en🇬🇧":
+                conn = sqlite3.connect('db.db')
+                cursor = conn.cursor()
+                cursor.execute(f"UPDATE users SET RU = '{0}' WHERE chat_id = '{message.from_user.id}'")
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.set_state(Register.all()[1])
+                await message.reply(messages.select_en, reply=False, reply_markup=KeyBoards.greet_kb_en)
+            elif switch_text == "ru🇷🇺":
+                conn = sqlite3.connect('db.db')
+                cursor = conn.cursor()
+                cursor.execute(f"UPDATE users SET RU = '{1}' WHERE chat_id = '{message.from_user.id}'")
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.set_state(Register.all()[1])
+                await message.reply(messages.select, reply=False, reply_markup=KeyBoards.greet_kb)
+            else:
+                await bot.send_message(message.from_user.id, messages.what)
+        else:
+            if switch_text == "en🇬🇧":
+                conn = sqlite3.connect('db.db')
+                cursor = conn.cursor()
+                cursor.execute(f"UPDATE users SET RU = '{0}' WHERE chat_id = '{message.from_user.id}'")
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.set_state(Register.all()[1])
+                await message.reply(messages.select_en, reply=False, reply_markup=KeyBoards.greet_kb2_en)
+            elif switch_text == "ru🇷🇺":
+                conn = sqlite3.connect('db.db')
+                cursor = conn.cursor()
+                cursor.execute(f"UPDATE users SET ru = '{1}' WHERE chat_id = '{message.from_user.id}'")
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.set_state(Register.all()[1])
+                await message.reply(messages.select, reply=False, reply_markup=KeyBoards.greet_kb2)
+            else:
+                await bot.send_message(message.from_user.id, messages.what)
+
+
+@dp.message_handler(state=Register.REGISTER_1)
+async def register_1(message: types.Message):
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{message.from_user.id}'")
+    result_set = cursor.fetchall()
+    cursor.close()
+    is_ru = False
+    if result_set[0][0] == 1:
+        is_ru = True
+    switch_text = message.text.lower()
+    if is_ru == True:
+        if switch_text == "я студент":
+            state = dp.current_state(user=message.from_user.id)
+            await state.set_state(Register.all()[2])
+            await message.reply(messages.student_name)
+        elif switch_text == "я преподаватель":
+            state = dp.current_state(user=message.from_user.id)
+            await state.set_state(Register.all()[5])
+            await message.reply(messages.teacher_surname)
+        else:
+            await bot.send_message(message.from_user.id, messages.what)
     else:
-        await bot.send_message(message.from_user.id, messages.what)
+        if switch_text == "i'm a student":
+            state = dp.current_state(user=message.from_user.id)
+            await state.set_state(Register.all()[2])
+            await message.reply(messages.student_name_en)
+        elif switch_text == "i'm a teacher":
+            state = dp.current_state(user=message.from_user.id)
+            await state.set_state(Register.all()[5])
+            await message.reply(messages.teacher_surname_en)
+        else:
+            await bot.send_message(message.from_user.id, messages.what_en)
 
 
 # name
-@dp.message_handler(state=Register.REGISTER_1)
-async def register_2(message: types.Message):
-    if only_letters(message.text) == True:
-        conn = sqlite3.connect('db.db')
-        cursor = conn.cursor()
-        cursor.execute(f"UPDATE users SET real_name = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
-        conn.commit()
-        conn.close()
-        state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Register.all()[2])
-        await message.reply(messages.institute_message, reply=False, reply_markup=KeyBoards.institute_kb)
-    else:
-        await bot.send_message(message.from_user.id, messages.message_error2)
-
-
-# inst
 @dp.message_handler(state=Register.REGISTER_2)
 async def register_2(message: types.Message):
-    try:
-        if messages.institutes[message.text]:
-            if only_letters(message.text) == True:
-                conn = sqlite3.connect('db.db')
-                cursor = conn.cursor()
-                cursor.execute(
-                    f"UPDATE users SET school = '{messages.institutes[message.text]}' WHERE chat_id = '{message.from_user.id}'")
-                conn.commit()
-                cursor.execute(f"SELECT school FROM users WHERE chat_id = '{message.from_user.id}'")
-                inst = cursor.fetchall()[0][0]
-                keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
-                url = 'https://edu.sfu-kras.ru/api/timetable/groups'
-                response = requests.get(url).json()
-                for item in response:
-                    if item['institute'] == inst:
-                        keyboard.add(item['name'])
-                        incoming_inst.append(item['name'])
-                await message.reply(messages.group_message, reply_markup=keyboard)
-                state = dp.current_state(user=message.from_user.id)
-                await state.set_state(Register.all()[3])
-            else:
-                await bot.send_message(message.from_user.id, messages.message_error)
-    except KeyError:
-        await bot.send_message(message.from_user.id, messages.message_error)
-
-
-# group
-@dp.message_handler(state=Register.REGISTER_3)
-async def register_3(message: types.Message):
-    a = False
-    for i in incoming_inst:
-        if i == message.text:
-            a = True
-    if only_letters(message.text) == True:
-        if a == True:
-            incoming_inst.clear()
-            conn = sqlite3.connect('db.db')
-            cursor = conn.cursor()
-            cursor.execute(f"UPDATE users SET user_group = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
-            cursor.execute(f"SELECT user_id FROM admins")
-            result_set = cursor.fetchall()
-            cursor.close()
-            is_succeed = False
-            for item in result_set:
-                if item[0] == message.from_user.id:
-                    is_succeed = True
-            if is_succeed:
-                await message.reply(messages.end_of_registration_message
-                                    , reply=False, reply_markup=KeyBoards.menu_admin_kb)
-                conn.commit()
-                conn.close()
-                state = dp.current_state(user=message.from_user.id)
-                await state.reset_state()
-            else:
-                await message.reply(messages.end_of_registration_message
-                                    , reply=False, reply_markup=KeyBoards.menu_user_kb)
-                conn.commit()
-                conn.close()
-                state = dp.current_state(user=message.from_user.id)
-                await state.reset_state()
-        else:
-            await bot.send_message(message.from_user.id, messages.message_error6)
-    else:
-        await bot.send_message(message.from_user.id, messages.message_error6)
-
-
-@dp.message_handler(state=Register.REGISTER_4)
-async def register_4(message: types.message):
-    url = "http://edu.sfu-kras.ru/timetable/teachers/autocomplete/"
-    surname = message.text
-    response = requests.get(url + surname).json()
-    keyboard = ReplyKeyboardMarkup()
-    if len(response) != 0:
-        for item in response:
-            keyboard.add(item)
-            incoming_inst.append(item)
-        await message.reply(messages.select, reply_markup=keyboard)
-        await dp.current_state(user=message.from_user.id).set_state(Register.all()[5])
-    else:
-        await message.reply(messages.error, reply_markup=keyboard)
-
-
-@dp.message_handler(state=Register.REGISTER_5)
-async def register_5(message: types.message):
-    a = False
-    for i in incoming_inst:
-        if i == message.text:
-            a = True
-    if only_letters(message.text) == True:
-        if a == True:
-            incoming_inst.clear()
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{message.from_user.id}'")
+    result_set = cursor.fetchall()
+    cursor.close()
+    is_ru = False
+    if result_set[0][0] == 1:
+        is_ru = True
+    switch_text = message.text.lower()
+    if is_ru == True:
+        if only_letters(message.text) == True:
             conn = sqlite3.connect('db.db')
             cursor = conn.cursor()
             cursor.execute(f"UPDATE users SET real_name = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
-            cursor.execute(f"UPDATE users SET user_group = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
-            cursor.execute(f"UPDATE users SET is_teacher = '{True}' WHERE chat_id = '{message.from_user.id}'")
-            cursor.execute(f"SELECT user_id FROM admins")
-            result_set = cursor.fetchall()
-            cursor.close()
-            is_succeed = False
-            for item in result_set:
-                if item[0] == message.from_user.id:
-                    is_succeed = True
-            if is_succeed:
-                await message.reply(messages.end_of_registration_message
-                                    , reply=False, reply_markup=KeyBoards.menu_admin_kb)
-                conn.commit()
-                conn.close()
-                state = dp.current_state(user=message.from_user.id)
-                await state.reset_state()
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.set_state(Register.all()[3])
+            await message.reply(messages.institute_message, reply=False, reply_markup=KeyBoards.institute_kb)
+        else:
+            await bot.send_message(message.from_user.id, messages.message_error2_en)
+    else:
+        if only_letters(message.text) == True:
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"UPDATE users SET real_name = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
+            conn.commit()
+            conn.close()
+            state = dp.current_state(user=message.from_user.id)
+            await state.set_state(Register.all()[3])
+            await message.reply(messages.institute_message_en, reply=False, reply_markup=KeyBoards.institute_kb)
+        else:
+            await bot.send_message(message.from_user.id, messages.message_error2_en)
+
+
+# inst
+@dp.message_handler(state=Register.REGISTER_3)
+async def register_2(message: types.Message):
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{message.from_user.id}'")
+    result_set = cursor.fetchall()
+    cursor.close()
+    is_ru = False
+    if result_set[0][0] == 1:
+        is_ru = True
+    switch_text = message.text.lower()
+    if is_ru == True:
+        try:
+            if messages.institutes[message.text]:
+                if only_letters(message.text) == True:
+                    conn = sqlite3.connect('db.db')
+                    cursor = conn.cursor()
+                    cursor.execute(
+                        f"UPDATE users SET school = '{messages.institutes[message.text]}' WHERE chat_id = '{message.from_user.id}'")
+                    conn.commit()
+                    cursor.execute(f"SELECT school FROM users WHERE chat_id = '{message.from_user.id}'")
+                    inst = cursor.fetchall()[0][0]
+                    keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
+                    url = 'https://edu.sfu-kras.ru/api/timetable/groups'
+                    response = requests.get(url).json()
+                    for item in response:
+                        if item['institute'] == inst:
+                            keyboard.add(item['name'])
+                            incoming_inst.append(item['name'])
+                    await message.reply(messages.group_message, reply_markup=keyboard)
+                    state = dp.current_state(user=message.from_user.id)
+                    await state.set_state(Register.all()[4])
+                else:
+                    await bot.send_message(message.from_user.id, messages.message_error)
+        except KeyError:
+            await bot.send_message(message.from_user.id, messages.message_error)
+    else:
+        try:
+            if messages.institutes[message.text]:
+                if only_letters(message.text) == True:
+                    conn = sqlite3.connect('db.db')
+                    cursor = conn.cursor()
+                    cursor.execute(
+                        f"UPDATE users SET school = '{messages.institutes[message.text]}' WHERE chat_id = '{message.from_user.id}'")
+                    conn.commit()
+                    cursor.execute(f"SELECT school FROM users WHERE chat_id = '{message.from_user.id}'")
+                    inst = cursor.fetchall()[0][0]
+                    keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
+                    url = 'https://edu.sfu-kras.ru/api/timetable/groups'
+                    response = requests.get(url).json()
+                    for item in response:
+                        if item['institute'] == inst:
+                            keyboard.add(item['name'])
+                            incoming_inst.append(item['name'])
+                    await message.reply(messages.group_message_en, reply_markup=keyboard)
+                    state = dp.current_state(user=message.from_user.id)
+                    await state.set_state(Register.all()[4])
+                else:
+                    await bot.send_message(message.from_user.id, messages.message_error_en)
+        except KeyError:
+            await bot.send_message(message.from_user.id, messages.message_error_en)
+
+
+# group
+@dp.message_handler(state=Register.REGISTER_4)
+async def register_3(message: types.Message):
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{message.from_user.id}'")
+    result_set = cursor.fetchall()
+    cursor.close()
+    is_ru = False
+    if result_set[0][0] == 1:
+        is_ru = True
+    switch_text = message.text.lower()
+    if is_ru == True:
+        a = False
+        for i in incoming_inst:
+            if i == message.text:
+                a = True
+        if only_letters(message.text) == True:
+            if a == True:
+                incoming_inst.clear()
+                conn = sqlite3.connect('db.db')
+                cursor = conn.cursor()
+                cursor.execute(f"UPDATE users SET user_group = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
+                cursor.execute(f"SELECT user_id FROM admins")
+                result_set = cursor.fetchall()
+                cursor.close()
+                is_succeed = False
+                for item in result_set:
+                    if item[0] == message.from_user.id:
+                        is_succeed = True
+                if is_succeed:
+                    await message.reply(messages.end_of_registration_message
+                                        , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+                    conn.commit()
+                    conn.close()
+                    state = dp.current_state(user=message.from_user.id)
+                    await state.reset_state()
+                else:
+                    await message.reply(messages.end_of_registration_message
+                                        , reply=False, reply_markup=KeyBoards.menu_user_kb)
+                    conn.commit()
+                    conn.close()
+                    state = dp.current_state(user=message.from_user.id)
+                    await state.reset_state()
             else:
-                await message.reply(messages.end_of_registration_message
-                                    , reply=False, reply_markup=KeyBoards.menu_user_kb)
-                conn.commit()
-                conn.close()
-                state = dp.current_state(user=message.from_user.id)
-                await state.reset_state()
+                await bot.send_message(message.from_user.id, messages.message_error6)
+        else:
+            await bot.send_message(message.from_user.id, messages.message_error6)
+    else:
+        a = False
+        for i in incoming_inst:
+            if i == message.text:
+                a = True
+        if only_letters(message.text) == True:
+            if a == True:
+                incoming_inst.clear()
+                conn = sqlite3.connect('db.db')
+                cursor = conn.cursor()
+                cursor.execute(
+                    f"UPDATE users SET user_group = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
+                cursor.execute(f"SELECT user_id FROM admins")
+                result_set = cursor.fetchall()
+                cursor.close()
+                is_succeed = False
+                for item in result_set:
+                    if item[0] == message.from_user.id:
+                        is_succeed = True
+                if is_succeed:
+                    await message.reply(messages.end_of_registration_message_en
+                                        , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+                    conn.commit()
+                    conn.close()
+                    state = dp.current_state(user=message.from_user.id)
+                    await state.reset_state()
+                else:
+                    await message.reply(messages.end_of_registration_message_en
+                                        , reply=False, reply_markup=KeyBoards.menu_user_kb)
+                    conn.commit()
+                    conn.close()
+                    state = dp.current_state(user=message.from_user.id)
+                    await state.reset_state()
+            else:
+                await bot.send_message(message.from_user.id, messages.message_error6_en)
+        else:
+            await bot.send_message(message.from_user.id, messages.message_error6_en)
+
+
+@dp.message_handler(state=Register.REGISTER_5)
+async def register_4(message: types.message):
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{message.from_user.id}'")
+    result_set = cursor.fetchall()
+    cursor.close()
+    is_ru = False
+    if result_set[0][0] == 1:
+        is_ru = True
+    switch_text = message.text.lower()
+    if is_ru == True:
+        url = "http://edu.sfu-kras.ru/timetable/teachers/autocomplete/"
+        surname = message.text
+        response = requests.get(url + surname).json()
+        keyboard = ReplyKeyboardMarkup()
+        if len(response) != 0:
+            for item in response:
+                keyboard.add(item)
+                incoming_inst.append(item)
+            await message.reply(messages.select, reply_markup=keyboard)
+            await dp.current_state(user=message.from_user.id).set_state(Register.all()[6])
+        else:
+            await message.reply(messages.error, reply_markup=keyboard)
+    else:
+        url = "http://edu.sfu-kras.ru/timetable/teachers/autocomplete/"
+        surname = message.text
+        response = requests.get(url + surname).json()
+        keyboard = ReplyKeyboardMarkup()
+        if len(response) != 0:
+            for item in response:
+                keyboard.add(item)
+                incoming_inst.append(item)
+            await message.reply(messages.select_en, reply_markup=keyboard)
+            await dp.current_state(user=message.from_user.id).set_state(Register.all()[6])
+        else:
+            await message.reply(messages.error_en, reply_markup=keyboard)
+
+
+@dp.message_handler(state=Register.REGISTER_6)
+async def register_5(message: types.message):
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{message.from_user.id}'")
+    result_set = cursor.fetchall()
+    cursor.close()
+    is_ru = False
+    if result_set[0][0] == 1:
+        is_ru = True
+    switch_text = message.text.lower()
+    if is_ru == True:
+        a = False
+        for i in incoming_inst:
+            if i == message.text:
+                a = True
+        if only_letters(message.text) == True:
+            if a == True:
+                incoming_inst.clear()
+                conn = sqlite3.connect('db.db')
+                cursor = conn.cursor()
+                cursor.execute(f"UPDATE users SET real_name = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
+                cursor.execute(f"UPDATE users SET user_group = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
+                cursor.execute(f"UPDATE users SET is_teacher = '{True}' WHERE chat_id = '{message.from_user.id}'")
+                cursor.execute(f"SELECT user_id FROM admins")
+                result_set = cursor.fetchall()
+                cursor.close()
+                is_succeed = False
+                for item in result_set:
+                    if item[0] == message.from_user.id:
+                        is_succeed = True
+                if is_succeed:
+                    await message.reply(messages.end_of_registration_message
+                                        , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+                    conn.commit()
+                    conn.close()
+                    state = dp.current_state(user=message.from_user.id)
+                    await state.reset_state()
+                else:
+                    await message.reply(messages.end_of_registration_message
+                                        , reply=False, reply_markup=KeyBoards.menu_user_kb)
+                    conn.commit()
+                    conn.close()
+                    state = dp.current_state(user=message.from_user.id)
+                    await state.reset_state()
+            else:
+                await bot.send_message(message.from_user.id, messages.message_error3)
         else:
             await bot.send_message(message.from_user.id, messages.message_error3)
     else:
-        await bot.send_message(message.from_user.id, messages.message_error3)
+        a = False
+        for i in incoming_inst:
+            if i == message.text:
+                a = True
+        if only_letters(message.text) == True:
+            if a == True:
+                incoming_inst.clear()
+                conn = sqlite3.connect('db.db')
+                cursor = conn.cursor()
+                cursor.execute(
+                    f"UPDATE users SET real_name = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
+                cursor.execute(
+                    f"UPDATE users SET user_group = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
+                cursor.execute(f"UPDATE users SET is_teacher = '{True}' WHERE chat_id = '{message.from_user.id}'")
+                cursor.execute(f"SELECT user_id FROM admins")
+                result_set = cursor.fetchall()
+                cursor.close()
+                is_succeed = False
+                for item in result_set:
+                    if item[0] == message.from_user.id:
+                        is_succeed = True
+                if is_succeed:
+                    await message.reply(messages.end_of_registration_message_en
+                                        , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+                    conn.commit()
+                    conn.close()
+                    state = dp.current_state(user=message.from_user.id)
+                    await state.reset_state()
+                else:
+                    await message.reply(messages.end_of_registration_message_en
+                                        , reply=False, reply_markup=KeyBoards.menu_user_kb)
+                    conn.commit()
+                    conn.close()
+                    state = dp.current_state(user=message.from_user.id)
+                    await state.reset_state()
+            else:
+                await bot.send_message(message.from_user.id, messages.message_error3_en)
+        else:
+            await bot.send_message(message.from_user.id, messages.message_error3_en)
 
 
 # endregion
@@ -3960,7 +4221,7 @@ async def handler_message(msg: types.Message):
         conn.commit()
         conn.close()
         state = dp.current_state(user=msg.from_user.id)
-        await state.set_state(Register.all()[2])
+        await state.set_state(Register.all()[3])
         await msg.reply(messages.choose_inst_change, reply_markup=KeyBoards.institute_kb)
 
     elif switch_text == "посмотреть расписание другой группы":
@@ -4010,7 +4271,18 @@ async def handler_message(msg: types.Message):
         else:
             await msg.reply(messages.not_admin, reply_markup=KeyBoards.menu_admin_kb)
     else:
-        await bot.send_message(msg.from_user.id, messages.what)
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{message.from_user.id}'")
+        result_set = cursor.fetchall()
+        cursor.close()
+        is_ru = False
+        if result_set[0][0] == 1:
+            is_ru = True
+        if is_ru == True:
+            await bot.send_message(msg.from_user.id, messages.what)
+        else:
+            await bot.send_message(msg.from_user.id, messages.what_en)
 
 
 @dp.message_handler(commands='help')

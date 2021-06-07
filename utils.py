@@ -9,6 +9,7 @@ class Register(Helper):
     REGISTER_3 = ListItem()
     REGISTER_4 = ListItem()
     REGISTER_5 = ListItem()
+    REGISTER_6 = ListItem()
 
 
 class Change(Helper):

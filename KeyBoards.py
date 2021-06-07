@@ -2,10 +2,11 @@ from aiogram import types
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
 # Начало
+select_RU_EN = ReplyKeyboardMarkup(resize_keyboard=True).add("EN🇬🇧").add("RU🇷🇺")
 greet_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add("Я студент").add("Я преподаватель")
 greet_kb2 = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add("Я студент")
-
-# Добавил запланированные мероприятия для пользователя(По просьбе Никиты)
+greet_kb_en = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add("I'm a student").add("I'm a teacher")
+greet_kb2_en = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add("I'm a student")
 # Меню с админ-панелью
 menu_admin_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Расписание").add("Админ-панель").add("Профиль") \
     .add("Рассылки") \
