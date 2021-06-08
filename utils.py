@@ -17,13 +17,6 @@ class Change(Helper):
     CHANGE_0 = ListItem()
 
 
-class Pay(Helper):
-    mode = HelperMode.snake_case
-    PAY_DISTRIBUTOR = ListItem()
-    PAY_DISTRIBUTOR2 = ListItem()
-    PAY_DISTRIBUTOR3 = ListItem()
-
-
 class AdminPanel(Helper):
     mode = HelperMode.snake_case
     ADMIN_0 = ListItem()
