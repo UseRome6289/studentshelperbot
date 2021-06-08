@@ -1843,239 +1843,492 @@ async def process_admin_command1(message: types.Message):
 # region payHandler
 @dp.message_handler(state=Pay.PAY_DISTRIBUTOR)
 async def process_buy_command0(message: types.Message):
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{message.from_user.id}'")
+    result_set = cursor.fetchall()
+    cursor.close()
+    is_ru = False
+    if result_set[0][0] == 1:
+        is_ru = True
     switch_text = message.text.lower()
-    if message.text == 'Меню':
-        is_succeed = False
-        conn = sqlite3.connect('db.db')
-        cursor = conn.cursor()
-        cursor.execute(f"SELECT user_id FROM admins")
-        result_set = cursor.fetchall()
-        cursor.close()
-        for item in result_set:
-            if item[0] == message.from_user.id:
-                is_succeed = True
-        if is_succeed:
-            await message.reply(messages.menu
-                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
-            conn.commit()
-            conn.close()
+    if is_ru == True:
+        if message.text == 'Меню':
+            is_succeed = False
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_id FROM admins")
+            result_set = cursor.fetchall()
+            cursor.close()
+            for item in result_set:
+                if item[0] == message.from_user.id:
+                    is_succeed = True
+            if is_succeed:
+                await message.reply(messages.menu
+                                    , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+            else:
+                await message.reply(messages.menu
+                                    , reply=False, reply_markup=KeyBoards.menu_user_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+        elif message.text == 'Узнать команду разработчиков':
+            await message.reply(messages.admin, parse_mode="HTML",
+                                reply_markup=KeyBoards.developer_support_kb)
+        elif message.text == 'Поддержать разработку телеграмм-бота':
             state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
+            await state.set_state(Pay.all()[1])
+            await message.reply(messages.thanks
+                                , reply_markup=KeyBoards.developer_support_kb2)
         else:
-            await message.reply(messages.menu
-                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
-            conn.commit()
-            conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
-    elif message.text == 'Узнать команду разработчиков':
-        await message.reply(messages.admin, parse_mode="HTML",
-                            reply_markup=KeyBoards.developer_support_kb)
-    elif message.text == 'Поддержать разработку телеграмм-бота':
-        state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Pay.all()[1])
-        await message.reply(messages.thanks
-                            , reply_markup=KeyBoards.developer_support_kb2)
+            await bot.send_message(message.from_user.id, messages.what)
     else:
-        await bot.send_message(message.from_user.id, messages.what)
+        if message.text == 'Меню':
+            is_succeed = False
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_id FROM admins")
+            result_set = cursor.fetchall()
+            cursor.close()
+            for item in result_set:
+                if item[0] == message.from_user.id:
+                    is_succeed = True
+            if is_succeed:
+                await message.reply(messages.menu_en
+                                    , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+            else:
+                await message.reply(messages.menu_en
+                                    , reply=False, reply_markup=KeyBoards.menu_user_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+        elif message.text == 'Узнать команду разработчиков':
+            await message.reply(messages.admin_en, parse_mode="HTML",
+                                reply_markup=KeyBoards.developer_support_kb)
+        elif message.text == 'Поддержать разработку телеграмм-бота':
+            state = dp.current_state(user=message.from_user.id)
+            await state.set_state(Pay.all()[1])
+            await message.reply(messages.thanks_en
+                                , reply_markup=KeyBoards.developer_support_kb2)
+        else:
+            await bot.send_message(message.from_user.id, messages.what)
+
 
 
 @dp.message_handler(state=Pay.PAY_DISTRIBUTOR2)
 async def process_buy_command01(message: types.Message):
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{message.from_user.id}'")
+    result_set = cursor.fetchall()
+    cursor.close()
+    is_ru = False
+    if result_set[0][0] == 1:
+        is_ru = True
     switch_text = message.text.lower()
-    if message.text == 'Меню':
-        state = dp.current_state(user=message.from_user.id)
-        await state.reset_state()
-        await message.reply(messages.menu, reply_markup=KeyBoards.menu_admin_kb)
-    elif switch_text == "поддержать разработчиков 100 рублей":
-        if PAYMENTS_PROVIDER_TOKEN.split(':')[1] == 'TEST':
-            await bot.send_message(message.chat.id, MESSAGES['pre_buy_demo_alert'])
-        await bot.send_invoice(message.chat.id,
-                               title=MESSAGES['tm_title'],
-                               description=MESSAGES['tm_description'],
-                               provider_token=PAYMENTS_PROVIDER_TOKEN,
-                               currency='rub',
-                               photo_url=TIME_MACHINE_IMAGE_URL,
-                               photo_height=512,  # !=0/None, иначе изображение не покажется
-                               photo_width=512,
-                               photo_size=512,
-                               is_flexible=False,  # True если конечная цена зависит от способа доставки
-                               prices=[KeyBoards.PRICE100],
-                               start_parameter='developer-support',
-                               payload='some-invoice-payload-for-our-internal-use'
-                               )
-    elif switch_text == "поддержать разработчиков 250 рублей":
-        if PAYMENTS_PROVIDER_TOKEN.split(':')[1] == 'TEST':
-            await bot.send_message(message.chat.id, MESSAGES['pre_buy_demo_alert'])
-        await bot.send_invoice(message.chat.id,
-                               title=MESSAGES['tm_title'],
-                               description=MESSAGES['tm_description'],
-                               provider_token=PAYMENTS_PROVIDER_TOKEN,
-                               currency='rub',
-                               photo_url=TIME_MACHINE_IMAGE_URL,
-                               photo_height=512,  # !=0/None, иначе изображение не покажется
-                               photo_width=512,
-                               photo_size=512,
-                               is_flexible=False,  # True если конечная цена зависит от способа доставки
-                               prices=[KeyBoards.PRICE250],
-                               start_parameter='developer-support',
-                               payload='some-invoice-payload-for-our-internal-use'
-                               )
-    elif switch_text == "поддержать разработчиков 500 рублей":
-        if PAYMENTS_PROVIDER_TOKEN.split(':')[1] == 'TEST':
-            await bot.send_message(message.chat.id, MESSAGES['pre_buy_demo_alert'])
-        await bot.send_invoice(message.chat.id,
-                               title=MESSAGES['tm_title'],
-                               description=MESSAGES['tm_description'],
-                               provider_token=PAYMENTS_PROVIDER_TOKEN,
-                               currency='rub',
-                               photo_url=TIME_MACHINE_IMAGE_URL,
-                               photo_height=512,  # !=0/None, иначе изображение не покажется
-                               photo_width=512,
-                               photo_size=512,
-                               is_flexible=False,  # True если конечная цена зависит от способа доставки
-                               prices=[KeyBoards.PRICE500],
-                               start_parameter='developer-support',
-                               payload='some-invoice-payload-for-our-internal-use'
-                               )
-    elif switch_text == "поддержать разработчиков 1000 рублей":
-        if PAYMENTS_PROVIDER_TOKEN.split(':')[1] == 'TEST':
-            await bot.send_message(message.chat.id, MESSAGES['pre_buy_demo_alert'])
-        await bot.send_invoice(message.chat.id,
-                               title=MESSAGES['tm_title'],
-                               description=MESSAGES['tm_description'],
-                               provider_token=PAYMENTS_PROVIDER_TOKEN,
-                               currency='rub',
-                               photo_url=TIME_MACHINE_IMAGE_URL,
-                               photo_height=512,  # !=0/None, иначе изображение не покажется
-                               photo_width=512,
-                               photo_size=512,
-                               is_flexible=False,  # True если конечная цена зависит от способа доставки
-                               prices=[KeyBoards.PRICE1000],
-                               start_parameter='developer-support',
-                               payload='some-invoice-payload-for-our-internal-use'
-                               )
-    elif switch_text == "поддержать разработчиков другой суммой":
-        state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Pay.all()[2])
-        await bot.send_message(message.from_user.id, messages.summa)
-    else:
-        state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Pay.all()[1])
-        await bot.send_message(message.from_user.id, messages.wrong)
-
-
-@dp.message_handler(state=Pay.PAY_DISTRIBUTOR3)
-async def process_buy_command01(message: types.Message):
-    switch_text = message.text.lower()
-    if message.text == 'Меню':
-        state = dp.current_state(user=message.from_user.id)
-        await state.reset_state()
-        await message.reply(messages.menu, reply_markup=KeyBoards.menu_admin_kb)
-    elif switch_text == "поддержать разработчиков 100 рублей":
-        if PAYMENTS_PROVIDER_TOKEN.split(':')[1] == 'TEST':
-            await bot.send_message(message.chat.id, MESSAGES['pre_buy_demo_alert'])
-        await bot.send_invoice(message.chat.id,
-                               title=MESSAGES['tm_title'],
-                               description=MESSAGES['tm_description'],
-                               provider_token=PAYMENTS_PROVIDER_TOKEN,
-                               currency='rub',
-                               photo_url=TIME_MACHINE_IMAGE_URL,
-                               photo_height=512,  # !=0/None, иначе изображение не покажется
-                               photo_width=512,
-                               photo_size=512,
-                               is_flexible=False,  # True если конечная цена зависит от способа доставки
-                               prices=[KeyBoards.PRICE100],
-                               start_parameter='developer-support',
-                               payload='some-invoice-payload-for-our-internal-use'
-                               )
-    elif switch_text == "поддержать разработчиков 250 рублей":
-        if PAYMENTS_PROVIDER_TOKEN.split(':')[1] == 'TEST':
-            await bot.send_message(message.chat.id, MESSAGES['pre_buy_demo_alert'])
-        await bot.send_invoice(message.chat.id,
-                               title=MESSAGES['tm_title'],
-                               description=MESSAGES['tm_description'],
-                               provider_token=PAYMENTS_PROVIDER_TOKEN,
-                               currency='rub',
-                               photo_url=TIME_MACHINE_IMAGE_URL,
-                               photo_height=512,  # !=0/None, иначе изображение не покажется
-                               photo_width=512,
-                               photo_size=512,
-                               is_flexible=False,  # True если конечная цена зависит от способа доставки
-                               prices=[KeyBoards.PRICE250],
-                               start_parameter='developer-support',
-                               payload='some-invoice-payload-for-our-internal-use'
-                               )
-    elif switch_text == "поддержать разработчиков 500 рублей":
-        if PAYMENTS_PROVIDER_TOKEN.split(':')[1] == 'TEST':
-            await bot.send_message(message.chat.id, MESSAGES['pre_buy_demo_alert'])
-        await bot.send_invoice(message.chat.id,
-                               title=MESSAGES['tm_title'],
-                               description=MESSAGES['tm_description'],
-                               provider_token=PAYMENTS_PROVIDER_TOKEN,
-                               currency='rub',
-                               photo_url=TIME_MACHINE_IMAGE_URL,
-                               photo_height=512,  # !=0/None, иначе изображение не покажется
-                               photo_width=512,
-                               photo_size=512,
-                               is_flexible=False,  # True если конечная цена зависит от способа доставки
-                               prices=[KeyBoards.PRICE500],
-                               start_parameter='developer-support',
-                               payload='some-invoice-payload-for-our-internal-use'
-                               )
-    elif switch_text == "поддержать разработчиков 1000 рублей":
-        if PAYMENTS_PROVIDER_TOKEN.split(':')[1] == 'TEST':
-            await bot.send_message(message.chat.id, MESSAGES['pre_buy_demo_alert'])
-        await bot.send_invoice(message.chat.id,
-                               title=MESSAGES['tm_title'],
-                               description=MESSAGES['tm_description'],
-                               provider_token=PAYMENTS_PROVIDER_TOKEN,
-                               currency='rub',
-                               photo_url=TIME_MACHINE_IMAGE_URL,
-                               photo_height=512,  # !=0/None, иначе изображение не покажется
-                               photo_width=512,
-                               photo_size=512,
-                               is_flexible=False,  # True если конечная цена зависит от способа доставки
-                               prices=[KeyBoards.PRICE1000],
-                               start_parameter='developer-support',
-                               payload='some-invoice-payload-for-our-internal-use'
-                               )
-    elif switch_text == "поддержать разработчиков другой суммой":
-        state = dp.current_state(user=message.from_user.id)
-        await state.set_state(Pay.all()[2])
-        await bot.send_message(message.from_user.id, messages.summa)
-    else:
-        if message.text.isdigit() == True:
-            if (int(message.text) >= 80 and message.text.isdigit() == True and int(message.text) <= 100000):
-                integer = int(message.text)
-                pr = integer * 100
-                price = types.LabeledPrice(label='Поддержать разработчиков другой суммой', amount=pr)
-                if PAYMENTS_PROVIDER_TOKEN.split(':')[1] == 'TEST':
-                    await bot.send_message(message.chat.id, MESSAGES['pre_buy_demo_alert'])
-                await bot.send_invoice(message.chat.id,
-                                       title=MESSAGES['tm_title'],
-                                       description=MESSAGES['tm_description'],
-                                       provider_token=PAYMENTS_PROVIDER_TOKEN,
-                                       currency='rub',
-                                       photo_url=TIME_MACHINE_IMAGE_URL,
-                                       photo_height=512,  # !=0/None, иначе изображение не покажется
-                                       photo_width=512,
-                                       photo_size=512,
-                                       is_flexible=False,  # True если конечная цена зависит от способа доставки
-                                       prices=[price],
-                                       start_parameter='developer-support',
-                                       payload='some-invoice-payload-for-our-internal-use'
-                                       )
-                state = dp.current_state(user=message.from_user.id)
-                await state.set_state(Pay.all()[1])
-            else:
-                state = dp.current_state(user=message.from_user.id)
-                await state.set_state(Pay.all()[1])
-                await bot.send_message(message.from_user.id, messages.wrong)
+    if is_ru == True:
+        if message.text == 'Меню':
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+            await message.reply(messages.menu, reply_markup=KeyBoards.menu_admin_kb)
+        elif switch_text == "поддержать разработчиков 100 рублей":
+            if PAYMENTS_PROVIDER_TOKEN.split(':')[1] == 'TEST':
+                await bot.send_message(message.chat.id, MESSAGES['pre_buy_demo_alert'])
+            await bot.send_invoice(message.chat.id,
+                                   title=MESSAGES['tm_title'],
+                                   description=MESSAGES['tm_description'],
+                                   provider_token=PAYMENTS_PROVIDER_TOKEN,
+                                   currency='rub',
+                                   photo_url=TIME_MACHINE_IMAGE_URL,
+                                   photo_height=512,  # !=0/None, иначе изображение не покажется
+                                   photo_width=512,
+                                   photo_size=512,
+                                   is_flexible=False,  # True если конечная цена зависит от способа доставки
+                                   prices=[KeyBoards.PRICE100],
+                                   start_parameter='developer-support',
+                                   payload='some-invoice-payload-for-our-internal-use'
+                                   )
+        elif switch_text == "поддержать разработчиков 250 рублей":
+            if PAYMENTS_PROVIDER_TOKEN.split(':')[1] == 'TEST':
+                await bot.send_message(message.chat.id, MESSAGES['pre_buy_demo_alert'])
+            await bot.send_invoice(message.chat.id,
+                                   title=MESSAGES['tm_title'],
+                                   description=MESSAGES['tm_description'],
+                                   provider_token=PAYMENTS_PROVIDER_TOKEN,
+                                   currency='rub',
+                                   photo_url=TIME_MACHINE_IMAGE_URL,
+                                   photo_height=512,  # !=0/None, иначе изображение не покажется
+                                   photo_width=512,
+                                   photo_size=512,
+                                   is_flexible=False,  # True если конечная цена зависит от способа доставки
+                                   prices=[KeyBoards.PRICE250],
+                                   start_parameter='developer-support',
+                                   payload='some-invoice-payload-for-our-internal-use'
+                                   )
+        elif switch_text == "поддержать разработчиков 500 рублей":
+            if PAYMENTS_PROVIDER_TOKEN.split(':')[1] == 'TEST':
+                await bot.send_message(message.chat.id, MESSAGES['pre_buy_demo_alert'])
+            await bot.send_invoice(message.chat.id,
+                                   title=MESSAGES['tm_title'],
+                                   description=MESSAGES['tm_description'],
+                                   provider_token=PAYMENTS_PROVIDER_TOKEN,
+                                   currency='rub',
+                                   photo_url=TIME_MACHINE_IMAGE_URL,
+                                   photo_height=512,  # !=0/None, иначе изображение не покажется
+                                   photo_width=512,
+                                   photo_size=512,
+                                   is_flexible=False,  # True если конечная цена зависит от способа доставки
+                                   prices=[KeyBoards.PRICE500],
+                                   start_parameter='developer-support',
+                                   payload='some-invoice-payload-for-our-internal-use'
+                                   )
+        elif switch_text == "поддержать разработчиков 1000 рублей":
+            if PAYMENTS_PROVIDER_TOKEN.split(':')[1] == 'TEST':
+                await bot.send_message(message.chat.id, MESSAGES['pre_buy_demo_alert'])
+            await bot.send_invoice(message.chat.id,
+                                   title=MESSAGES['tm_title'],
+                                   description=MESSAGES['tm_description'],
+                                   provider_token=PAYMENTS_PROVIDER_TOKEN,
+                                   currency='rub',
+                                   photo_url=TIME_MACHINE_IMAGE_URL,
+                                   photo_height=512,  # !=0/None, иначе изображение не покажется
+                                   photo_width=512,
+                                   photo_size=512,
+                                   is_flexible=False,  # True если конечная цена зависит от способа доставки
+                                   prices=[KeyBoards.PRICE1000],
+                                   start_parameter='developer-support',
+                                   payload='some-invoice-payload-for-our-internal-use'
+                                   )
+        elif switch_text == "поддержать разработчиков другой суммой":
+            state = dp.current_state(user=message.from_user.id)
+            await state.set_state(Pay.all()[2])
+            await bot.send_message(message.from_user.id, messages.summa)
         else:
             state = dp.current_state(user=message.from_user.id)
             await state.set_state(Pay.all()[1])
             await bot.send_message(message.from_user.id, messages.wrong)
+    else:
+        if message.text == 'Меню':
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+            await message.reply(messages.menu_en, reply_markup=KeyBoards.menu_admin_kb)
+        elif switch_text == "поддержать разработчиков 100 рублей":
+            if PAYMENTS_PROVIDER_TOKEN.split(':')[1] == 'TEST':
+                await bot.send_message(message.chat.id, MESSAGES['pre_buy_demo_alert'])
+            await bot.send_invoice(message.chat.id,
+                                   title=MESSAGES['tm_title'],
+                                   description=MESSAGES['tm_description'],
+                                   provider_token=PAYMENTS_PROVIDER_TOKEN,
+                                   currency='rub',
+                                   photo_url=TIME_MACHINE_IMAGE_URL,
+                                   photo_height=512,  # !=0/None, иначе изображение не покажется
+                                   photo_width=512,
+                                   photo_size=512,
+                                   is_flexible=False,  # True если конечная цена зависит от способа доставки
+                                   prices=[KeyBoards.PRICE100],
+                                   start_parameter='developer-support',
+                                   payload='some-invoice-payload-for-our-internal-use'
+                                   )
+        elif switch_text == "поддержать разработчиков 250 рублей":
+            if PAYMENTS_PROVIDER_TOKEN.split(':')[1] == 'TEST':
+                await bot.send_message(message.chat.id, MESSAGES['pre_buy_demo_alert'])
+            await bot.send_invoice(message.chat.id,
+                                   title=MESSAGES['tm_title'],
+                                   description=MESSAGES['tm_description'],
+                                   provider_token=PAYMENTS_PROVIDER_TOKEN,
+                                   currency='rub',
+                                   photo_url=TIME_MACHINE_IMAGE_URL,
+                                   photo_height=512,  # !=0/None, иначе изображение не покажется
+                                   photo_width=512,
+                                   photo_size=512,
+                                   is_flexible=False,  # True если конечная цена зависит от способа доставки
+                                   prices=[KeyBoards.PRICE250],
+                                   start_parameter='developer-support',
+                                   payload='some-invoice-payload-for-our-internal-use'
+                                   )
+        elif switch_text == "поддержать разработчиков 500 рублей":
+            if PAYMENTS_PROVIDER_TOKEN.split(':')[1] == 'TEST':
+                await bot.send_message(message.chat.id, MESSAGES['pre_buy_demo_alert'])
+            await bot.send_invoice(message.chat.id,
+                                   title=MESSAGES['tm_title'],
+                                   description=MESSAGES['tm_description'],
+                                   provider_token=PAYMENTS_PROVIDER_TOKEN,
+                                   currency='rub',
+                                   photo_url=TIME_MACHINE_IMAGE_URL,
+                                   photo_height=512,  # !=0/None, иначе изображение не покажется
+                                   photo_width=512,
+                                   photo_size=512,
+                                   is_flexible=False,  # True если конечная цена зависит от способа доставки
+                                   prices=[KeyBoards.PRICE500],
+                                   start_parameter='developer-support',
+                                   payload='some-invoice-payload-for-our-internal-use'
+                                   )
+        elif switch_text == "поддержать разработчиков 1000 рублей":
+            if PAYMENTS_PROVIDER_TOKEN.split(':')[1] == 'TEST':
+                await bot.send_message(message.chat.id, MESSAGES['pre_buy_demo_alert'])
+            await bot.send_invoice(message.chat.id,
+                                   title=MESSAGES['tm_title'],
+                                   description=MESSAGES['tm_description'],
+                                   provider_token=PAYMENTS_PROVIDER_TOKEN,
+                                   currency='rub',
+                                   photo_url=TIME_MACHINE_IMAGE_URL,
+                                   photo_height=512,  # !=0/None, иначе изображение не покажется
+                                   photo_width=512,
+                                   photo_size=512,
+                                   is_flexible=False,  # True если конечная цена зависит от способа доставки
+                                   prices=[KeyBoards.PRICE1000],
+                                   start_parameter='developer-support',
+                                   payload='some-invoice-payload-for-our-internal-use'
+                                   )
+        elif switch_text == "поддержать разработчиков другой суммой":
+            state = dp.current_state(user=message.from_user.id)
+            await state.set_state(Pay.all()[2])
+            await bot.send_message(message.from_user.id, messages.summa_en)
+        else:
+            state = dp.current_state(user=message.from_user.id)
+            await state.set_state(Pay.all()[1])
+            await bot.send_message(message.from_user.id, messages.wrong_en)
+
+
+@dp.message_handler(state=Pay.PAY_DISTRIBUTOR3)
+async def process_buy_command01(message: types.Message):
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{message.from_user.id}'")
+    result_set = cursor.fetchall()
+    cursor.close()
+    is_ru = False
+    if result_set[0][0] == 1:
+        is_ru = True
+    switch_text = message.text.lower()
+    if is_ru == True:
+        if message.text == 'Меню':
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+            await message.reply(messages.menu, reply_markup=KeyBoards.menu_admin_kb)
+        elif switch_text == "поддержать разработчиков 100 рублей":
+            if PAYMENTS_PROVIDER_TOKEN.split(':')[1] == 'TEST':
+                await bot.send_message(message.chat.id, MESSAGES['pre_buy_demo_alert'])
+            await bot.send_invoice(message.chat.id,
+                                   title=MESSAGES['tm_title'],
+                                   description=MESSAGES['tm_description'],
+                                   provider_token=PAYMENTS_PROVIDER_TOKEN,
+                                   currency='rub',
+                                   photo_url=TIME_MACHINE_IMAGE_URL,
+                                   photo_height=512,  # !=0/None, иначе изображение не покажется
+                                   photo_width=512,
+                                   photo_size=512,
+                                   is_flexible=False,  # True если конечная цена зависит от способа доставки
+                                   prices=[KeyBoards.PRICE100],
+                                   start_parameter='developer-support',
+                                   payload='some-invoice-payload-for-our-internal-use'
+                                   )
+        elif switch_text == "поддержать разработчиков 250 рублей":
+            if PAYMENTS_PROVIDER_TOKEN.split(':')[1] == 'TEST':
+                await bot.send_message(message.chat.id, MESSAGES['pre_buy_demo_alert'])
+            await bot.send_invoice(message.chat.id,
+                                   title=MESSAGES['tm_title'],
+                                   description=MESSAGES['tm_description'],
+                                   provider_token=PAYMENTS_PROVIDER_TOKEN,
+                                   currency='rub',
+                                   photo_url=TIME_MACHINE_IMAGE_URL,
+                                   photo_height=512,  # !=0/None, иначе изображение не покажется
+                                   photo_width=512,
+                                   photo_size=512,
+                                   is_flexible=False,  # True если конечная цена зависит от способа доставки
+                                   prices=[KeyBoards.PRICE250],
+                                   start_parameter='developer-support',
+                                   payload='some-invoice-payload-for-our-internal-use'
+                                   )
+        elif switch_text == "поддержать разработчиков 500 рублей":
+            if PAYMENTS_PROVIDER_TOKEN.split(':')[1] == 'TEST':
+                await bot.send_message(message.chat.id, MESSAGES['pre_buy_demo_alert'])
+            await bot.send_invoice(message.chat.id,
+                                   title=MESSAGES['tm_title'],
+                                   description=MESSAGES['tm_description'],
+                                   provider_token=PAYMENTS_PROVIDER_TOKEN,
+                                   currency='rub',
+                                   photo_url=TIME_MACHINE_IMAGE_URL,
+                                   photo_height=512,  # !=0/None, иначе изображение не покажется
+                                   photo_width=512,
+                                   photo_size=512,
+                                   is_flexible=False,  # True если конечная цена зависит от способа доставки
+                                   prices=[KeyBoards.PRICE500],
+                                   start_parameter='developer-support',
+                                   payload='some-invoice-payload-for-our-internal-use'
+                                   )
+        elif switch_text == "поддержать разработчиков 1000 рублей":
+            if PAYMENTS_PROVIDER_TOKEN.split(':')[1] == 'TEST':
+                await bot.send_message(message.chat.id, MESSAGES['pre_buy_demo_alert'])
+            await bot.send_invoice(message.chat.id,
+                                   title=MESSAGES['tm_title'],
+                                   description=MESSAGES['tm_description'],
+                                   provider_token=PAYMENTS_PROVIDER_TOKEN,
+                                   currency='rub',
+                                   photo_url=TIME_MACHINE_IMAGE_URL,
+                                   photo_height=512,  # !=0/None, иначе изображение не покажется
+                                   photo_width=512,
+                                   photo_size=512,
+                                   is_flexible=False,  # True если конечная цена зависит от способа доставки
+                                   prices=[KeyBoards.PRICE1000],
+                                   start_parameter='developer-support',
+                                   payload='some-invoice-payload-for-our-internal-use'
+                                   )
+        elif switch_text == "поддержать разработчиков другой суммой":
+            state = dp.current_state(user=message.from_user.id)
+            await state.set_state(Pay.all()[2])
+            await bot.send_message(message.from_user.id, messages.summa)
+        else:
+            if message.text.isdigit() == True:
+                if (int(message.text) >= 80 and message.text.isdigit() == True and int(message.text) <= 100000):
+                    integer = int(message.text)
+                    pr = integer * 100
+                    price = types.LabeledPrice(label='Поддержать разработчиков другой суммой', amount=pr)
+                    if PAYMENTS_PROVIDER_TOKEN.split(':')[1] == 'TEST':
+                        await bot.send_message(message.chat.id, MESSAGES['pre_buy_demo_alert'])
+                    await bot.send_invoice(message.chat.id,
+                                           title=MESSAGES['tm_title'],
+                                           description=MESSAGES['tm_description'],
+                                           provider_token=PAYMENTS_PROVIDER_TOKEN,
+                                           currency='rub',
+                                           photo_url=TIME_MACHINE_IMAGE_URL,
+                                           photo_height=512,  # !=0/None, иначе изображение не покажется
+                                           photo_width=512,
+                                           photo_size=512,
+                                           is_flexible=False,  # True если конечная цена зависит от способа доставки
+                                           prices=[price],
+                                           start_parameter='developer-support',
+                                           payload='some-invoice-payload-for-our-internal-use'
+                                           )
+                    state = dp.current_state(user=message.from_user.id)
+                    await state.set_state(Pay.all()[1])
+                else:
+                    state = dp.current_state(user=message.from_user.id)
+                    await state.set_state(Pay.all()[1])
+                    await bot.send_message(message.from_user.id, messages.wrong)
+            else:
+                state = dp.current_state(user=message.from_user.id)
+                await state.set_state(Pay.all()[1])
+                await bot.send_message(message.from_user.id, messages.wrong)
+    else:
+        if message.text == 'Меню':
+            state = dp.current_state(user=message.from_user.id)
+            await state.reset_state()
+            await message.reply(messages.menu_en, reply_markup=KeyBoards.menu_admin_kb)
+        elif switch_text == "поддержать разработчиков 100 рублей":
+            if PAYMENTS_PROVIDER_TOKEN.split(':')[1] == 'TEST':
+                await bot.send_message(message.chat.id, MESSAGES['pre_buy_demo_alert'])
+            await bot.send_invoice(message.chat.id,
+                                   title=MESSAGES['tm_title'],
+                                   description=MESSAGES['tm_description'],
+                                   provider_token=PAYMENTS_PROVIDER_TOKEN,
+                                   currency='rub',
+                                   photo_url=TIME_MACHINE_IMAGE_URL,
+                                   photo_height=512,  # !=0/None, иначе изображение не покажется
+                                   photo_width=512,
+                                   photo_size=512,
+                                   is_flexible=False,  # True если конечная цена зависит от способа доставки
+                                   prices=[KeyBoards.PRICE100],
+                                   start_parameter='developer-support',
+                                   payload='some-invoice-payload-for-our-internal-use'
+                                   )
+        elif switch_text == "поддержать разработчиков 250 рублей":
+            if PAYMENTS_PROVIDER_TOKEN.split(':')[1] == 'TEST':
+                await bot.send_message(message.chat.id, MESSAGES['pre_buy_demo_alert'])
+            await bot.send_invoice(message.chat.id,
+                                   title=MESSAGES['tm_title'],
+                                   description=MESSAGES['tm_description'],
+                                   provider_token=PAYMENTS_PROVIDER_TOKEN,
+                                   currency='rub',
+                                   photo_url=TIME_MACHINE_IMAGE_URL,
+                                   photo_height=512,  # !=0/None, иначе изображение не покажется
+                                   photo_width=512,
+                                   photo_size=512,
+                                   is_flexible=False,  # True если конечная цена зависит от способа доставки
+                                   prices=[KeyBoards.PRICE250],
+                                   start_parameter='developer-support',
+                                   payload='some-invoice-payload-for-our-internal-use'
+                                   )
+        elif switch_text == "поддержать разработчиков 500 рублей":
+            if PAYMENTS_PROVIDER_TOKEN.split(':')[1] == 'TEST':
+                await bot.send_message(message.chat.id, MESSAGES['pre_buy_demo_alert'])
+            await bot.send_invoice(message.chat.id,
+                                   title=MESSAGES['tm_title'],
+                                   description=MESSAGES['tm_description'],
+                                   provider_token=PAYMENTS_PROVIDER_TOKEN,
+                                   currency='rub',
+                                   photo_url=TIME_MACHINE_IMAGE_URL,
+                                   photo_height=512,  # !=0/None, иначе изображение не покажется
+                                   photo_width=512,
+                                   photo_size=512,
+                                   is_flexible=False,  # True если конечная цена зависит от способа доставки
+                                   prices=[KeyBoards.PRICE500],
+                                   start_parameter='developer-support',
+                                   payload='some-invoice-payload-for-our-internal-use'
+                                   )
+        elif switch_text == "поддержать разработчиков 1000 рублей":
+            if PAYMENTS_PROVIDER_TOKEN.split(':')[1] == 'TEST':
+                await bot.send_message(message.chat.id, MESSAGES['pre_buy_demo_alert'])
+            await bot.send_invoice(message.chat.id,
+                                   title=MESSAGES['tm_title'],
+                                   description=MESSAGES['tm_description'],
+                                   provider_token=PAYMENTS_PROVIDER_TOKEN,
+                                   currency='rub',
+                                   photo_url=TIME_MACHINE_IMAGE_URL,
+                                   photo_height=512,  # !=0/None, иначе изображение не покажется
+                                   photo_width=512,
+                                   photo_size=512,
+                                   is_flexible=False,  # True если конечная цена зависит от способа доставки
+                                   prices=[KeyBoards.PRICE1000],
+                                   start_parameter='developer-support',
+                                   payload='some-invoice-payload-for-our-internal-use'
+                                   )
+        elif switch_text == "поддержать разработчиков другой суммой":
+            state = dp.current_state(user=message.from_user.id)
+            await state.set_state(Pay.all()[2])
+            await bot.send_message(message.from_user.id, messages.summa_en)
+        else:
+            if message.text.isdigit() == True:
+                if (int(message.text) >= 80 and message.text.isdigit() == True and int(message.text) <= 100000):
+                    integer = int(message.text)
+                    pr = integer * 100
+                    price = types.LabeledPrice(label='Поддержать разработчиков другой суммой', amount=pr)
+                    if PAYMENTS_PROVIDER_TOKEN.split(':')[1] == 'TEST':
+                        await bot.send_message(message.chat.id, MESSAGES['pre_buy_demo_alert'])
+                    await bot.send_invoice(message.chat.id,
+                                           title=MESSAGES['tm_title'],
+                                           description=MESSAGES['tm_description'],
+                                           provider_token=PAYMENTS_PROVIDER_TOKEN,
+                                           currency='rub',
+                                           photo_url=TIME_MACHINE_IMAGE_URL,
+                                           photo_height=512,  # !=0/None, иначе изображение не покажется
+                                           photo_width=512,
+                                           photo_size=512,
+                                           is_flexible=False,  # True если конечная цена зависит от способа доставки
+                                           prices=[price],
+                                           start_parameter='developer-support',
+                                           payload='some-invoice-payload-for-our-internal-use'
+                                           )
+                    state = dp.current_state(user=message.from_user.id)
+                    await state.set_state(Pay.all()[1])
+                else:
+                    state = dp.current_state(user=message.from_user.id)
+                    await state.set_state(Pay.all()[1])
+                    await bot.send_message(message.from_user.id, messages.wrong_en)
+            else:
+                state = dp.current_state(user=message.from_user.id)
+                await state.set_state(Pay.all()[1])
+                await bot.send_message(message.from_user.id, messages.wrong_en)
 
 
 # endregion payHandler
@@ -2088,58 +2341,125 @@ async def process_pre_checkout_query(pre_checkout_query: types.PreCheckoutQuery)
 
 @dp.message_handler(content_types=ContentType.SUCCESSFUL_PAYMENT)
 async def process_successful_payment(message: types.Message):
-    print('successful_payment:')
-    pmnt = message.successful_payment.to_python()
-    for key, val in pmnt.items():
-        print(f'{key} = {val}')
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{message.from_user.id}'")
+    result_set = cursor.fetchall()
+    cursor.close()
+    is_ru = False
+    if result_set[0][0] == 1:
+        is_ru = True
+    switch_text = message.text.lower()
+    if is_ru == True:
+        print('successful_payment:')
+        pmnt = message.successful_payment.to_python()
+        for key, val in pmnt.items():
+            print(f'{key} = {val}')
 
-    await bot.send_message(
-        message.chat.id,
-        MESSAGES['successful_payment'].format(
-            total_amount=message.successful_payment.total_amount // 100,
-            currency=message.successful_payment.currency
+        await bot.send_message(
+            message.chat.id,
+            MESSAGES['successful_payment'].format(
+                total_amount=message.successful_payment.total_amount // 100,
+                currency=message.successful_payment.currency
+            )
         )
-    )
-    state = dp.current_state(user=message.from_user.id)
-    await state.reset_state()
-    await message.reply(messages.menu, reply_markup=KeyBoards.menu_admin_kb)
+        state = dp.current_state(user=message.from_user.id)
+        await state.reset_state()
+        await message.reply(messages.menu, reply_markup=KeyBoards.menu_admin_kb)
+    else:
+        print('successful_payment:')
+        pmnt = message.successful_payment.to_python()
+        for key, val in pmnt.items():
+            print(f'{key} = {val}')
+
+        await bot.send_message(
+            message.chat.id,
+            MESSAGES['successful_payment'].format(
+                total_amount=message.successful_payment.total_amount // 100,
+                currency=message.successful_payment.currency
+            )
+        )
+        state = dp.current_state(user=message.from_user.id)
+        await state.reset_state()
+        await message.reply(messages.menu_en, reply_markup=KeyBoards.menu_admin_kb)
 
 
 @dp.message_handler(state=Change.CHANGE_0)
 async def name_change(message: types.Message):
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{message.from_user.id}'")
+    result_set = cursor.fetchall()
+    cursor.close()
+    is_ru = False
+    if result_set[0][0] == 1:
+        is_ru = True
     switch_text = message.text.lower()
-    if only_letters(message.text) == True:
-        conn = sqlite3.connect('db.db')
-        cursor = conn.cursor()
-        cursor.execute(f"UPDATE users SET real_name = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
-        conn.commit()
-        conn.close()
-        is_succeed = False
-        conn = sqlite3.connect('db.db')
-        cursor = conn.cursor()
-        cursor.execute(f"SELECT user_id FROM admins")
-        result_set = cursor.fetchall()
-        cursor.close()
-        for item in result_set:
-            if item[0] == message.from_user.id:
-                is_succeed = True
-        if is_succeed:
-            await message.reply(messages.menu
-                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+    if is_ru == True:
+        if only_letters(message.text) == True:
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"UPDATE users SET real_name = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
             conn.commit()
             conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
+            is_succeed = False
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_id FROM admins")
+            result_set = cursor.fetchall()
+            cursor.close()
+            for item in result_set:
+                if item[0] == message.from_user.id:
+                    is_succeed = True
+            if is_succeed:
+                await message.reply(messages.menu
+                                    , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+            else:
+                await message.reply(messages.menu
+                                    , reply=False, reply_markup=KeyBoards.menu_user_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
         else:
-            await message.reply(messages.menu
-                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
+            await bot.send_message(message.from_user.id, messages.message_error2)
+    else:
+        #english
+        if only_letters(message.text) == True:
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"UPDATE users SET real_name = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
             conn.commit()
             conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
-    else:
-        await bot.send_message(message.from_user.id, messages.message_error2)
-
+            is_succeed = False
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_id FROM admins")
+            result_set = cursor.fetchall()
+            cursor.close()
+            for item in result_set:
+                if item[0] == message.from_user.id:
+                    is_succeed = True
+            if is_succeed:
+                await message.reply(messages.menu_en
+                                    , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+            else:
+                await message.reply(messages.menu_en
+                                    , reply=False, reply_markup=KeyBoards.menu_user_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+        else:
+            await bot.send_message(message.from_user.id, messages.message_error2_en)
 
 # region registerHandler
 
@@ -2568,116 +2888,1096 @@ async def register_5(message: types.message):
 # region schedule_userHandler
 @dp.message_handler(state=ScheduleUser.SCHEDULE_USER_0)
 async def schedule_0(msg: types.Message):
-    try:
-        if messages.institutes[msg.text]:
-            if only_letters(msg.text) == True:
-                inst = messages.institutes[msg.text]
-                keyboard = ReplyKeyboardMarkup(resize_keyboard=True).add("Меню")
-                url = 'https://edu.sfu-kras.ru/api/timetable/groups'
-                response = requests.get(url).json()
-                for item in response:
-                    if item['institute'] == inst:
-                        keyboard.add(item['name'])
-                        incoming_inst.append(item['name'])
-                await msg.reply(messages.group_message, reply_markup=keyboard)
-                state = dp.current_state(user=msg.from_user.id)
-                await state.set_state(ScheduleUser.all()[1])
-            else:
-                await bot.send_message(msg.from_user.id, messages.message_error)
-    except KeyError:
-        await bot.send_message(msg.from_user.id, messages.message_error)
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{msg.from_user.id}'")
+    result_set = cursor.fetchall()
+    cursor.close()
+    is_ru = False
+    if result_set[0][0] == 1:
+        is_ru = True
+    switch_text = msg.text.lower()
+    if is_ru == True:
+        try:
+            if messages.institutes[msg.text]:
+                if only_letters(msg.text) == True:
+                    inst = messages.institutes[msg.text]
+                    keyboard = ReplyKeyboardMarkup(resize_keyboard=True).add("Меню")
+                    url = 'https://edu.sfu-kras.ru/api/timetable/groups'
+                    response = requests.get(url).json()
+                    for item in response:
+                        if item['institute'] == inst:
+                            keyboard.add(item['name'])
+                            incoming_inst.append(item['name'])
+                    await msg.reply(messages.group_message, reply_markup=keyboard)
+                    state = dp.current_state(user=msg.from_user.id)
+                    await state.set_state(ScheduleUser.all()[1])
+                else:
+                    await bot.send_message(msg.from_user.id, messages.message_error)
+        except KeyError:
+            await bot.send_message(msg.from_user.id, messages.message_error)
+    else:
+        #english
+        try:
+            if messages.institutes[msg.text]:
+                if only_letters(msg.text) == True:
+                    inst = messages.institutes[msg.text]
+                    keyboard = ReplyKeyboardMarkup(resize_keyboard=True).add("Меню")
+                    url = 'https://edu.sfu-kras.ru/api/timetable/groups'
+                    response = requests.get(url).json()
+                    for item in response:
+                        if item['institute'] == inst:
+                            keyboard.add(item['name'])
+                            incoming_inst.append(item['name'])
+                    await msg.reply(messages.group_message_en, reply_markup=keyboard)
+                    state = dp.current_state(user=msg.from_user.id)
+                    await state.set_state(ScheduleUser.all()[1])
+                else:
+                    await bot.send_message(msg.from_user.id, messages.message_error_en)
+        except KeyError:
+            await bot.send_message(msg.from_user.id, messages.message_error_en)
 
 
 @dp.message_handler(state=ScheduleUser.SCHEDULE_USER_1)
 async def schedule_1(message: types.Message):
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{message.from_user.id}'")
+    result_set = cursor.fetchall()
+    cursor.close()
+    is_ru = False
+    if result_set[0][0] == 1:
+        is_ru = True
     switch_text = message.text.lower()
-    if switch_text == 'меню':
-        is_succeed = False
-        conn = sqlite3.connect('db.db')
-        cursor = conn.cursor()
-        cursor.execute(f"SELECT user_id FROM admins")
-        result_set = cursor.fetchall()
-        cursor.close()
-        for item in result_set:
-            if item[0] == message.from_user.id:
-                is_succeed = True
-        if is_succeed:
-            await message.reply(messages.menu
-                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
-            conn.commit()
-            conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
-        else:
-            await message.reply(messages.menu
-                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
-            conn.commit()
-            conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
-    else:
-        a = False
-        for i in incoming_inst:
-            if i == message.text:
-                a = True
-        if only_letters(message.text) == True:
-            if a == True:
-                incoming_inst.clear()
-                conn = sqlite3.connect('db.db')
-                cursor = conn.cursor()
-                cursor.execute(
-                    f"INSERT INTO user_table(chat_id) values ({message.from_user.id})")
-                cursor.execute(
-                    f"UPDATE user_table SET user_group = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
+    if is_ru == True:
+        if switch_text == 'меню':
+            is_succeed = False
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_id FROM admins")
+            result_set = cursor.fetchall()
+            cursor.close()
+            for item in result_set:
+                if item[0] == message.from_user.id:
+                    is_succeed = True
+            if is_succeed:
+                await message.reply(messages.menu
+                                    , reply=False, reply_markup=KeyBoards.menu_admin_kb)
                 conn.commit()
                 conn.close()
-                await message.reply(messages.day_of_the_week, reply_markup=KeyBoards.day_of_the_week_kb)
                 state = dp.current_state(user=message.from_user.id)
-                await state.set_state(ScheduleUser.all()[2])
+                await state.reset_state()
+            else:
+                await message.reply(messages.menu
+                                    , reply=False, reply_markup=KeyBoards.menu_user_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+        else:
+            a = False
+            for i in incoming_inst:
+                if i == message.text:
+                    a = True
+            if only_letters(message.text) == True:
+                if a == True:
+                    incoming_inst.clear()
+                    conn = sqlite3.connect('db.db')
+                    cursor = conn.cursor()
+                    cursor.execute(
+                        f"INSERT INTO user_table(chat_id) values ({message.from_user.id})")
+                    cursor.execute(
+                        f"UPDATE user_table SET user_group = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
+                    conn.commit()
+                    conn.close()
+                    await message.reply(messages.day_of_the_week, reply_markup=KeyBoards.day_of_the_week_kb)
+                    state = dp.current_state(user=message.from_user.id)
+                    await state.set_state(ScheduleUser.all()[2])
+                else:
+                    await bot.send_message(message.from_user.id, messages.message_error6)
             else:
                 await bot.send_message(message.from_user.id, messages.message_error6)
+    else:
+        #english
+        if switch_text == 'меню':
+            is_succeed = False
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_id FROM admins")
+            result_set = cursor.fetchall()
+            cursor.close()
+            for item in result_set:
+                if item[0] == message.from_user.id:
+                    is_succeed = True
+            if is_succeed:
+                await message.reply(messages.menu_en
+                                    , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+            else:
+                await message.reply(messages.menu_en
+                                    , reply=False, reply_markup=KeyBoards.menu_user_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
         else:
-            await bot.send_message(message.from_user.id, messages.message_error6)
+            a = False
+            for i in incoming_inst:
+                if i == message.text:
+                    a = True
+            if only_letters(message.text) == True:
+                if a == True:
+                    incoming_inst.clear()
+                    conn = sqlite3.connect('db.db')
+                    cursor = conn.cursor()
+                    cursor.execute(
+                        f"INSERT INTO user_table(chat_id) values ({message.from_user.id})")
+                    cursor.execute(
+                        f"UPDATE user_table SET user_group = '{message.text}' WHERE chat_id = '{message.from_user.id}'")
+                    conn.commit()
+                    conn.close()
+                    await message.reply(messages.day_of_the_week_en, reply_markup=KeyBoards.day_of_the_week_kb)
+                    state = dp.current_state(user=message.from_user.id)
+                    await state.set_state(ScheduleUser.all()[2])
+                else:
+                    await bot.send_message(message.from_user.id, messages.message_error6_en)
+            else:
+                await bot.send_message(message.from_user.id, messages.message_error6_en)
 
 
 @dp.message_handler(state=ScheduleUser.SCHEDULE_USER_2)
 async def schedule_1(message: types.Message):
     global group
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{message.from_user.id}'")
+    result_set = cursor.fetchall()
+    cursor.close()
+    is_ru = False
+    if result_set[0][0] == 1:
+        is_ru = True
     switch_text = message.text.lower()
-    if switch_text == 'меню':
-        is_succeed = False
-        conn = sqlite3.connect('db.db')
-        cursor = conn.cursor()
-        cursor.execute(f"SELECT user_id FROM admins")
-        result_set = cursor.fetchall()
-        cursor.close()
-        for item in result_set:
-            if item[0] == message.from_user.id:
-                is_succeed = True
-        if is_succeed:
-            await message.reply(messages.menu
-                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
-            conn.commit()
-            conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
+    if is_ru == True:
+        if switch_text == 'меню':
+            is_succeed = False
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_id FROM admins")
+            result_set = cursor.fetchall()
+            cursor.close()
+            for item in result_set:
+                if item[0] == message.from_user.id:
+                    is_succeed = True
+            if is_succeed:
+                await message.reply(messages.menu
+                                    , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+            else:
+                await message.reply(messages.menu
+                                    , reply=False, reply_markup=KeyBoards.menu_user_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
         else:
-            await message.reply(messages.menu
-                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
-            conn.commit()
-            conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
+            if switch_text == "понедельник":
+                timetable_message = ""
+                url = 'https://edu.sfu-kras.ru/timetable'
+                response = requests.get(url).text
+                match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+                if match:
+                    current_week = "1"
+                else:
+                    current_week = "2"
+                conn = sqlite3.connect('db.db')
+                cursor = conn.cursor()
+                cursor.execute(f"SELECT chat_id, user_group FROM user_table")
+                result_set = cursor.fetchall()
+                cursor.close()
+                for i in result_set:
+                    if i[0] == message.from_user.id:
+                        group = i[1]
+                url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={group}')
+                response = requests.get(url).json()
+                adding = []
+                for item in response["timetable"]:
+                    if item["week"] == current_week:
+                        adding.append(
+                            [item['day'], item['time'], item['subject'], "", item['type'], item['place']])
+                flag = 0
+                for i in adding:
+                    if i[0] == '1':
+                        if i[2] != '':
+                            flag = 1
+                if flag == 1:
+                    if match:
+                        timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
+                    else:
+                        timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
+                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Понедельник</b>\n\t\t➖➖➖➖➖➖➖'
+                    for i in adding:
+                        if i[0] == '1':
+                            if i[4] == '' and i[5] == '':
+                                timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
+                            else:
+                                timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
+                else:
+                    timetable_message += 'В понедельник у этой группы пар нет!'
+                await message.reply(timetable_message, parse_mode="HTML")
+
+            elif switch_text == "вторник":
+                timetable_message = ""
+
+                url = 'https://edu.sfu-kras.ru/timetable'
+                response = requests.get(url).text
+                match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+                if match:
+                    current_week = "1"
+                else:
+                    current_week = "2"
+                conn = sqlite3.connect('db.db')
+                cursor = conn.cursor()
+                cursor.execute(f"SELECT chat_id, user_group FROM user_table")
+                result_set = cursor.fetchall()
+                cursor.close()
+                for i in result_set:
+                    if i[0] == message.from_user.id:
+                        group = i[1]
+                url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={group}')
+                response = requests.get(url).json()
+                adding = []
+                for item in response["timetable"]:
+                    if item["week"] == current_week:
+                        adding.append(
+                            [item['day'], item['time'], item['subject'], item['type'], "", item['place']])
+                flag = 0
+                for i in adding:
+                    if i[0] == '2':
+                        if i[2] != '':
+                            flag = 1
+                if flag == 1:
+                    if match:
+                        timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
+                    else:
+                        timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
+                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Вторник</b>\n\t\t➖➖➖➖➖➖➖'
+                    for i in adding:
+                        if i[0] == '2':
+                            if i[4] == '' and i[5] == '':
+                                timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
+                            else:
+                                timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
+                else:
+                    timetable_message += 'Во вторник у этой группы пар нет!'
+                await message.reply(timetable_message, parse_mode="HTML")
+
+            elif switch_text == "среда":
+                timetable_message = ""
+
+                url = 'https://edu.sfu-kras.ru/timetable'
+                response = requests.get(url).text
+                match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+                if match:
+                    current_week = "1"
+                else:
+                    current_week = "2"
+                conn = sqlite3.connect('db.db')
+                cursor = conn.cursor()
+                cursor.execute(f"SELECT chat_id, user_group FROM user_table")
+                result_set = cursor.fetchall()
+                cursor.close()
+                for i in result_set:
+                    if i[0] == message.from_user.id:
+                        group = i[1]
+                url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={group}')
+                response = requests.get(url).json()
+                adding = []
+                for item in response["timetable"]:
+                    if item["week"] == current_week:
+                        adding.append(
+                            [item['day'], item['time'], item['subject'], item['type'], "", item['place']])
+                flag = 0
+                for i in adding:
+                    if i[0] == '3':
+                        if i[2] != '':
+                            flag = 1
+                if flag == 1:
+                    if match:
+                        timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
+                    else:
+                        timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
+                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Среда</b>\n\t\t➖➖➖➖➖➖➖'
+                    for i in adding:
+                        if i[0] == '3':
+                            if i[4] == '' and i[5] == '':
+                                timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
+                            else:
+                                timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
+                else:
+                    timetable_message += 'В среду у этой группы пар нет!'
+                await message.reply(timetable_message, parse_mode="HTML")
+
+            elif switch_text == "четверг":
+                timetable_message = ""
+
+                url = 'https://edu.sfu-kras.ru/timetable'
+                response = requests.get(url).text
+                match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+                if match:
+                    current_week = "1"
+                else:
+                    current_week = "2"
+                conn = sqlite3.connect('db.db')
+                cursor = conn.cursor()
+                cursor.execute(f"SELECT chat_id, user_group FROM user_table")
+                result_set = cursor.fetchall()
+                cursor.close()
+                for i in result_set:
+                    if i[0] == message.from_user.id:
+                        group = i[1]
+                url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={group}')
+                response = requests.get(url).json()
+                adding = []
+                for item in response["timetable"]:
+                    if item["week"] == current_week:
+                        adding.append(
+                            [item['day'], item['time'], item['subject'], item['type'], "", item['place']])
+                flag = 0
+                for i in adding:
+                    if i[0] == '4':
+                        if i[2] != '':
+                            flag = 1
+                if flag == 1:
+                    if match:
+                        timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
+                    else:
+                        timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
+                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Четверг</b>\n\t\t➖➖➖➖➖➖➖'
+                    for i in adding:
+                        if i[0] == '4':
+                            if i[4] == '' and i[5] == '':
+                                timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
+                            else:
+                                timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
+                else:
+                    timetable_message += 'В четверг у этой группы пар нет!'
+                await message.reply(timetable_message, parse_mode="HTML")
+
+            elif switch_text == "пятница":
+                timetable_message = ""
+
+                url = 'https://edu.sfu-kras.ru/timetable'
+                response = requests.get(url).text
+                match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+                if match:
+                    current_week = "1"
+                else:
+                    current_week = "2"
+                conn = sqlite3.connect('db.db')
+                cursor = conn.cursor()
+                cursor.execute(f"SELECT chat_id, user_group FROM user_table")
+                result_set = cursor.fetchall()
+                cursor.close()
+                for i in result_set:
+                    if i[0] == message.from_user.id:
+                        group = i[1]
+                url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={group}')
+                response = requests.get(url).json()
+                adding = []
+                for item in response["timetable"]:
+                    if item["week"] == current_week:
+                        adding.append(
+                            [item['day'], item['time'], item['subject'], item['type'], "", item['place']])
+                flag = 0
+                for i in adding:
+                    if i[0] == '5':
+                        if i[2] != '':
+                            flag = 1
+                if flag == 1:
+                    if match:
+                        timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
+                    else:
+                        timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
+                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Пятница</b>\n\t\t➖➖➖➖➖➖➖'
+                    for i in adding:
+                        if i[0] == '5':
+                            if i[4] == '' and i[5] == '':
+                                timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
+                            else:
+                                timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
+                else:
+                    timetable_message += 'В пятницу у этой группы пар нет!'
+                await message.reply(timetable_message, parse_mode="HTML")
+
+            elif switch_text == "суббота":
+                timetable_message = ""
+
+                url = 'https://edu.sfu-kras.ru/timetable'
+                response = requests.get(url).text
+                match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+                if match:
+                    current_week = "1"
+                else:
+                    current_week = "2"
+                conn = sqlite3.connect('db.db')
+                cursor = conn.cursor()
+                cursor.execute(f"SELECT chat_id, user_group FROM user_table")
+                result_set = cursor.fetchall()
+                cursor.close()
+                for i in result_set:
+                    if i[0] == message.from_user.id:
+                        group = i[1]
+                url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={group}')
+                response = requests.get(url).json()
+                adding = []
+                for item in response["timetable"]:
+                    if item["week"] == current_week:
+                        adding.append(
+                            [item['day'], item['time'], item['subject'], item['type'], "", item['place']])
+                flag = 0
+                for i in adding:
+                    if i[0] == '6':
+                        if i[2] != '':
+                            flag = 1
+                if flag == 1:
+                    if match:
+                        timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
+                    else:
+                        timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
+                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Суббота</b>\n\t\t➖➖➖➖➖➖➖'
+                    for i in adding:
+                        if i[0] == '6':
+                            if i[4] == '' and i[5] == '':
+                                timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
+                            else:
+                                timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
+                else:
+                    timetable_message += 'В субботу у этой группы пар нет!'
+                await message.reply(timetable_message, parse_mode="HTML")
+            elif switch_text == 'посмотреть расписание на след. неделю':
+                state = dp.current_state(user=message.from_user.id)
+                await state.set_state(ScheduleUser.all()[3])
+                await message.reply('Выберите день недели 👇\n(Вы будете смотреть следующую неделю)'
+                                    , reply=False, reply_markup=KeyBoards.day_of_the_week_kb2)
+            else:
+                await bot.send_message(message.from_user.id, messages.what)
     else:
+        #english
+        if switch_text == 'меню':
+            is_succeed = False
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_id FROM admins")
+            result_set = cursor.fetchall()
+            cursor.close()
+            for item in result_set:
+                if item[0] == message.from_user.id:
+                    is_succeed = True
+            if is_succeed:
+                await message.reply(messages.menu_en
+                                    , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+            else:
+                await message.reply(messages.menu_en
+                                    , reply=False, reply_markup=KeyBoards.menu_user_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+        else:
+            if switch_text == "понедельник":
+                timetable_message = ""
+                url = 'https://edu.sfu-kras.ru/timetable'
+                response = requests.get(url).text
+                match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+                if match:
+                    current_week = "1"
+                else:
+                    current_week = "2"
+                conn = sqlite3.connect('db.db')
+                cursor = conn.cursor()
+                cursor.execute(f"SELECT chat_id, user_group FROM user_table")
+                result_set = cursor.fetchall()
+                cursor.close()
+                for i in result_set:
+                    if i[0] == message.from_user.id:
+                        group = i[1]
+                url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={group}')
+                response = requests.get(url).json()
+                adding = []
+                for item in response["timetable"]:
+                    if item["week"] == current_week:
+                        adding.append(
+                            [item['day'], item['time'], item['subject'], "", item['type'], item['place']])
+                flag = 0
+                for i in adding:
+                    if i[0] == '1':
+                        if i[2] != '':
+                            flag = 1
+                if flag == 1:
+                    if match:
+                        timetable_message += "It is now <b>odd</b> week\n"
+                    else:
+                        timetable_message += "It is now <b>an even</b> week\n"
+                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Monday</b>\n\t\t➖➖➖➖➖➖➖'
+                    for i in adding:
+                        if i[0] == '1':
+                            if i[4] == '' and i[5] == '':
+                                timetable_message += f'\n{i[1]}\n{translate(i[2])} ({translate(i[3])})\n'
+                            else:
+                                timetable_message += f'\n{i[1]}\n{translate(i[2])} ({translate(i[3])}) \n{translate(i[4])}\n<b>{i[5]}</b>\n'
+                else:
+                    timetable_message += 'On Monday, this group has no couples!'
+                await message.reply(timetable_message, parse_mode="HTML")
+
+            elif switch_text == "вторник":
+                timetable_message = ""
+
+                url = 'https://edu.sfu-kras.ru/timetable'
+                response = requests.get(url).text
+                match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+                if match:
+                    current_week = "1"
+                else:
+                    current_week = "2"
+                conn = sqlite3.connect('db.db')
+                cursor = conn.cursor()
+                cursor.execute(f"SELECT chat_id, user_group FROM user_table")
+                result_set = cursor.fetchall()
+                cursor.close()
+                for i in result_set:
+                    if i[0] == message.from_user.id:
+                        group = i[1]
+                url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={group}')
+                response = requests.get(url).json()
+                adding = []
+                for item in response["timetable"]:
+                    if item["week"] == current_week:
+                        adding.append(
+                            [item['day'], item['time'], item['subject'], item['type'], "", item['place']])
+                flag = 0
+                for i in adding:
+                    if i[0] == '2':
+                        if i[2] != '':
+                            flag = 1
+                if flag == 1:
+                    if match:
+                        timetable_message += "It is now <b>odd</b> week\n"
+                    else:
+                        timetable_message += "It is now <b>an even</b> week\n"
+                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Tuesday</b>\n\t\t➖➖➖➖➖➖➖'
+                    for i in adding:
+                        if i[0] == '2':
+                            if i[4] == '' and i[5] == '':
+                                timetable_message += f'\n{i[1]}\n{translate(i[2])} ({translate(i[3])})\n'
+                            else:
+                                timetable_message += f'\n{i[1]}\n{translate(i[2])} ({translate(i[3])}) \n{translate(i[4])}\n<b>{i[5]}</b>\n'
+                else:
+                    timetable_message += 'On Tuesday, this group has no couples!'
+                await message.reply(timetable_message, parse_mode="HTML")
+
+            elif switch_text == "среда":
+                timetable_message = ""
+
+                url = 'https://edu.sfu-kras.ru/timetable'
+                response = requests.get(url).text
+                match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+                if match:
+                    current_week = "1"
+                else:
+                    current_week = "2"
+                conn = sqlite3.connect('db.db')
+                cursor = conn.cursor()
+                cursor.execute(f"SELECT chat_id, user_group FROM user_table")
+                result_set = cursor.fetchall()
+                cursor.close()
+                for i in result_set:
+                    if i[0] == message.from_user.id:
+                        group = i[1]
+                url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={group}')
+                response = requests.get(url).json()
+                adding = []
+                for item in response["timetable"]:
+                    if item["week"] == current_week:
+                        adding.append(
+                            [item['day'], item['time'], item['subject'], item['type'], "", item['place']])
+                flag = 0
+                for i in adding:
+                    if i[0] == '3':
+                        if i[2] != '':
+                            flag = 1
+                if flag == 1:
+                    if match:
+                        timetable_message += "It is now <b>odd</b> week\n"
+                    else:
+                        timetable_message += "It is now <b>an even</b> week\n"
+                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Wednesday</b>\n\t\t➖➖➖➖➖➖➖'
+                    for i in adding:
+                        if i[0] == '3':
+                            if i[4] == '' and i[5] == '':
+                                timetable_message += f'\n{i[1]}\n{translate(i[2])} ({translate(i[3])})\n'
+                            else:
+                                timetable_message += f'\n{i[1]}\n{translate(i[2])} ({translate(i[3])}) \n{translate(i[4])}\n<b>{i[5]}</b>\n'
+                else:
+                    timetable_message += 'On Wednesday, this group has no pairs!'
+                await message.reply(timetable_message, parse_mode="HTML")
+
+            elif switch_text == "четверг":
+                timetable_message = ""
+
+                url = 'https://edu.sfu-kras.ru/timetable'
+                response = requests.get(url).text
+                match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+                if match:
+                    current_week = "1"
+                else:
+                    current_week = "2"
+                conn = sqlite3.connect('db.db')
+                cursor = conn.cursor()
+                cursor.execute(f"SELECT chat_id, user_group FROM user_table")
+                result_set = cursor.fetchall()
+                cursor.close()
+                for i in result_set:
+                    if i[0] == message.from_user.id:
+                        group = i[1]
+                url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={group}')
+                response = requests.get(url).json()
+                adding = []
+                for item in response["timetable"]:
+                    if item["week"] == current_week:
+                        adding.append(
+                            [item['day'], item['time'], item['subject'], item['type'], "", item['place']])
+                flag = 0
+                for i in adding:
+                    if i[0] == '4':
+                        if i[2] != '':
+                            flag = 1
+                if flag == 1:
+                    if match:
+                        timetable_message += "It is now <b>odd</b> week\n"
+                    else:
+                        timetable_message += "It is now <b>an even</b> week\n"
+                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Thursday</b>\n\t\t➖➖➖➖➖➖➖'
+                    for i in adding:
+                        if i[0] == '4':
+                            if i[4] == '' and i[5] == '':
+                                timetable_message += f'\n{i[1]}\n{translate(i[2])} ({translate(i[3])})\n'
+                            else:
+                                timetable_message += f'\n{i[1]}\n{translate(i[2])} ({translate(i[3])}) \n{translate(i[4])}\n<b>{i[5]}</b>\n'
+                else:
+                    timetable_message += 'On Thursday, this group has no couples!'
+                await message.reply(timetable_message, parse_mode="HTML")
+
+            elif switch_text == "пятница":
+                timetable_message = ""
+
+                url = 'https://edu.sfu-kras.ru/timetable'
+                response = requests.get(url).text
+                match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+                if match:
+                    current_week = "1"
+                else:
+                    current_week = "2"
+                conn = sqlite3.connect('db.db')
+                cursor = conn.cursor()
+                cursor.execute(f"SELECT chat_id, user_group FROM user_table")
+                result_set = cursor.fetchall()
+                cursor.close()
+                for i in result_set:
+                    if i[0] == message.from_user.id:
+                        group = i[1]
+                url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={group}')
+                response = requests.get(url).json()
+                adding = []
+                for item in response["timetable"]:
+                    if item["week"] == current_week:
+                        adding.append(
+                            [item['day'], item['time'], item['subject'], item['type'], "", item['place']])
+                flag = 0
+                for i in adding:
+                    if i[0] == '5':
+                        if i[2] != '':
+                            flag = 1
+                if flag == 1:
+                    if match:
+                        timetable_message += "It is now <b>odd</b> week\n"
+                    else:
+                        timetable_message += "It is now <b>an even</b> week\n"
+                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Friday</b>\n\t\t➖➖➖➖➖➖➖'
+                    for i in adding:
+                        if i[0] == '5':
+                            if i[4] == '' and i[5] == '':
+                                timetable_message += f'\n{i[1]}\n{translate(i[2])} ({translate(i[3])})\n'
+                            else:
+                                timetable_message += f'\n{i[1]}\n{translate(i[2])} ({translate(i[3])}) \n{translate(i[4])}\n<b>{i[5]}</b>\n'
+                else:
+                    timetable_message += 'On Friday, this group has no couples!'
+                await message.reply(timetable_message, parse_mode="HTML")
+
+            elif switch_text == "суббота":
+                timetable_message = ""
+
+                url = 'https://edu.sfu-kras.ru/timetable'
+                response = requests.get(url).text
+                match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+                if match:
+                    current_week = "1"
+                else:
+                    current_week = "2"
+                conn = sqlite3.connect('db.db')
+                cursor = conn.cursor()
+                cursor.execute(f"SELECT chat_id, user_group FROM user_table")
+                result_set = cursor.fetchall()
+                cursor.close()
+                for i in result_set:
+                    if i[0] == message.from_user.id:
+                        group = i[1]
+                url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={group}')
+                response = requests.get(url).json()
+                adding = []
+                for item in response["timetable"]:
+                    if item["week"] == current_week:
+                        adding.append(
+                            [item['day'], item['time'], item['subject'], item['type'], "", item['place']])
+                flag = 0
+                for i in adding:
+                    if i[0] == '6':
+                        if i[2] != '':
+                            flag = 1
+                if flag == 1:
+                    if match:
+                        timetable_message += "It is now <b>odd</b> week\n"
+                    else:
+                        timetable_message += "It is now <b>an even</b> week\n"
+                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Saturday</b>\n\t\t➖➖➖➖➖➖➖'
+                    for i in adding:
+                        if i[0] == '6':
+                            if i[4] == '' and i[5] == '':
+                                timetable_message += f'\n{i[1]}\n{translate(i[2])} ({translate(i[3])})\n'
+                            else:
+                                timetable_message += f'\n{i[1]}\n{translate(i[2])} ({translate(i[3])}) \n{translate(i[4])}\n<b>{i[5]}</b>\n'
+                else:
+                    timetable_message += 'On Saturday, this group has no couples!'
+                await message.reply(timetable_message, parse_mode="HTML")
+            elif switch_text == 'посмотреть расписание на след. неделю':
+                state = dp.current_state(user=message.from_user.id)
+                await state.set_state(ScheduleUser.all()[3])
+                await message.reply("Choose a day of the week 👇\n(You'll be watching next week)"
+                                    , reply=False, reply_markup=KeyBoards.day_of_the_week_kb2)
+            else:
+                await bot.send_message(message.from_user.id, messages.what_en)
+
+
+@dp.message_handler(state=ScheduleUser.SCHEDULE_USER_3)
+async def schedule_1(message: types.Message):
+    global group
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{message.from_user.id}'")
+    result_set = cursor.fetchall()
+    cursor.close()
+    is_ru = False
+    if result_set[0][0] == 1:
+        is_ru = True
+    switch_text = message.text.lower()
+    if is_ru == True:
+        if switch_text == 'меню':
+            is_succeed = False
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_id FROM admins")
+            result_set = cursor.fetchall()
+            cursor.close()
+            for item in result_set:
+                if item[0] == message.from_user.id:
+                    is_succeed = True
+            if is_succeed:
+                await message.reply(messages.menu
+                                    , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+            else:
+                await message.reply(messages.menu
+                                    , reply=False, reply_markup=KeyBoards.menu_user_kb)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+        else:
+            if switch_text == 'понедельник':
+                timetable_message = ""
+                current_week = "0"
+                url = 'https://edu.sfu-kras.ru/timetable'
+                response = requests.get(url).text
+                match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+                if match:
+                    current_week = "2"
+                else:
+                    current_week = "1"
+                conn = sqlite3.connect('db.db')
+                cursor = conn.cursor()
+                cursor.execute(f"SELECT user_group FROM user_table WHERE chat_id = '{message.from_user.id}'")
+                result_set1 = cursor.fetchall()
+                conn.commit()
+                conn.close()
+                url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={result_set1[0][0]}')
+                response = requests.get(url).json()
+                adding = []
+                for item in response["timetable"]:
+                    if item["week"] == current_week:
+                        adding.append(
+                            [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
+                flag = 0
+                for i in adding:
+                    if i[0] == '1':
+                        if i[2] != '':
+                            flag = 1
+                if flag == 1:
+                    timetable_message += "Вы смотрите расписание на <b>следующую</b> неделю\n"
+                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Понедельник</b>\n\t\t➖➖➖➖➖➖➖'
+                    for i in adding:
+                        if i[0] == '1':
+                            if i[4] == '' and i[5] == '':
+                                timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
+                            else:
+                                timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
+                else:
+                    timetable_message += 'В следующий понедельник у этой группы пар нет!'
+                await message.reply(timetable_message, parse_mode="HTML")
+
+            elif switch_text == 'вторник':
+                timetable_message = ""
+                current_week = "0"
+                url = 'https://edu.sfu-kras.ru/timetable'
+                response = requests.get(url).text
+                match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+                if match:
+                    current_week = "2"
+                else:
+                    current_week = "1"
+                conn = sqlite3.connect('db.db')
+                cursor = conn.cursor()
+                cursor.execute(f"SELECT user_group FROM user_table WHERE chat_id = '{message.from_user.id}'")
+                result_set1 = cursor.fetchall()
+                conn.commit()
+                conn.close()
+                url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={result_set1[0][0]}')
+                response = requests.get(url).json()
+                adding = []
+                for item in response["timetable"]:
+                    if item["week"] == current_week:
+                        adding.append(
+                            [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
+                flag = 0
+                for i in adding:
+                    if i[0] == '2':
+                        if i[2] != '':
+                            flag = 1
+                if flag == 1:
+                    timetable_message += "Вы смотрите расписание на <b>следующую</b> неделю\n"
+                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Вторник</b>\n\t\t➖➖➖➖➖➖➖'
+                    for i in adding:
+                        if i[0] == '2':
+                            if i[4] == '' and i[5] == '':
+                                timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
+                            else:
+                                timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
+                else:
+                    timetable_message += 'Во следующий вторник у этой группы пар нет!'
+                await message.reply(timetable_message, parse_mode="HTML")
+
+            elif switch_text == 'среда':
+                timetable_message = ""
+                current_week = "0"
+                url = 'https://edu.sfu-kras.ru/timetable'
+                response = requests.get(url).text
+                match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+                if match:
+                    current_week = "2"
+                else:
+                    current_week = "1"
+                conn = sqlite3.connect('db.db')
+                cursor = conn.cursor()
+                cursor.execute(f"SELECT user_group FROM user_table WHERE chat_id = '{message.from_user.id}'")
+                result_set1 = cursor.fetchall()
+                conn.commit()
+                conn.close()
+                url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={result_set1[0][0]}')
+                response = requests.get(url).json()
+                adding = []
+                for item in response["timetable"]:
+                    if item["week"] == current_week:
+                        adding.append(
+                            [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
+                flag = 0
+                for i in adding:
+                    if i[0] == '3':
+                        if i[2] != '':
+                            flag = 1
+                if flag == 1:
+                    timetable_message += "Вы смотрите расписание на <b>следующую</b> неделю\n"
+                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Среда</b>\n\t\t➖➖➖➖➖➖➖'
+                    for i in adding:
+                        if i[0] == '3':
+                            if i[4] == '' and i[5] == '':
+                                timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
+                            else:
+                                timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
+                else:
+                    timetable_message += 'В следующую среду у этой группы пар нет!'
+                await message.reply(timetable_message, parse_mode="HTML")
+
+            elif switch_text == 'четверг':
+                timetable_message = ""
+                current_week = "0"
+                url = 'https://edu.sfu-kras.ru/timetable'
+                response = requests.get(url).text
+                match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+                if match:
+                    current_week = "2"
+                else:
+                    current_week = "1"
+                conn = sqlite3.connect('db.db')
+                cursor = conn.cursor()
+                cursor.execute(f"SELECT user_group FROM user_table WHERE chat_id = '{message.from_user.id}'")
+                result_set1 = cursor.fetchall()
+                conn.commit()
+                conn.close()
+                url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={result_set1[0][0]}')
+                response = requests.get(url).json()
+                adding = []
+                for item in response["timetable"]:
+                    if item["week"] == current_week:
+                        adding.append(
+                            [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
+                flag = 0
+                for i in adding:
+                    if i[0] == '4':
+                        if i[2] != '':
+                            flag = 1
+                if flag == 1:
+                    timetable_message += "Вы смотрите расписание на <b>следующую</b> неделю\n"
+                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Четверг</b>\n\t\t➖➖➖➖➖➖➖'
+                    for i in adding:
+                        if i[0] == '4':
+                            if i[4] == '' and i[5] == '':
+                                timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
+                            else:
+                                timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
+                else:
+                    timetable_message += 'В следующий четверг у этой группы пар нет!'
+                await message.reply(timetable_message, parse_mode="HTML")
+
+            elif switch_text == 'пятница':
+                timetable_message = ""
+                current_week = "0"
+                url = 'https://edu.sfu-kras.ru/timetable'
+                response = requests.get(url).text
+                match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+                if match:
+                    current_week = "2"
+                else:
+                    current_week = "1"
+                conn = sqlite3.connect('db.db')
+                cursor = conn.cursor()
+                cursor.execute(f"SELECT user_group FROM user_table WHERE chat_id = '{message.from_user.id}'")
+                result_set1 = cursor.fetchall()
+                conn.commit()
+                conn.close()
+                url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={result_set1[0][0]}')
+                response = requests.get(url).json()
+                adding = []
+                for item in response["timetable"]:
+                    if item["week"] == current_week:
+                        adding.append(
+                            [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
+                flag = 0
+                for i in adding:
+                    if i[0] == '5':
+                        if i[2] != '':
+                            flag = 1
+                if flag == 1:
+                    timetable_message += "Вы смотрите расписание на <b>следующую</b> неделю\n"
+                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Пятница</b>\n\t\t➖➖➖➖➖➖➖'
+                    for i in adding:
+                        if i[0] == '5':
+                            if i[4] == '' and i[5] == '':
+                                timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
+                            else:
+                                timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
+                else:
+                    timetable_message += 'В следующую пятницу у этой группы пар нет!'
+                await message.reply(timetable_message, parse_mode="HTML")
+
+            elif switch_text == 'суббота':
+                timetable_message = ""
+                current_week = "0"
+                url = 'https://edu.sfu-kras.ru/timetable'
+                response = requests.get(url).text
+                match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+                if match:
+                    current_week = "2"
+                else:
+                    current_week = "1"
+                conn = sqlite3.connect('db.db')
+                cursor = conn.cursor()
+                cursor.execute(f"SELECT user_group FROM user_table WHERE chat_id = '{message.from_user.id}'")
+                result_set1 = cursor.fetchall()
+                conn.commit()
+                conn.close()
+                url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={result_set1[0][0]}')
+                response = requests.get(url).json()
+                adding = []
+                for item in response["timetable"]:
+                    if item["week"] == current_week:
+                        adding.append(
+                            [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
+                flag = 0
+                for i in adding:
+                    if i[0] == '6':
+                        if i[2] != '':
+                            flag = 1
+                if flag == 1:
+                    timetable_message += "Вы смотрите расписание на <b>следующую</b> неделю\n"
+                    timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Суббота</b>\n\t\t➖➖➖➖➖➖➖'
+                    for i in adding:
+                        if i[0] == '6':
+                            if i[4] == '' and i[5] == '':
+                                timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
+                            else:
+                                timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
+                else:
+                    timetable_message += 'В следующую субботу у этой группы пар нет!'
+                await message.reply(timetable_message, parse_mode="HTML")
+            elif switch_text == 'посмотреть расписание нынешней недели':
+                state = dp.current_state(user=message.from_user.id)
+                await state.set_state(ScheduleUser.all()[2])
+                await message.reply('Выберите день недели 👇\n(Вы будете смотреть нынешнюю неделю)'
+                                    , reply=False, reply_markup=KeyBoards.day_of_the_week_kb)
+            else:
+                await bot.send_message(message.from_user.id, messages.what)
+    else:
+        #english
         if switch_text == "понедельник":
             timetable_message = ""
             url = 'https://edu.sfu-kras.ru/timetable'
             response = requests.get(url).text
             match = re.search(r'Идёт\s\w{8}\sнеделя', response)
             if match:
-                current_week = "1"
-            else:
                 current_week = "2"
+            else:
+                current_week = "1"
             conn = sqlite3.connect('db.db')
             cursor = conn.cursor()
             cursor.execute(f"SELECT chat_id, user_group FROM user_table")
@@ -2700,18 +4000,18 @@ async def schedule_1(message: types.Message):
                         flag = 1
             if flag == 1:
                 if match:
-                    timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
+                    timetable_message += "It is now <b>odd</b> week\n"
                 else:
-                    timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
-                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Понедельник</b>\n\t\t➖➖➖➖➖➖➖'
+                    timetable_message += "It is now <b>an even</b> week\n"
+                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Monday</b>\n\t\t➖➖➖➖➖➖➖'
                 for i in adding:
                     if i[0] == '1':
                         if i[4] == '' and i[5] == '':
-                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
+                            timetable_message += f'\n{i[1]}\n{translate(i[2])} ({translate(i[3])})\n'
                         else:
-                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
+                            timetable_message += f'\n{i[1]}\n{translate(i[2])} ({translate(i[3])}) \n{translate(i[4])}\n<b>{i[5]}</b>\n'
             else:
-                timetable_message += 'В понедельник у этой группы пар нет!'
+                timetable_message += 'On Monday, this group has no couples!'
             await message.reply(timetable_message, parse_mode="HTML")
 
         elif switch_text == "вторник":
@@ -2721,9 +4021,9 @@ async def schedule_1(message: types.Message):
             response = requests.get(url).text
             match = re.search(r'Идёт\s\w{8}\sнеделя', response)
             if match:
-                current_week = "1"
-            else:
                 current_week = "2"
+            else:
+                current_week = "1"
             conn = sqlite3.connect('db.db')
             cursor = conn.cursor()
             cursor.execute(f"SELECT chat_id, user_group FROM user_table")
@@ -2746,18 +4046,18 @@ async def schedule_1(message: types.Message):
                         flag = 1
             if flag == 1:
                 if match:
-                    timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
+                    timetable_message += "It is now <b>odd</b> week\n"
                 else:
-                    timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
-                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Вторник</b>\n\t\t➖➖➖➖➖➖➖'
+                    timetable_message += "It is now <b>an even</b> week\n"
+                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Tuesday</b>\n\t\t➖➖➖➖➖➖➖'
                 for i in adding:
                     if i[0] == '2':
                         if i[4] == '' and i[5] == '':
-                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
+                            timetable_message += f'\n{i[1]}\n{translate(i[2])} ({translate(i[3])})\n'
                         else:
-                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
+                            timetable_message += f'\n{i[1]}\n{translate(i[2])} ({translate(i[3])}) \n{translate(i[4])}\n<b>{i[5]}</b>\n'
             else:
-                timetable_message += 'Во вторник у этой группы пар нет!'
+                timetable_message += 'On Tuesday, this group has no couples!'
             await message.reply(timetable_message, parse_mode="HTML")
 
         elif switch_text == "среда":
@@ -2767,9 +4067,9 @@ async def schedule_1(message: types.Message):
             response = requests.get(url).text
             match = re.search(r'Идёт\s\w{8}\sнеделя', response)
             if match:
-                current_week = "1"
-            else:
                 current_week = "2"
+            else:
+                current_week = "1"
             conn = sqlite3.connect('db.db')
             cursor = conn.cursor()
             cursor.execute(f"SELECT chat_id, user_group FROM user_table")
@@ -2792,18 +4092,18 @@ async def schedule_1(message: types.Message):
                         flag = 1
             if flag == 1:
                 if match:
-                    timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
+                    timetable_message += "It is now <b>odd</b> week\n"
                 else:
-                    timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
-                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Среда</b>\n\t\t➖➖➖➖➖➖➖'
+                    timetable_message += "It is now <b>an even</b> week\n"
+                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Wednesday</b>\n\t\t➖➖➖➖➖➖➖'
                 for i in adding:
                     if i[0] == '3':
                         if i[4] == '' and i[5] == '':
-                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
+                            timetable_message += f'\n{i[1]}\n{translate(i[2])} ({translate(i[3])})\n'
                         else:
-                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
+                            timetable_message += f'\n{i[1]}\n{translate(i[2])} ({translate(i[3])}) \n{translate(i[4])}\n<b>{i[5]}</b>\n'
             else:
-                timetable_message += 'В среду у этой группы пар нет!'
+                timetable_message += 'On Wednesday, this group has no pairs!'
             await message.reply(timetable_message, parse_mode="HTML")
 
         elif switch_text == "четверг":
@@ -2813,9 +4113,9 @@ async def schedule_1(message: types.Message):
             response = requests.get(url).text
             match = re.search(r'Идёт\s\w{8}\sнеделя', response)
             if match:
-                current_week = "1"
-            else:
                 current_week = "2"
+            else:
+                current_week = "1"
             conn = sqlite3.connect('db.db')
             cursor = conn.cursor()
             cursor.execute(f"SELECT chat_id, user_group FROM user_table")
@@ -2838,18 +4138,18 @@ async def schedule_1(message: types.Message):
                         flag = 1
             if flag == 1:
                 if match:
-                    timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
+                    timetable_message += "It is now <b>odd</b> week\n"
                 else:
-                    timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
-                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Четверг</b>\n\t\t➖➖➖➖➖➖➖'
+                    timetable_message += "It is now <b>an even</b> week\n"
+                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Thursday</b>\n\t\t➖➖➖➖➖➖➖'
                 for i in adding:
                     if i[0] == '4':
                         if i[4] == '' and i[5] == '':
-                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
+                            timetable_message += f'\n{i[1]}\n{translate(i[2])} ({translate(i[3])})\n'
                         else:
-                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
+                            timetable_message += f'\n{i[1]}\n{translate(i[2])} ({translate(i[3])}) \n{translate(i[4])}\n<b>{i[5]}</b>\n'
             else:
-                timetable_message += 'В четверг у этой группы пар нет!'
+                timetable_message += 'On Thursday, this group has no couples!'
             await message.reply(timetable_message, parse_mode="HTML")
 
         elif switch_text == "пятница":
@@ -2859,9 +4159,9 @@ async def schedule_1(message: types.Message):
             response = requests.get(url).text
             match = re.search(r'Идёт\s\w{8}\sнеделя', response)
             if match:
-                current_week = "1"
-            else:
                 current_week = "2"
+            else:
+                current_week = "1"
             conn = sqlite3.connect('db.db')
             cursor = conn.cursor()
             cursor.execute(f"SELECT chat_id, user_group FROM user_table")
@@ -2884,18 +4184,18 @@ async def schedule_1(message: types.Message):
                         flag = 1
             if flag == 1:
                 if match:
-                    timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
+                    timetable_message += "It is now <b>odd</b> week\n"
                 else:
-                    timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
-                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Пятница</b>\n\t\t➖➖➖➖➖➖➖'
+                    timetable_message += "It is now <b>an even</b> week\n"
+                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Friday</b>\n\t\t➖➖➖➖➖➖➖'
                 for i in adding:
                     if i[0] == '5':
                         if i[4] == '' and i[5] == '':
-                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
+                            timetable_message += f'\n{i[1]}\n{translate(i[2])} ({translate(i[3])})\n'
                         else:
-                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
+                            timetable_message += f'\n{i[1]}\n{translate(i[2])} ({translate(i[3])}) \n{translate(i[4])}\n<b>{i[5]}</b>\n'
             else:
-                timetable_message += 'В пятницу у этой группы пар нет!'
+                timetable_message += 'On Friday, this group has no couples!'
             await message.reply(timetable_message, parse_mode="HTML")
 
         elif switch_text == "суббота":
@@ -2905,9 +4205,9 @@ async def schedule_1(message: types.Message):
             response = requests.get(url).text
             match = re.search(r'Идёт\s\w{8}\sнеделя', response)
             if match:
-                current_week = "1"
-            else:
                 current_week = "2"
+            else:
+                current_week = "1"
             conn = sqlite3.connect('db.db')
             cursor = conn.cursor()
             cursor.execute(f"SELECT chat_id, user_group FROM user_table")
@@ -2930,308 +4230,26 @@ async def schedule_1(message: types.Message):
                         flag = 1
             if flag == 1:
                 if match:
-                    timetable_message += "Сейчас идёт <b>нечётная</b> неделя\n"
+                    timetable_message += "It is now <b>odd</b> week\n"
                 else:
-                    timetable_message += "Сейчас идёт <b>чётная</b> неделя\n"
-                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Суббота</b>\n\t\t➖➖➖➖➖➖➖'
+                    timetable_message += "It is now <b>an even</b> week\n"
+                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Saturday</b>\n\t\t➖➖➖➖➖➖➖'
                 for i in adding:
                     if i[0] == '6':
                         if i[4] == '' and i[5] == '':
-                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
+                            timetable_message += f'\n{i[1]}\n{translate(i[2])} ({translate(i[3])})\n'
                         else:
-                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
+                            timetable_message += f'\n{i[1]}\n{translate(i[2])} ({translate(i[3])}) \n{translate(i[4])}\n<b>{i[5]}</b>\n'
             else:
-                timetable_message += 'В субботу у этой группы пар нет!'
-            await message.reply(timetable_message, parse_mode="HTML")
-        elif switch_text == 'посмотреть расписание на след. неделю':
-            state = dp.current_state(user=message.from_user.id)
-            await state.set_state(ScheduleUser.all()[3])
-            await message.reply('Выберите день недели 👇\n(Вы будете смотреть следующую неделю)'
-                                , reply=False, reply_markup=KeyBoards.day_of_the_week_kb2)
-        else:
-            await bot.send_message(message.from_user.id, messages.what)
-
-
-@dp.message_handler(state=ScheduleUser.SCHEDULE_USER_3)
-async def schedule_1(message: types.Message):
-    switch_text = message.text.lower()
-    if switch_text == 'меню':
-        is_succeed = False
-        conn = sqlite3.connect('db.db')
-        cursor = conn.cursor()
-        cursor.execute(f"SELECT user_id FROM admins")
-        result_set = cursor.fetchall()
-        cursor.close()
-        for item in result_set:
-            if item[0] == message.from_user.id:
-                is_succeed = True
-        if is_succeed:
-            await message.reply(messages.menu
-                                , reply=False, reply_markup=KeyBoards.menu_admin_kb)
-            conn.commit()
-            conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
-        else:
-            await message.reply(messages.menu
-                                , reply=False, reply_markup=KeyBoards.menu_user_kb)
-            conn.commit()
-            conn.close()
-            state = dp.current_state(user=message.from_user.id)
-            await state.reset_state()
-    else:
-        if switch_text == 'понедельник':
-            timetable_message = ""
-            current_week = "0"
-            url = 'https://edu.sfu-kras.ru/timetable'
-            response = requests.get(url).text
-            match = re.search(r'Идёт\s\w{8}\sнеделя', response)
-            if match:
-                current_week = "2"
-            else:
-                current_week = "1"
-            conn = sqlite3.connect('db.db')
-            cursor = conn.cursor()
-            cursor.execute(f"SELECT user_group FROM user_table WHERE chat_id = '{message.from_user.id}'")
-            result_set1 = cursor.fetchall()
-            conn.commit()
-            conn.close()
-            url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={result_set1[0][0]}')
-            response = requests.get(url).json()
-            adding = []
-            for item in response["timetable"]:
-                if item["week"] == current_week:
-                    adding.append(
-                        [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
-            flag = 0
-            for i in adding:
-                if i[0] == '1':
-                    if i[2] != '':
-                        flag = 1
-            if flag == 1:
-                timetable_message += "Вы смотрите расписание на <b>следующую</b> неделю\n"
-                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Понедельник</b>\n\t\t➖➖➖➖➖➖➖'
-                for i in adding:
-                    if i[0] == '1':
-                        if i[4] == '' and i[5] == '':
-                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
-                        else:
-                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
-            else:
-                timetable_message += 'В следующий понедельник у этой группы пар нет!'
-            await message.reply(timetable_message, parse_mode="HTML")
-
-        elif switch_text == 'вторник':
-            timetable_message = ""
-            current_week = "0"
-            url = 'https://edu.sfu-kras.ru/timetable'
-            response = requests.get(url).text
-            match = re.search(r'Идёт\s\w{8}\sнеделя', response)
-            if match:
-                current_week = "2"
-            else:
-                current_week = "1"
-            conn = sqlite3.connect('db.db')
-            cursor = conn.cursor()
-            cursor.execute(f"SELECT user_group FROM user_table WHERE chat_id = '{message.from_user.id}'")
-            result_set1 = cursor.fetchall()
-            conn.commit()
-            conn.close()
-            url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={result_set1[0][0]}')
-            response = requests.get(url).json()
-            adding = []
-            for item in response["timetable"]:
-                if item["week"] == current_week:
-                    adding.append(
-                        [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
-            flag = 0
-            for i in adding:
-                if i[0] == '2':
-                    if i[2] != '':
-                        flag = 1
-            if flag == 1:
-                timetable_message += "Вы смотрите расписание на <b>следующую</b> неделю\n"
-                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Вторник</b>\n\t\t➖➖➖➖➖➖➖'
-                for i in adding:
-                    if i[0] == '2':
-                        if i[4] == '' and i[5] == '':
-                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
-                        else:
-                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
-            else:
-                timetable_message += 'Во следующий вторник у этой группы пар нет!'
-            await message.reply(timetable_message, parse_mode="HTML")
-
-        elif switch_text == 'среда':
-            timetable_message = ""
-            current_week = "0"
-            url = 'https://edu.sfu-kras.ru/timetable'
-            response = requests.get(url).text
-            match = re.search(r'Идёт\s\w{8}\sнеделя', response)
-            if match:
-                current_week = "2"
-            else:
-                current_week = "1"
-            conn = sqlite3.connect('db.db')
-            cursor = conn.cursor()
-            cursor.execute(f"SELECT user_group FROM user_table WHERE chat_id = '{message.from_user.id}'")
-            result_set1 = cursor.fetchall()
-            conn.commit()
-            conn.close()
-            url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={result_set1[0][0]}')
-            response = requests.get(url).json()
-            adding = []
-            for item in response["timetable"]:
-                if item["week"] == current_week:
-                    adding.append(
-                        [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
-            flag = 0
-            for i in adding:
-                if i[0] == '3':
-                    if i[2] != '':
-                        flag = 1
-            if flag == 1:
-                timetable_message += "Вы смотрите расписание на <b>следующую</b> неделю\n"
-                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Среда</b>\n\t\t➖➖➖➖➖➖➖'
-                for i in adding:
-                    if i[0] == '3':
-                        if i[4] == '' and i[5] == '':
-                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
-                        else:
-                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
-            else:
-                timetable_message += 'В следующую среду у этой группы пар нет!'
-            await message.reply(timetable_message, parse_mode="HTML")
-
-        elif switch_text == 'четверг':
-            timetable_message = ""
-            current_week = "0"
-            url = 'https://edu.sfu-kras.ru/timetable'
-            response = requests.get(url).text
-            match = re.search(r'Идёт\s\w{8}\sнеделя', response)
-            if match:
-                current_week = "2"
-            else:
-                current_week = "1"
-            conn = sqlite3.connect('db.db')
-            cursor = conn.cursor()
-            cursor.execute(f"SELECT user_group FROM user_table WHERE chat_id = '{message.from_user.id}'")
-            result_set1 = cursor.fetchall()
-            conn.commit()
-            conn.close()
-            url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={result_set1[0][0]}')
-            response = requests.get(url).json()
-            adding = []
-            for item in response["timetable"]:
-                if item["week"] == current_week:
-                    adding.append(
-                        [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
-            flag = 0
-            for i in adding:
-                if i[0] == '4':
-                    if i[2] != '':
-                        flag = 1
-            if flag == 1:
-                timetable_message += "Вы смотрите расписание на <b>следующую</b> неделю\n"
-                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Четверг</b>\n\t\t➖➖➖➖➖➖➖'
-                for i in adding:
-                    if i[0] == '4':
-                        if i[4] == '' and i[5] == '':
-                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
-                        else:
-                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
-            else:
-                timetable_message += 'В следующий четверг у этой группы пар нет!'
-            await message.reply(timetable_message, parse_mode="HTML")
-
-        elif switch_text == 'пятница':
-            timetable_message = ""
-            current_week = "0"
-            url = 'https://edu.sfu-kras.ru/timetable'
-            response = requests.get(url).text
-            match = re.search(r'Идёт\s\w{8}\sнеделя', response)
-            if match:
-                current_week = "2"
-            else:
-                current_week = "1"
-            conn = sqlite3.connect('db.db')
-            cursor = conn.cursor()
-            cursor.execute(f"SELECT user_group FROM user_table WHERE chat_id = '{message.from_user.id}'")
-            result_set1 = cursor.fetchall()
-            conn.commit()
-            conn.close()
-            url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={result_set1[0][0]}')
-            response = requests.get(url).json()
-            adding = []
-            for item in response["timetable"]:
-                if item["week"] == current_week:
-                    adding.append(
-                        [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
-            flag = 0
-            for i in adding:
-                if i[0] == '5':
-                    if i[2] != '':
-                        flag = 1
-            if flag == 1:
-                timetable_message += "Вы смотрите расписание на <b>следующую</b> неделю\n"
-                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Пятница</b>\n\t\t➖➖➖➖➖➖➖'
-                for i in adding:
-                    if i[0] == '5':
-                        if i[4] == '' and i[5] == '':
-                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
-                        else:
-                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
-            else:
-                timetable_message += 'В следующую пятницу у этой группы пар нет!'
-            await message.reply(timetable_message, parse_mode="HTML")
-
-        elif switch_text == 'суббота':
-            timetable_message = ""
-            current_week = "0"
-            url = 'https://edu.sfu-kras.ru/timetable'
-            response = requests.get(url).text
-            match = re.search(r'Идёт\s\w{8}\sнеделя', response)
-            if match:
-                current_week = "2"
-            else:
-                current_week = "1"
-            conn = sqlite3.connect('db.db')
-            cursor = conn.cursor()
-            cursor.execute(f"SELECT user_group FROM user_table WHERE chat_id = '{message.from_user.id}'")
-            result_set1 = cursor.fetchall()
-            conn.commit()
-            conn.close()
-            url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={result_set1[0][0]}')
-            response = requests.get(url).json()
-            adding = []
-            for item in response["timetable"]:
-                if item["week"] == current_week:
-                    adding.append(
-                        [item['day'], item['time'], item['subject'], item['type'], item['teacher'], item['place']])
-            flag = 0
-            for i in adding:
-                if i[0] == '6':
-                    if i[2] != '':
-                        flag = 1
-            if flag == 1:
-                timetable_message += "Вы смотрите расписание на <b>следующую</b> неделю\n"
-                timetable_message += '\n\t\t\t\t\t\t\t\t\t<b>Суббота</b>\n\t\t➖➖➖➖➖➖➖'
-                for i in adding:
-                    if i[0] == '6':
-                        if i[4] == '' and i[5] == '':
-                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]})\n'
-                        else:
-                            timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
-            else:
-                timetable_message += 'В следующую субботу у этой группы пар нет!'
+                timetable_message += 'On Saturday, this group has no couples!'
             await message.reply(timetable_message, parse_mode="HTML")
         elif switch_text == 'посмотреть расписание нынешней недели':
             state = dp.current_state(user=message.from_user.id)
             await state.set_state(ScheduleUser.all()[2])
-            await message.reply('Выберите день недели 👇\n(Вы будете смотреть нынешнюю неделю)'
+            await message.reply("Choose a day of the week 👇\n(You will be watching this week)"
                                 , reply=False, reply_markup=KeyBoards.day_of_the_week_kb)
         else:
-            await bot.send_message(message.from_user.id, messages.what)
+            await bot.send_message(message.from_user.id, messages.what_en)
 
 
 # endregion
