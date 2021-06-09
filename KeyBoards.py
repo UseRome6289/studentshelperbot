@@ -26,7 +26,7 @@ profile_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Меню")
 
 # Настройки
 setting_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Рассылки").add('Запланированные мероприятия'). \
-    add("Изменить информацию").add("Меню")
+    add("Изменить информацию").add('Поменять язык').add("Меню")
 
 # Изменение информации о себе
 change_information_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add("Изменить имя"). \
@@ -38,7 +38,7 @@ mailing_lists_kb2 = ReplyKeyboardMarkup(resize_keyboard=True).add("Меню")
 
 # Отправление рассылок из админ-панели
 admin_panel = ReplyKeyboardMarkup(resize_keyboard=True).add("Отправить рассылку") \
-    .add('Отправить рассылку всем пользователям').add("Меню")
+    .add('Отправить рассылку всем пользователям').add("Добавить преподавателя").add("Меню")
 admin_panel_teacher = ReplyKeyboardMarkup(resize_keyboard=True).add("Отправить рассылку") \
     .add("Меню")
 # Запланированные мероприятия
@@ -110,7 +110,7 @@ profile_kb_en = ReplyKeyboardMarkup(resize_keyboard=True).add("Menu")
 
 # Настройки
 setting_kb_en = ReplyKeyboardMarkup(resize_keyboard=True).add("Mailing lists").add('Planned events'). \
-    add("Change information").add("Menu")
+    add("Change information").add("Change the language").add("Menu")
 
 # Изменение информации о себе
 change_information_kb_en = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add("Change the name"). \
@@ -122,7 +122,7 @@ mailing_lists_kb2_en = ReplyKeyboardMarkup(resize_keyboard=True).add("Menu")
 
 # Отправление рассылок из админ-панели
 admin_panel_en = ReplyKeyboardMarkup(resize_keyboard=True).add("Send a newsletter") \
-    .add('Send a newsletter to all users').add("Menu")
+    .add('Send a newsletter to all users').add("Add a teacher").add("Menu")
 admin_panel_teacher_en = ReplyKeyboardMarkup(resize_keyboard=True).add("Send a newsletter") \
     .add("Menu")
 # Запланированные мероприятия

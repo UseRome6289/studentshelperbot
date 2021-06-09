@@ -62,3 +62,7 @@ class Delete(Helper):
     DELETE_EVENTS_1 = ListItem()
     DELETE_EVENTS_2 = ListItem()
     DELETE_EVENTS_3 = ListItem()
+
+class Change_Eu_Rus(Helper):
+    mode = HelperMode.snake_case
+    CHANGE_RUS_EN_0 = ListItem()
