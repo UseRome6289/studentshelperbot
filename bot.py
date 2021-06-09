@@ -6881,7 +6881,7 @@ async def name_change(message: types.Message):
                     state = dp.current_state(user=message.from_user.id)
                     await state.reset_state()
             else:
-                await bot.send_message(message.from_user.id, messages.message_error2)
+                await bot.send_message(message.from_user.id, "Похоже, что вы допустили ошибку, попробуйте еще раз ❌")
     else:
         # english
         if only_letters(message.text) == True:
@@ -6940,7 +6940,7 @@ async def name_change(message: types.Message):
                     state = dp.current_state(user=message.from_user.id)
                     await state.reset_state()
             else:
-                await bot.send_message(message.from_user.id, messages.message_error2)
+                await bot.send_message(message.from_user.id, 'It looks like you made a mistake, please try again ❌')
 
 
 @dp.message_handler(state='*', content_types=["text"])
