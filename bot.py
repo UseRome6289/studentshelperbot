@@ -2041,6 +2041,8 @@ async def process_admin_command1(message: types.Message):
             conn.commit()
             conn.close()
             await bot.send_message(message.from_user.id, messages.successfully)
+            await bot.send_message(a[1], f"Здравствуйте, {a[0]}, вас добавили в список преподавателей. "
+                                         f"Сделайте /start и зарегистрируйтесь за преподавателя.")
             is_succeed = False
             conn = sqlite3.connect('db.db')
             cursor = conn.cursor()
@@ -2092,6 +2094,8 @@ async def process_admin_command1(message: types.Message):
             conn.commit()
             conn.close()
             is_succeed = False
+            await bot.send_message(a[1], f"Здравствуйте, {a[0]}, вас добавили в список преподавателей. "
+                                         f"Сделайте /start и зарегистрируйтесь за преподавателя.")
             conn = sqlite3.connect('db.db')
             cursor = conn.cursor()
             cursor.execute(f"SELECT user_id FROM admins")
