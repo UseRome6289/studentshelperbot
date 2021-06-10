@@ -2030,19 +2030,25 @@ async def process_admin_command1(message: types.Message):
                 state = dp.current_state(user=message.from_user.id)
                 await state.reset_state()
         else:
-            conn = sqlite3.connect('db.db')
-            cursor = conn.cursor()
-            k = message.text
-            a = k.split(":")
-            conn = sqlite3.connect('db.db')
-            cursor = conn.cursor()
-            cursor.execute(
-                f"INSERT INTO admins(user_id, is_teacher, name_admin) values ({a[1]}, '{True}', '{a[0]}')")
-            conn.commit()
-            conn.close()
-            await bot.send_message(message.from_user.id, messages.successfully)
-            await bot.send_message(a[1], f"Здравствуйте, {a[0]}, вас добавили в список преподавателей. "
-                                         f"Нажмите на /start и зарегистрируйтесь за преподавателя.")
+            try:
+                k = message.text
+                a = k.split(":")
+                conn = sqlite3.connect('db.db')
+                cursor = conn.cursor()
+                cursor.execute(f"SELECT user_id FROM admins WHERE user_id = '{a[1]}'")
+                result_set2 = cursor.fetchall()
+                if result_set2 == []:
+                    await bot.send_message(a[1], f"Здравствуйте, <b>{a[0]}</b>, вас добавили в список преподавателей.\n"
+                                             f"Нажмите на /start и <b>зарегистрируйтесь</b> за преподавателя.", parse_mode= "HTML")
+                    cursor.execute(
+                        f"INSERT INTO admins(user_id, is_teacher, name_admin) values ({a[1]}, '{True}', '{a[0]}')")
+                    conn.commit()
+                    conn.close()
+                    await bot.send_message(message.from_user.id, messages.successfully)
+                else:
+                    await bot.send_message(message.from_user.id, "Пользователь уже преподаватель!")
+            except:
+                await bot.send_message(message.from_user.id, "Пользователь заблокировал бота")
             is_succeed = False
             conn = sqlite3.connect('db.db')
             cursor = conn.cursor()
@@ -2053,8 +2059,15 @@ async def process_admin_command1(message: types.Message):
                 if item[0] == message.from_user.id:
                     is_succeed = True
             if is_succeed:
-                await message.reply(messages.menu
-                                    , reply=False, reply_markup=KeyBoards.menu_admin_kb)
+                await message.reply(messages.menu_en
+                                    , reply=False, reply_markup=KeyBoards.menu_admin_kb_en)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+            else:
+                await message.reply(messages.menu_en
+                                    , reply=False, reply_markup=KeyBoards.menu_user_kb_en)
                 conn.commit()
                 conn.close()
                 state = dp.current_state(user=message.from_user.id)
@@ -2085,29 +2098,46 @@ async def process_admin_command1(message: types.Message):
                 state = dp.current_state(user=message.from_user.id)
                 await state.reset_state()
         else:
-            k = message.text
-            a = k.split(":")
-            conn = sqlite3.connect('db.db')
-            cursor = conn.cursor()
-            cursor.execute(
-                f"INSERT INTO admins(user_id, is_teacher, name_admin) values ({a[1]}, '{True}', '{a[0]}')")
-            conn.commit()
-            conn.close()
+            try:
+                k = message.text
+                a = k.split(":")
+                conn = sqlite3.connect('db.db')
+                cursor = conn.cursor()
+                cursor.execute(f"SELECT user_id FROM admins WHERE user_id = '{a[1]}'")
+                result_set2 = cursor.fetchall()
+                if result_set2 == []:
+                    await bot.send_message(a[1], f"Здравствуйте, <b>{a[0]}</b>, вас добавили в список преподавателей.\n"
+                                                 f"Нажмите на /start и <b>зарегистрируйтесь</b> за преподавателя.",
+                                           parse_mode="HTML")
+                    cursor.execute(
+                        f"INSERT INTO admins(user_id, is_teacher, name_admin) values ({a[1]}, '{True}', '{a[0]}')")
+                    conn.commit()
+                    conn.close()
+                    await bot.send_message(message.from_user.id, messages.successfully_en)
+                else:
+                    await bot.send_message(message.from_user.id, "The user is already a teacher!")
+            except:
+                await bot.send_message(message.from_user.id, "The user blocked the bot")
+
             is_succeed = False
-            await bot.send_message(a[1], f"Здравствуйте, {a[0]}, вас добавили в список преподавателей. "
-                                         f"Нажмите на /start и зарегистрируйтесь за преподавателя.")
             conn = sqlite3.connect('db.db')
             cursor = conn.cursor()
             cursor.execute(f"SELECT user_id FROM admins")
             result_set = cursor.fetchall()
             cursor.close()
-            await bot.send_message(message.from_user.id, messages.successfully_en)
             for item in result_set:
                 if item[0] == message.from_user.id:
                     is_succeed = True
             if is_succeed:
                 await message.reply(messages.menu_en
                                     , reply=False, reply_markup=KeyBoards.menu_admin_kb_en)
+                conn.commit()
+                conn.close()
+                state = dp.current_state(user=message.from_user.id)
+                await state.reset_state()
+            else:
+                await message.reply(messages.menu_en
+                                    , reply=False, reply_markup=KeyBoards.menu_user_kb_en)
                 conn.commit()
                 conn.close()
                 state = dp.current_state(user=message.from_user.id)
