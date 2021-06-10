@@ -2059,15 +2059,15 @@ async def process_admin_command1(message: types.Message):
                 if item[0] == message.from_user.id:
                     is_succeed = True
             if is_succeed:
-                await message.reply(messages.menu_en
-                                    , reply=False, reply_markup=KeyBoards.menu_admin_kb_en)
+                await message.reply(messages.menu
+                                    , reply=False, reply_markup=KeyBoards.menu_admin_kb)
                 conn.commit()
                 conn.close()
                 state = dp.current_state(user=message.from_user.id)
                 await state.reset_state()
             else:
-                await message.reply(messages.menu_en
-                                    , reply=False, reply_markup=KeyBoards.menu_user_kb_en)
+                await message.reply(messages.menu
+                                    , reply=False, reply_markup=KeyBoards.menu_user_kb)
                 conn.commit()
                 conn.close()
                 state = dp.current_state(user=message.from_user.id)
