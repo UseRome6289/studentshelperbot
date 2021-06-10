@@ -333,67 +333,89 @@ class MyThread3(Thread):
 
     def run(self):
         global adding2, a, data, mes
-        while not self.stopped.wait(80):
-
-            url = 'https://edu.sfu-kras.ru/timetable'
-            response = requests.get(url).text
-            match = re.search(r'Идёт\s\w{8}\sнеделя', response)
-            if match:
-                current_week = "1"
-            else:
-                current_week = "2"
+        while not self.stopped.wait(60):
             conn = sqlite3.connect('db.db')
             cursor = conn.cursor()
-            cursor.execute(f"SELECT user_group FROM users")
-            result_set = cursor.fetchall()
+            cursor.execute(f"SELECT chat_id FROM users")
+            result_set2 = cursor.fetchall()
             cursor.close()
-            listing = []
-            for i in result_set:
-                listing.append(i)
-            listing = list(set(listing))
-            for i in listing:
-                url = f'http://edu.sfu-kras.ru/api/timetable/get?target={i[0]}'
-                response = requests.get(url).json()
-                adding2 = []
-                for item in response["timetable"]:
-                    if item["week"] == current_week:
-                        adding2.append(
-                            [item['day'], item['time'], item['subject'], item['type'], "", item['place']])
-                date = datetime.datetime.today()
-                date_date = date.strftime('%H:%M')
-                date_split = date_date.split(':')
-                listing_date_split = []
-                for n in date_split:
-                    n = int(n)
-                    listing_date_split.append(n)
-                listing_date_sum = listing_date_split[0] * 60 + listing_date_split[1]
-                state_time = 0
-                local_time_now = time.time()
-                local_time = time.ctime(local_time_now)
-                local_time = local_time.split(' ')
-                a = '0'
-                if local_time[0] == "Mon":
-                    a = '1'
-                    local_time[0] = "понедельник"
-                if local_time[0] == "Tue":
-                    a = '2'
-                    local_time[0] = "вторник"
-                if local_time[0] == "Wed":
-                    a = '3'
-                    local_time[0] = "среда"
-                if local_time[0] == "Thu":
-                    a = '4'
-                    local_time[0] = "четверг"
-                if local_time[0] == "Fri":
-                    a = '5'
-                    local_time[0] = "пятница"
-                if local_time[0] == "Sat":
-                    a = '6'
-                    local_time[0] = "суббота"
-                if local_time[0] == "Sun":
-                    a = '7'
-                    local_time[0] = "воскресенье"
-                if listing_date_sum == state_time or listing_date_sum == 1:
+            date = datetime.datetime.today()
+            date_date = date.strftime('%H:%M')
+            date_split = date_date.split(':')
+            listing_date_split = []
+            for n in date_split:
+                n = int(n)
+                listing_date_split.append(n)
+            listing_date_sum = listing_date_split[0] * 60 + listing_date_split[1]
+            if listing_date_sum == 0:
+                conn = sqlite3.connect('db.db')
+                cursor = conn.cursor()
+                cursor.execute(f"UPDATE `users` SET `7utra` = '{1}'")
+                conn.commit()
+                conn.close()
+            for l in result_set2:
+                conn = sqlite3.connect('db.db')
+                cursor = conn.cursor()
+                cursor.execute(f"SELECT `7utra` FROM users WHERE chat_id = '{l[0]}'")
+                result_set2 = cursor.fetchall()
+                cursor.close()
+                if result_set2[0][0] == 1:
+                    conn = sqlite3.connect('db.db')
+                    cursor = conn.cursor()
+                    cursor.execute(f"UPDATE `users` SET `7utra` = '{0}' WHERE `chat_id` = '{l[0]}'")
+                    conn.commit()
+                    conn.close()
+                    conn = sqlite3.connect('db.db')
+                    cursor = conn.cursor()
+                    cursor.execute(f"SELECT `user_group` FROM users WHERE chat_id = '{l[0]}'")
+                    result_set2 = cursor.fetchall()
+                    cursor.close()
+                    url = 'https://edu.sfu-kras.ru/timetable'
+                    response = requests.get(url).text
+                    match = re.search(r'Идёт\s\w{8}\sнеделя', response)
+                    if match:
+                        current_week = "1"
+                    else:
+                        current_week = "2"
+                    url = f'http://edu.sfu-kras.ru/api/timetable/get?target={result_set2[0][0]}'
+                    response = requests.get(url).json()
+                    adding2 = []
+                    for item in response["timetable"]:
+                        if item["week"] == current_week:
+                            adding2.append(
+                                [item['day'], item['time'], item['subject'], item['type'], "", item['place']])
+                    date = datetime.datetime.today()
+                    date_date = date.strftime('%H:%M')
+                    date_split = date_date.split(':')
+                    listing_date_split = []
+                    for n in date_split:
+                        n = int(n)
+                        listing_date_split.append(n)
+                    local_time_now = time.time()
+                    local_time = time.ctime(local_time_now)
+                    local_time = local_time.split(' ')
+                    a = '0'
+                    if local_time[0] == "Mon":
+                        a = '1'
+                        local_time[0] = "понедельник"
+                    if local_time[0] == "Tue":
+                        a = '2'
+                        local_time[0] = "вторник"
+                    if local_time[0] == "Wed":
+                        a = '3'
+                        local_time[0] = "среда"
+                    if local_time[0] == "Thu":
+                        a = '4'
+                        local_time[0] = "четверг"
+                    if local_time[0] == "Fri":
+                        a = '5'
+                        local_time[0] = "пятница"
+                    if local_time[0] == "Sat":
+                        a = '6'
+                        local_time[0] = "суббота"
+                    if local_time[0] == "Sun":
+                        a = '7'
+                        local_time[0] = "воскресенье"
                     s_city = "Красноярск,RU"
                     city_id = 0
                     appid = "8fb0b9a76ed0af2c84d8fae4a6f61133"
@@ -458,7 +480,7 @@ class MyThread3(Thread):
                         pass
                     conn = sqlite3.connect('db.db')
                     cursor = conn.cursor()
-                    cursor.execute(f"SELECT chat_id, real_name FROM users WHERE user_group = '{i[0]}'")
+                    cursor.execute(f"SELECT chat_id, real_name FROM users WHERE chat_id = '{l[0]}'")
                     id_group = cursor.fetchall()
                     cursor.close()
                     timetable_message = ""
@@ -469,7 +491,7 @@ class MyThread3(Thread):
                         current_week = "1"
                     else:
                         current_week = "2"
-                    url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={i[0]}')
+                    url = (f'http://edu.sfu-kras.ru/api/timetable/get?target={result_set2[0][0]}')
                     response = requests.get(url).json()
                     adding = []
                     for item in response["timetable"]:
@@ -482,13 +504,29 @@ class MyThread3(Thread):
                         if p[0] == a:
                             if p[2] != '':
                                 flag = 1
-                    if flag == 1:
-                        for l in adding:
-                            if l[0] == a:
-                                if l[4] == '' and l[5] == '':
-                                    timetable_message += f'\n{l[1]}\n{l[2]} ({l[3]})\n'
-                                else:
-                                    timetable_message += f'\n{l[1]}\n{l[2]} ({l[3]}) \n{l[4]}\n{l[5]}\n'
+                    conn = sqlite3.connect('db.db')
+                    cursor = conn.cursor()
+                    cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{l[0]}'")
+                    result_set = cursor.fetchall()
+                    is_ru = False
+                    if result_set[0][0] == 1:
+                        is_ru = True
+                    if is_ru == False:
+                        if flag == 1:
+                            for u in adding:
+                                if u[0] == a:
+                                    if u[4] == '' and u[5] == '':
+                                        timetable_message += f'\n{u[1]}\n{translate(u[2])} ({translate(u[3])})\n'
+                                    else:
+                                        timetable_message += f'\n{u[1]}\n{translate(u[2])} ({translate(u[3])}) \n{translate(u[4])}\n{u[5]}\n'
+                    else:
+                        if flag == 1:
+                            for u in adding:
+                                if u[0] == a:
+                                    if u[4] == '' and u[5] == '':
+                                        timetable_message += f'\n{u[1]}\n{u[2]} ({u[3]})\n'
+                                    else:
+                                        timetable_message += f'\n{u[1]}\n{u[2]} ({u[3]}) \n{u[4]}\n{u[5]}\n'
                     for k in id_group:
                         conn = sqlite3.connect('db.db')
                         cursor = conn.cursor()
