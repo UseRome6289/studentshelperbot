@@ -1427,9 +1427,9 @@ async def process_admin_command1(message: types.Message):
                 cursor.close()
                 if group_users == group:
                     if rus[0][0] == 1:
-                        a = f'Рассылка от пользователя: {name[0][0]}\n' + f'{content[0][0]}'
+                        a = f'Рассылка от пользователя: <b>{name[0][0]}</b>\n' + '\n ➖➖➖➖➖➖ \n\n' + f'<i>{content[0][0]}</i>'
                     else:
-                        a = f'Mailing list from the user: {name[0][0]}\n' + f'{translate(content[0][0])}'
+                        a = f'Mailing list from the user: <b>{name[0][0]}</b>\n' +'\n ➖➖➖➖➖➖ \n\n' + f'<i>{translate(content[0][0])}</i>'
                     if incoming_event3[message.from_user.id] == 'Без таймера':
                         pass
                     else:
@@ -1439,7 +1439,10 @@ async def process_admin_command1(message: types.Message):
                             f"INSERT INTO mail(`chat_id`, `event1`, `time`, `30min`, `5min`) values ({user[0]}, '{content[0][0]}', {time2[0][0]}, {1}, {1})")
                         conn.commit()
                         conn.close()
-                    bot2.send_message(user[0], a)
+                    try:
+                        await bot.send_message(user[0], a, parse_mode='HTML')
+                    except:
+                        pass
             incoming_event3.pop(message.from_user.id)
             await dp.bot.send_message(message.from_user.id,
                                       f'Ваша рассылка: <b>{content[0][0]}</b>\nУспешно отправлена группе '
@@ -1527,17 +1530,24 @@ async def process_admin_command1(message: types.Message):
                 cursor.close()
                 if group_users == group:
                     if rus[0][0] == 1:
-                        a = f'Рассылка от пользователя: {name[0][0]}\n' + f'{content[0][0]}'
+                        a = f'Рассылка от пользователя: <b>{name[0][0]}</b>\n' + '\n ➖➖➖➖➖➖ \n\n' + f'<i>{content[0][0]}</i>'
                     else:
-                        a = f'Mailing list from the user: {name[0][0]}\n' + f'{translate(content[0][0])}'
+                        a = f'Mailing list from the user: <b>{name[0][0]}</b>\n' + '\n ➖➖➖➖➖➖ \n\n' + f'<i>{translate(content[0][0])}</i>'
                     if incoming_event3[message.from_user.id] == 'Without a timer':
-                        bot2.send_message(user[0], a)
+                        try:
+                            await bot.send_message(user[0], a, parse_mode='HTML')
+                        except:
+                            pass
                     else:
+
                         conn = sqlite3.connect('db.db')
                         cursor = conn.cursor()
                         cursor.execute(
                             f"INSERT INTO mail(`chat_id`, `event1`, `time`, `30min`, `5min`) values ({user[0]}, '{content[0][0]}', {time2[0][0]}, {1}, {1})")
-                        bot2.send_message(user[0], a)
+                        try:
+                            await bot.send_message(user[0], a, parse_mode='HTML')
+                        except:
+                            pass
                         conn.commit()
                         conn.close()
 
@@ -7109,7 +7119,7 @@ async def handler_message(msg: types.Message):
                     if local_time[0] == "Sun":
                         local_time[0] = "Воскресенье"
                     # месяц
-                    if local_time[1] == "Jan":
+                    if local_time[1] == "Jun":
                         local_time[1] = "Января"
                     if local_time[1] == "Feb":
                         local_time[1] = "Февраля"
@@ -7221,7 +7231,7 @@ async def handler_message(msg: types.Message):
                     if local_time[0] == "Sun":
                         local_time[0] = "Воскресенье"
                     # месяц
-                    if local_time[1] == "Jan":
+                    if local_time[1] == "Jun":
                         local_time[1] = "Января"
                     if local_time[1] == "Feb":
                         local_time[1] = "Февраля"
