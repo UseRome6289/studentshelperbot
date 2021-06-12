@@ -453,8 +453,6 @@ class MyThread3(Thread):
                         url = 'https://edu.sfu-kras.ru/timetable'
                         response = requests.get(url).text
                         match = re.search(r'Идёт\s\w{8}\sнеделя', response)
-                        k_ru = False
-                        k_en = False
                         if match:
                             current_week = "1"
                         else:
@@ -479,25 +477,9 @@ class MyThread3(Thread):
                                         timetable_message += f'\n{l[1]}\n{l[2]} ({l[3]})\n'
                                     else:
                                         timetable_message += f'\n{l[1]}\n{l[2]} ({l[3]}) \n{l[4]}\n{l[5]}\n'
-                        else:
 
-                            conn = sqlite3.connect('db.db')
-                            cursor = conn.cursor()
-                            cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{k[0]}'")
-                            result_set = cursor.fetchall()
-                            is_ru = False
-                            if result_set[0][0] == 1:
-                                is_ru = True
-                            if is_ru == True:
-                                k_ru = True
-                            else:
-                                k_en = True
 
                         for k in id_group:
-                            if k_ru:
-                                timetable_message += 'пар нет! Отличный повод увидеться с друзьями! 🎉'
-                            if k_en:
-                                timetable_message += 'no couples, a great reason to see your friends! 🎉'
                             conn = sqlite3.connect('db.db')
                             cursor = conn.cursor()
                             cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{k[0]}'")
@@ -505,14 +487,24 @@ class MyThread3(Thread):
                             is_ru = False
                             if result_set[0][0] == 1:
                                 is_ru = True
-                            if is_ru == True:
-                                bot2.send_message(k[0], f"Доброе утро, {k[1]}!\n\nСегодня {local_time[0]}, "
-                                                    f"сейчас {data['weather'][0]['description']}\n\nТемпература в Красноярске "
-                                                    f"{round(int(data['main']['temp']))}°.\n\nПрогноз погоды на сегодня:\n\n{mes}\nУ вас сегодня\n{timetable_message}")
+                            if flag == 1:
+                                if is_ru == True:
+                                    bot2.send_message(k[0], f"Доброе утро, {k[1]}!\n\nСегодня {local_time[0]}, "
+                                                        f"сейчас {data['weather'][0]['description']}\n\nТемпература в Красноярске "
+                                                        f"{round(int(data['main']['temp']))}°.\n\nПрогноз погоды на сегодня:\n\n{mes}\nУ вас сегодня\n{timetable_message}")
+                                else:
+                                    bot2.send_message(k[0], f"Good morning, {k[1]}!\n\nToday {local_time[0]}, "
+                                                            f"now {data['weather'][0]['description']}\n\nTemperature in Krasnoyarsk "
+                                                            f"{round(int(data['main']['temp']))}°.\n\nToday's weather forecast:\n\n{mes}\nYou have today\n{timetable_message}")
                             else:
-                                bot2.send_message(k[0], f"Good morning, {k[1]}!\n\nToday {local_time[0]}, "
-                                                        f"now {data['weather'][0]['description']}\n\nTemperature in Krasnoyarsk "
-                                                        f"{round(int(data['main']['temp']))}°.\n\nToday's weather forecast:\n\n{mes}\nYou have today\n{timetable_message}")
+                                if is_ru == True:
+                                    bot2.send_message(k[0], f"Доброе утро, {k[1]}!\n\nСегодня {local_time[0]}, "
+                                                        f"сейчас {data['weather'][0]['description']}\n\nТемпература в Красноярске "
+                                                        f"{round(int(data['main']['temp']))}°.\n\nПрогноз погоды на сегодня:\n\n{mes}\nУ вас сегодня пар нет! Отличный повод увидеться с друзьями! 🎉'")
+                                else:
+                                    bot2.send_message(k[0], f"Good morning, {k[1]}!\n\nToday {local_time[0]}, "
+                                                            f"now {data['weather'][0]['description']}\n\nTemperature in Krasnoyarsk "
+                                                            f"{round(int(data['main']['temp']))}°.\n\nToday's weather forecast:\n\n{mes}\nYou have today no couples, a great reason to see your friends! 🎉")
 
 
 
