@@ -554,7 +554,18 @@ class MyThread3(Thread):
                                                         f"now {translate(data['weather'][0]['description'])}\n\nTemperature in Krasnoyarsk "
                                                         f"{round(int(data['main']['temp']))}°.\n\nToday's weather forecast:\n\n{translate(mes)}\nYou have today no couples, a great reason to see your friends! 🎉")
 
+class MyThread4(Thread):
+    def __init__(self, event):
+        Thread.__init__(self)
+        self.stopped = event
 
+    def run(self):
+        while not self.stopped.wait(3600):
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT ru FROM users WHERE chat_id = 1008740088")
+            result_set = cursor.fetchall()
+            bot2.send_message(1008740088, f"Язык на сервере {result_set[0][0]}")
 # endregions
 
 @dp.message_handler(state='*', commands='start')
@@ -7839,4 +7850,7 @@ if __name__ == "__main__":
     stopFlag3 = threading.Event()
     thread3 = MyThread3(stopFlag3)
     thread3.start()
+    stopFlag4 = threading.Event()
+    thread4 = MyThread4(stopFlag4)
+    thread4.start()
     executor.start_polling(dp, on_shutdown=shutdown, skip_updates=shutdown)
