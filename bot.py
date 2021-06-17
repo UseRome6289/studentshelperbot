@@ -80,7 +80,7 @@ class MyThread(Thread):
                     cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{item[0]}'")
                     result_set = cursor.fetchall()
                     is_ru = False
-                    if result_set[0][0] == 1:
+                    if result_set[0][0] == "True":
                         is_ru = True
                     if is_ru == True:
                         cursor.execute(
@@ -105,7 +105,7 @@ class MyThread(Thread):
                     cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{item[0]}'")
                     result_set = cursor.fetchall()
                     is_ru = False
-                    if result_set[0][0] == 1:
+                    if result_set[0][0] == "True":
                         is_ru = True
                     if is_ru == True:
                         cursor.execute(
@@ -129,7 +129,7 @@ class MyThread(Thread):
                 cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{item[0]}'")
                 result_set = cursor.fetchall()
                 is_ru = False
-                if result_set[0][0] == 1:
+                if result_set[0][0] == "True":
                     is_ru = True
                 if is_ru == True:
                     bot2.send_message(item[0], f'{real_name[0][0]}! Ваше мероприятие: {item[1]}\nокончено')
@@ -148,7 +148,7 @@ class MyThread(Thread):
                     cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{item[0]}'")
                     result_set = cursor.fetchall()
                     is_ru = False
-                    if result_set[0][0] == 1:
+                    if result_set[0][0] == "True":
                         is_ru = True
                     if is_ru == True:
                         cursor.execute(
@@ -172,7 +172,7 @@ class MyThread(Thread):
                     cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{item[0]}'")
                     result_set = cursor.fetchall()
                     is_ru = False
-                    if result_set[0][0] == 1:
+                    if result_set[0][0] == "True":
                         is_ru = True
                     if is_ru == True:
                         cursor.execute(
@@ -198,7 +198,7 @@ class MyThread(Thread):
                 cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{item[0]}'")
                 result_set = cursor.fetchall()
                 is_ru = False
-                if result_set[0][0] == 1:
+                if result_set[0][0] == "True":
                     is_ru = True
                 if is_ru == True:
                     bot2.send_message(item[0], f'{real_name[0][0]}! Рассылка: {item[1]} закончилась')
@@ -273,7 +273,7 @@ class MyThread2(Thread):
                                     cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{k[0]}'")
                                     result_set = cursor.fetchall()
                                     is_ru = False
-                                    if result_set[0][0] == 1:
+                                    if result_set[0][0] == "True":
                                         is_ru = True
                                     if is_ru == True:
                                         bot2.send_message(k[0], f'{k[1]}, у вас начинается {j[2]}')
@@ -285,7 +285,7 @@ class MyThread2(Thread):
                                     cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{k[0]}'")
                                     result_set = cursor.fetchall()
                                     is_ru = False
-                                    if result_set[0][0] == 1:
+                                    if result_set[0][0] == "True":
                                         is_ru = True
                                     if is_ru == True:
                                         bot2.send_message(k[0], f'{k[1]}, у вас начинается {j[2]} в {j[5]}')
@@ -304,7 +304,7 @@ class MyThread2(Thread):
                                     cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{k[0]}'")
                                     result_set = cursor.fetchall()
                                     is_ru = False
-                                    if result_set[0][0] == 1:
+                                    if result_set[0][0] == "True":
                                         is_ru = True
                                     if is_ru == True:
                                         bot2.send_message(k[0], f'{k[1]}, у вас через 5 минут начнется {j[2]}')
@@ -317,7 +317,7 @@ class MyThread2(Thread):
                                     cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{k[0]}'")
                                     result_set = cursor.fetchall()
                                     is_ru = False
-                                    if result_set[0][0] == 1:
+                                    if result_set[0][0] == "True":
                                         is_ru = True
                                     if is_ru == True:
                                         bot2.send_message(k[0], f'{k[1]}, у вас начнется {j[2]} через 5 минут в {j[5]}')
@@ -463,19 +463,39 @@ class MyThread3(Thread):
                             listik.append(t['weather'][0]['description'])
                             if q[1] == "15:00":
                                 break
-                        mes = ''
-                        j = 0
-                        for s in listik:
-                            if j == 0:
-                                mes += "В "
-                            mes += s
-                            j += 1
-                            if j != 3:
-                                mes += ", "
-                            if j == 3:
-                                mes += "\n"
-                                j = 0
-
+                        conn = sqlite3.connect('db.db')
+                        cursor = conn.cursor()
+                        cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{l[0]}'")
+                        result_set = cursor.fetchall()
+                        is_ru = False
+                        if result_set[0][0] == "True":
+                            is_ru = True
+                        if is_ru == True:
+                            mes = ''
+                            j = 0
+                            for s in listik:
+                                if j == 0:
+                                    mes += "В "
+                                mes += s
+                                j += 1
+                                if j != 3:
+                                    mes += ", "
+                                if j == 3:
+                                    mes += "\n"
+                                    j = 0
+                        else:
+                            mes = ''
+                            j = 0
+                            for s in listik:
+                                if j == 0:
+                                    mes += "В "
+                                mes += translate(s)
+                                j += 1
+                                if j != 3:
+                                    mes += ", "
+                                if j == 3:
+                                    mes += "\n"
+                                    j = 0
                     except Exception:
                         pass
                     conn = sqlite3.connect('db.db')
@@ -509,7 +529,7 @@ class MyThread3(Thread):
                     cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{l[0]}'")
                     result_set = cursor.fetchall()
                     is_ru = False
-                    if result_set[0][0] == 1:
+                    if result_set[0][0] == "True":
                         is_ru = True
                     if is_ru == False:
                         if flag == 1:
@@ -533,7 +553,7 @@ class MyThread3(Thread):
                         cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{k[0]}'")
                         result_set = cursor.fetchall()
                         is_ru = False
-                        if result_set[0][0] == 1:
+                        if result_set[0][0] == "True":
                             is_ru = True
                         if flag == 1:
                             if is_ru == True:
@@ -543,7 +563,7 @@ class MyThread3(Thread):
                             else:
                                 bot2.send_message(k[0], f"Good morning, {k[1]}!\n\nToday {translate(local_time[0])}, "
                                                         f"now {translate(data['weather'][0]['description'])}\n\nTemperature in Krasnoyarsk "
-                                                        f"{round(int(data['main']['temp']))}°.\n\nToday's weather forecast:\n\n{translate(mes)}\nYou have today\n{timetable_message}")
+                                                        f"{round(int(data['main']['temp']))}°.\n\nToday's weather forecast:\n\n{mes}\nYou have today\n{timetable_message}")
                         else:
                             if is_ru == True:
                                 bot2.send_message(k[0], f"Доброе утро, {k[1]}!\n\nСегодня {local_time[0]}, "
@@ -552,7 +572,7 @@ class MyThread3(Thread):
                             else:
                                 bot2.send_message(k[0], f"Good morning, {k[1]}!\n\nToday {translate(local_time[0])}, "
                                                         f"now {translate(data['weather'][0]['description'])}\n\nTemperature in Krasnoyarsk "
-                                                        f"{round(int(data['main']['temp']))}°.\n\nToday's weather forecast:\n\n{translate(mes)}\nYou have today no couples, a great reason to see your friends! 🎉")
+                                                        f"{round(int(data['main']['temp']))}°.\n\nToday's weather forecast:\n\n{mes}\nYou have today no couples, a great reason to see your friends! 🎉")
 
 class MyThread4(Thread):
     def __init__(self, event):
@@ -651,7 +671,7 @@ async def process_command0(message: types.Message):
     result_set = cursor.fetchall()
     cursor.close()
     is_ru = False
-    if result_set[0][0] == 1:
+    if result_set[0][0] == "True":
         is_ru = True
     switch_text = message.text.lower()
     if is_ru == True:
@@ -736,7 +756,7 @@ async def process_command1(message: types.Message):
     result_set = cursor.fetchall()
     cursor.close()
     is_ru = False
-    if result_set[0][0] == 1:
+    if result_set[0][0] == "True":
         is_ru = True
     switch_text = message.text.lower()
     if is_ru == True:
@@ -885,7 +905,7 @@ async def process_admin_command2(message: types.Message):
     result_set = cursor.fetchall()
     cursor.close()
     is_ru = False
-    if result_set[0][0] == 1:
+    if result_set[0][0] == "True":
         is_ru = True
     switch_text = message.text.lower()
     if is_ru == True:
@@ -993,7 +1013,7 @@ async def process_admin_command1(message: types.Message):
     result_set = cursor.fetchall()
     cursor.close()
     is_ru = False
-    if result_set[0][0] == 1:
+    if result_set[0][0] == "True":
         is_ru = True
     switch_text = message.text.lower()
     if is_ru == True:
@@ -1083,7 +1103,7 @@ async def process_admin_command4(message: types.Message):
     result_set = cursor.fetchall()
     cursor.close()
     is_ru = False
-    if result_set[0][0] == 1:
+    if result_set[0][0] == "True":
         is_ru = True
     switch_text = message.text.lower()
     if is_ru == True:
@@ -1197,7 +1217,7 @@ async def process_admin_command4(message: types.Message):
     result_set = cursor.fetchall()
     cursor.close()
     is_ru = False
-    if result_set[0][0] == 1:
+    if result_set[0][0] == "True":
         is_ru = True
     switch_text = message.text.lower()
     if is_ru == True:
@@ -1303,7 +1323,7 @@ async def process_admin_command4(message: types.Message):
     result_set = cursor.fetchall()
     cursor.close()
     is_ru = False
-    if result_set[0][0] == 1:
+    if result_set[0][0] == "True":
         is_ru = True
     switch_text = message.text.lower()
     if is_ru == True:
@@ -1421,7 +1441,7 @@ async def process_admin_command1(message: types.Message):
     result_set = cursor.fetchall()
     cursor.close()
     is_ru = False
-    if result_set[0][0] == 1:
+    if result_set[0][0] == "True":
         is_ru = True
     switch_text = message.text.lower()
     if is_ru == True:
@@ -1644,7 +1664,7 @@ async def process_admin_command1(message: types.Message):
     result_set = cursor.fetchall()
     cursor.close()
     is_ru = False
-    if result_set[0][0] == 1:
+    if result_set[0][0] == "True":
         is_ru = True
     switch_text = message.text.lower()
     if is_ru == True:
@@ -1734,7 +1754,7 @@ async def process_admin_command4(message: types.Message):
     result_set = cursor.fetchall()
     cursor.close()
     is_ru = False
-    if result_set[0][0] == 1:
+    if result_set[0][0] == "True":
         is_ru = True
     switch_text = message.text.lower()
     if is_ru == True:
@@ -1852,7 +1872,7 @@ async def process_admin_command1(message: types.Message):
     result_set = cursor.fetchall()
     cursor.close()
     is_ru = False
-    if result_set[0][0] == 1:
+    if result_set[0][0] == "True":
         is_ru = True
     switch_text = message.text.lower()
     if is_ru == True:
@@ -2060,7 +2080,7 @@ async def process_admin_command1(message: types.Message):
     result_set = cursor.fetchall()
     cursor.close()
     is_ru = False
-    if result_set[0][0] == 1:
+    if result_set[0][0] == "True":
         is_ru = True
     switch_text = message.text.lower()
     if is_ru == True:
@@ -2213,7 +2233,7 @@ async def name_change(message: types.Message):
     result_set = cursor.fetchall()
     cursor.close()
     is_ru = False
-    if result_set[0][0] == 1:
+    if result_set[0][0] == "True":
         is_ru = True
     switch_text = message.text.lower()
     if is_ru == True:
@@ -2307,7 +2327,7 @@ async def register_1(message: types.Message):
             if switch_text == "en🇬🇧":
                 conn = sqlite3.connect('db.db')
                 cursor = conn.cursor()
-                cursor.execute(f"UPDATE users SET ru = '{0}' WHERE chat_id = '{message.from_user.id}'")
+                cursor.execute(f"UPDATE users SET ru = '{False}' WHERE chat_id = '{message.from_user.id}'")
                 conn.commit()
                 conn.close()
                 state = dp.current_state(user=message.from_user.id)
@@ -2316,7 +2336,7 @@ async def register_1(message: types.Message):
             elif switch_text == "ru🇷🇺":
                 conn = sqlite3.connect('db.db')
                 cursor = conn.cursor()
-                cursor.execute(f"UPDATE users SET ru = '{1}' WHERE chat_id = '{message.from_user.id}'")
+                cursor.execute(f"UPDATE users SET ru = '{True}' WHERE chat_id = '{message.from_user.id}'")
                 conn.commit()
                 conn.close()
                 state = dp.current_state(user=message.from_user.id)
@@ -2328,7 +2348,7 @@ async def register_1(message: types.Message):
             if switch_text == "en🇬🇧":
                 conn = sqlite3.connect('db.db')
                 cursor = conn.cursor()
-                cursor.execute(f"UPDATE users SET ru = '{0}' WHERE chat_id = '{message.from_user.id}'")
+                cursor.execute(f"UPDATE users SET ru = '{False}' WHERE chat_id = '{message.from_user.id}'")
                 conn.commit()
                 conn.close()
                 state = dp.current_state(user=message.from_user.id)
@@ -2337,7 +2357,7 @@ async def register_1(message: types.Message):
             elif switch_text == "ru🇷🇺":
                 conn = sqlite3.connect('db.db')
                 cursor = conn.cursor()
-                cursor.execute(f"UPDATE users SET ru = '{1}' WHERE chat_id = '{message.from_user.id}'")
+                cursor.execute(f"UPDATE users SET ru = '{True}' WHERE chat_id = '{message.from_user.id}'")
                 conn.commit()
                 conn.close()
                 state = dp.current_state(user=message.from_user.id)
@@ -2350,7 +2370,7 @@ async def register_1(message: types.Message):
             if switch_text == "en🇬🇧":
                 conn = sqlite3.connect('db.db')
                 cursor = conn.cursor()
-                cursor.execute(f"UPDATE users SET ru = '{0}' WHERE chat_id = '{message.from_user.id}'")
+                cursor.execute(f"UPDATE users SET ru = '{False}' WHERE chat_id = '{message.from_user.id}'")
                 conn.commit()
                 conn.close()
                 state = dp.current_state(user=message.from_user.id)
@@ -2359,7 +2379,7 @@ async def register_1(message: types.Message):
             elif switch_text == "ru🇷🇺":
                 conn = sqlite3.connect('db.db')
                 cursor = conn.cursor()
-                cursor.execute(f"UPDATE users SET ru = '{1}' WHERE chat_id = '{message.from_user.id}'")
+                cursor.execute(f"UPDATE users SET ru = '{True}' WHERE chat_id = '{message.from_user.id}'")
                 conn.commit()
                 conn.close()
                 state = dp.current_state(user=message.from_user.id)
@@ -2371,7 +2391,7 @@ async def register_1(message: types.Message):
             if switch_text == "en🇬🇧":
                 conn = sqlite3.connect('db.db')
                 cursor = conn.cursor()
-                cursor.execute(f"UPDATE users SET ru = '{0}' WHERE chat_id = '{message.from_user.id}'")
+                cursor.execute(f"UPDATE users SET ru = '{False}' WHERE chat_id = '{message.from_user.id}'")
                 conn.commit()
                 conn.close()
                 state = dp.current_state(user=message.from_user.id)
@@ -2380,7 +2400,7 @@ async def register_1(message: types.Message):
             elif switch_text == "ru🇷🇺":
                 conn = sqlite3.connect('db.db')
                 cursor = conn.cursor()
-                cursor.execute(f"UPDATE users SET ru = '{1}' WHERE chat_id = '{message.from_user.id}'")
+                cursor.execute(f"UPDATE users SET ru = '{True}' WHERE chat_id = '{message.from_user.id}'")
                 conn.commit()
                 conn.close()
                 state = dp.current_state(user=message.from_user.id)
@@ -2398,7 +2418,8 @@ async def register_1(message: types.Message):
     result_set = cursor.fetchall()
     cursor.close()
     is_ru = False
-    if result_set[0][0] == 1:
+    if result_set[0][0] == "True":
+
         is_ru = True
     switch_text = message.text.lower()
     if is_ru == True:
@@ -2434,7 +2455,7 @@ async def register_2(message: types.Message):
     result_set = cursor.fetchall()
     cursor.close()
     is_ru = False
-    if result_set[0][0] == 1:
+    if result_set[0][0] == "True":
         is_ru = True
     switch_text = message.text.lower()
     if is_ru == True:
@@ -2472,7 +2493,7 @@ async def register_2(message: types.Message):
     result_set = cursor.fetchall()
     cursor.close()
     is_ru = False
-    if result_set[0][0] == 1:
+    if result_set[0][0] == "True":
         is_ru = True
     switch_text = message.text.lower()
     if is_ru == True:
@@ -2536,7 +2557,7 @@ async def register_3(message: types.Message):
     result_set = cursor.fetchall()
     cursor.close()
     is_ru = False
-    if result_set[0][0] == 1:
+    if result_set[0][0] == "True":
         is_ru = True
     switch_text = message.text.lower()
     if is_ru == True:
@@ -2623,7 +2644,7 @@ async def register_4(message: types.message):
     result_set = cursor.fetchall()
     cursor.close()
     is_ru = False
-    if result_set[0][0] == 1:
+    if result_set[0][0] == "True":
         is_ru = True
     switch_text = message.text.lower()
     if is_ru == True:
@@ -2662,7 +2683,7 @@ async def register_5(message: types.message):
     result_set = cursor.fetchall()
     cursor.close()
     is_ru = False
-    if result_set[0][0] == 1:
+    if result_set[0][0] == "True":
         is_ru = True
     switch_text = message.text.lower()
     if is_ru == True:
@@ -2759,7 +2780,7 @@ async def schedule_0(msg: types.Message):
     result_set = cursor.fetchall()
     cursor.close()
     is_ru = False
-    if result_set[0][0] == 1:
+    if result_set[0][0] == "True":
         is_ru = True
     switch_text = msg.text.lower()
     if is_ru == True:
@@ -2811,7 +2832,7 @@ async def schedule_1(message: types.Message):
     result_set = cursor.fetchall()
     cursor.close()
     is_ru = False
-    if result_set[0][0] == 1:
+    if result_set[0][0] == "True":
         is_ru = True
     switch_text = message.text.lower()
     if is_ru == True:
@@ -2922,7 +2943,7 @@ async def schedule_1(message: types.Message):
     result_set = cursor.fetchall()
     cursor.close()
     is_ru = False
-    if result_set[0][0] == 1:
+    if result_set[0][0] == "True":
         is_ru = True
     switch_text = message.text.lower()
     if is_ru == True:
@@ -3551,7 +3572,7 @@ async def schedule_1(message: types.Message):
     result_set = cursor.fetchall()
     cursor.close()
     is_ru = False
-    if result_set[0][0] == 1:
+    if result_set[0][0] == "True":
         is_ru = True
     switch_text = message.text.lower()
     if is_ru == True:
@@ -4153,7 +4174,7 @@ async def schedule(message: types.Message):
     result_set = cursor.fetchall()
     cursor.close()
     is_ru = False
-    if result_set[0][0] == 1:
+    if result_set[0][0] == "True":
         is_ru = True
     switch_text = message.text.lower()
     if is_ru == True:
@@ -5254,7 +5275,7 @@ async def schedule_check(msg: types.Message):
     result_set = cursor.fetchall()
     cursor.close()
     is_ru = False
-    if result_set[0][0] == 1:
+    if result_set[0][0] == "True":
         is_ru = True
     switch_text = msg.text.lower()
     if is_ru == True:
@@ -6476,7 +6497,7 @@ async def schedule(message: types.Message):
     result_set = cursor.fetchall()
     cursor.close()
     is_ru = False
-    if result_set[0][0] == 1:
+    if result_set[0][0] == "True":
         is_ru = True
     switch_text = message.text.lower()
     if is_ru == True:
@@ -6587,7 +6608,7 @@ async def schedule(message: types.Message):
     result_set = cursor.fetchall()
     cursor.close()
     is_ru = False
-    if result_set[0][0] == 1:
+    if result_set[0][0] == "True":
         is_ru = True
     switch_text = message.text.lower()
     if is_ru == True:
@@ -6686,7 +6707,7 @@ async def schedule(message: types.Message):
     result_set = cursor.fetchall()
     cursor.close()
     is_ru = False
-    if result_set[0][0] == 1:
+    if result_set[0][0] == "True":
         is_ru = True
     switch_text = message.text.lower()
     if is_ru == True:
@@ -6819,7 +6840,7 @@ async def schedule(message: types.Message):
     result_set = cursor.fetchall()
     cursor.close()
     is_ru = False
-    if result_set[0][0] == 1:
+    if result_set[0][0] == "True":
         is_ru = True
     switch_text = message.text.lower()
     if is_ru == True:
@@ -6951,7 +6972,7 @@ async def name_change(message: types.Message):
     result_set = cursor.fetchall()
     cursor.close()
     is_ru = False
-    if result_set[0][0] == 1:
+    if result_set[0][0] == "True":
         is_ru = True
     switch_text = message.text.lower()
     if is_ru == True:
@@ -6959,7 +6980,7 @@ async def name_change(message: types.Message):
             if switch_text == 'да':
                 conn = sqlite3.connect('db.db')
                 cursor = conn.cursor()
-                cursor.execute(f"UPDATE users SET ru = '{0}' WHERE chat_id = '{message.from_user.id}'")
+                cursor.execute(f"UPDATE users SET ru = '{False}' WHERE chat_id = '{message.from_user.id}'")
                 conn.commit()
                 conn.close()
                 is_succeed = False
@@ -7018,7 +7039,7 @@ async def name_change(message: types.Message):
             if switch_text == 'yes':
                 conn = sqlite3.connect('db.db')
                 cursor = conn.cursor()
-                cursor.execute(f"UPDATE users SET ru = '{1}' WHERE chat_id = '{message.from_user.id}'")
+                cursor.execute(f"UPDATE users SET ru = '{True}' WHERE chat_id = '{message.from_user.id}'")
                 conn.commit()
                 conn.close()
                 is_succeed = False
@@ -7083,7 +7104,7 @@ async def handler_message(msg: types.Message):
     result_set = cursor.fetchall()
     cursor.close()
     is_ru = False
-    if result_set[0][0] == 1:
+    if result_set[0][0] == "True":
         is_ru = True
     switch_text = msg.text.lower()
     if is_ru == True:
@@ -7478,7 +7499,7 @@ async def handler_message(msg: types.Message):
             result_set = cursor.fetchall()
             cursor.close()
             is_ru = False
-            if result_set[0][0] == 1:
+            if result_set[0][0] == "True":
                 is_ru = True
             if is_ru == True:
                 await bot.send_message(msg.from_user.id, messages.what)
@@ -7797,7 +7818,7 @@ async def handler_message(msg: types.Message):
             result_set = cursor.fetchall()
             cursor.close()
             is_ru = False
-            if result_set[0][0] == 1:
+            if result_set[0][0] == "True":
                 is_ru = True
             if is_ru == True:
                 await bot.send_message(msg.from_user.id, messages.what)
