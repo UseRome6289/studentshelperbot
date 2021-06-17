@@ -2292,7 +2292,7 @@ async def register_1(message: types.Message):
     is_succeed = False
     conn = sqlite3.connect('db.db')
     cursor = conn.cursor()
-    cursor.execute(f"INSERT INTO users(chat_id, name) values ({message.from_user.id}, '{message.from_user.username}')")
+    cursor.execute(f"INSERT INTO users(chat_id, name, `7utra`) values ({message.from_user.id}, '{message.from_user.username}', '{0}')")
     conn.commit()
     conn.close()
     conn = sqlite3.connect('db.db')
@@ -2307,7 +2307,7 @@ async def register_1(message: types.Message):
             if switch_text == "en🇬🇧":
                 conn = sqlite3.connect('db.db')
                 cursor = conn.cursor()
-                cursor.execute(f"UPDATE users SET RU = '{0}' WHERE chat_id = '{message.from_user.id}'")
+                cursor.execute(f"UPDATE users SET ru = '{0}' WHERE chat_id = '{message.from_user.id}'")
                 conn.commit()
                 conn.close()
                 state = dp.current_state(user=message.from_user.id)
@@ -2316,7 +2316,7 @@ async def register_1(message: types.Message):
             elif switch_text == "ru🇷🇺":
                 conn = sqlite3.connect('db.db')
                 cursor = conn.cursor()
-                cursor.execute(f"UPDATE users SET RU = '{1}' WHERE chat_id = '{message.from_user.id}'")
+                cursor.execute(f"UPDATE users SET ru = '{1}' WHERE chat_id = '{message.from_user.id}'")
                 conn.commit()
                 conn.close()
                 state = dp.current_state(user=message.from_user.id)
@@ -2328,7 +2328,7 @@ async def register_1(message: types.Message):
             if switch_text == "en🇬🇧":
                 conn = sqlite3.connect('db.db')
                 cursor = conn.cursor()
-                cursor.execute(f"UPDATE users SET RU = '{0}' WHERE chat_id = '{message.from_user.id}'")
+                cursor.execute(f"UPDATE users SET ru = '{0}' WHERE chat_id = '{message.from_user.id}'")
                 conn.commit()
                 conn.close()
                 state = dp.current_state(user=message.from_user.id)
@@ -2350,7 +2350,7 @@ async def register_1(message: types.Message):
             if switch_text == "en🇬🇧":
                 conn = sqlite3.connect('db.db')
                 cursor = conn.cursor()
-                cursor.execute(f"UPDATE users SET RU = '{0}' WHERE chat_id = '{message.from_user.id}'")
+                cursor.execute(f"UPDATE users SET ru = '{0}' WHERE chat_id = '{message.from_user.id}'")
                 conn.commit()
                 conn.close()
                 state = dp.current_state(user=message.from_user.id)
@@ -2359,7 +2359,7 @@ async def register_1(message: types.Message):
             elif switch_text == "ru🇷🇺":
                 conn = sqlite3.connect('db.db')
                 cursor = conn.cursor()
-                cursor.execute(f"UPDATE users SET RU = '{1}' WHERE chat_id = '{message.from_user.id}'")
+                cursor.execute(f"UPDATE users SET ru = '{1}' WHERE chat_id = '{message.from_user.id}'")
                 conn.commit()
                 conn.close()
                 state = dp.current_state(user=message.from_user.id)
@@ -2371,7 +2371,7 @@ async def register_1(message: types.Message):
             if switch_text == "en🇬🇧":
                 conn = sqlite3.connect('db.db')
                 cursor = conn.cursor()
-                cursor.execute(f"UPDATE users SET RU = '{0}' WHERE chat_id = '{message.from_user.id}'")
+                cursor.execute(f"UPDATE users SET ru = '{0}' WHERE chat_id = '{message.from_user.id}'")
                 conn.commit()
                 conn.close()
                 state = dp.current_state(user=message.from_user.id)
