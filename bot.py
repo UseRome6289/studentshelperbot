@@ -2328,6 +2328,8 @@ async def register_1(message: types.Message):
                 conn = sqlite3.connect('db.db')
                 cursor = conn.cursor()
                 cursor.execute(f"UPDATE users SET ru = '{False}' WHERE chat_id = '{message.from_user.id}'")
+                if message.from_user.id == 1008740088:
+                    bot2.send_message(1008740088, f"Язык на сервере изменен на строчке 2330 {result_set[0][0]}")
                 conn.commit()
                 conn.close()
                 state = dp.current_state(user=message.from_user.id)
@@ -2337,6 +2339,8 @@ async def register_1(message: types.Message):
                 conn = sqlite3.connect('db.db')
                 cursor = conn.cursor()
                 cursor.execute(f"UPDATE users SET ru = '{True}' WHERE chat_id = '{message.from_user.id}'")
+                if message.from_user.id == 1008740088:
+                    bot2.send_message(1008740088, f"Язык на сервере изменен на строчке 2343 {result_set[0][0]}")
                 conn.commit()
                 conn.close()
                 state = dp.current_state(user=message.from_user.id)
@@ -2349,6 +2353,8 @@ async def register_1(message: types.Message):
                 conn = sqlite3.connect('db.db')
                 cursor = conn.cursor()
                 cursor.execute(f"UPDATE users SET ru = '{False}' WHERE chat_id = '{message.from_user.id}'")
+                if message.from_user.id == 1008740088:
+                    bot2.send_message(1008740088, f"Язык на сервере изменен на строчке 2357 {result_set[0][0]}")
                 conn.commit()
                 conn.close()
                 state = dp.current_state(user=message.from_user.id)
@@ -2358,6 +2364,8 @@ async def register_1(message: types.Message):
                 conn = sqlite3.connect('db.db')
                 cursor = conn.cursor()
                 cursor.execute(f"UPDATE users SET ru = '{True}' WHERE chat_id = '{message.from_user.id}'")
+                if message.from_user.id == 1008740088:
+                    bot2.send_message(1008740088, f"Язык на сервере изменен на строчке 2368 {result_set[0][0]}")
                 conn.commit()
                 conn.close()
                 state = dp.current_state(user=message.from_user.id)
@@ -2371,6 +2379,8 @@ async def register_1(message: types.Message):
                 conn = sqlite3.connect('db.db')
                 cursor = conn.cursor()
                 cursor.execute(f"UPDATE users SET ru = '{False}' WHERE chat_id = '{message.from_user.id}'")
+                if message.from_user.id == 1008740088:
+                    bot2.send_message(1008740088, f"Язык на сервере изменен на строчке 2383 {result_set[0][0]}")
                 conn.commit()
                 conn.close()
                 state = dp.current_state(user=message.from_user.id)
@@ -2380,6 +2390,8 @@ async def register_1(message: types.Message):
                 conn = sqlite3.connect('db.db')
                 cursor = conn.cursor()
                 cursor.execute(f"UPDATE users SET ru = '{True}' WHERE chat_id = '{message.from_user.id}'")
+                if message.from_user.id == 1008740088:
+                    bot2.send_message(1008740088, f"Язык на сервере изменен на строчке 2394 {result_set[0][0]}")
                 conn.commit()
                 conn.close()
                 state = dp.current_state(user=message.from_user.id)
@@ -2401,6 +2413,8 @@ async def register_1(message: types.Message):
                 conn = sqlite3.connect('db.db')
                 cursor = conn.cursor()
                 cursor.execute(f"UPDATE users SET ru = '{True}' WHERE chat_id = '{message.from_user.id}'")
+                if message.from_user.id == 1008740088:
+                    bot2.send_message(1008740088, f"Язык на сервере изменен на строчке 2417 {result_set[0][0]}")
                 conn.commit()
                 conn.close()
                 state = dp.current_state(user=message.from_user.id)
@@ -6981,6 +6995,8 @@ async def name_change(message: types.Message):
                 conn = sqlite3.connect('db.db')
                 cursor = conn.cursor()
                 cursor.execute(f"UPDATE users SET ru = '{False}' WHERE chat_id = '{message.from_user.id}'")
+                if message.from_user.id == 1008740088:
+                    bot2.send_message(1008740088, f"Язык на сервере изменен на строчке 6999 {result_set[0][0]}")
                 conn.commit()
                 conn.close()
                 is_succeed = False
@@ -7040,6 +7056,8 @@ async def name_change(message: types.Message):
                 conn = sqlite3.connect('db.db')
                 cursor = conn.cursor()
                 cursor.execute(f"UPDATE users SET ru = '{True}' WHERE chat_id = '{message.from_user.id}'")
+                if message.from_user.id == 1008740088:
+                    bot2.send_message(1008740088, f"Язык на сервере изменен на строчке 7060 {result_set[0][0]}")
                 conn.commit()
                 conn.close()
                 is_succeed = False
