@@ -75,3 +75,10 @@ class Teacher(Helper):
     TEACHER_1 = ListItem()
     TEACHER_2 = ListItem()
     TEACHER_3 = ListItem()
+
+
+class Turn_on_off(Helper):
+    mode = HelperMode.snake_case
+    TURN_0 = ListItem()
+    TURN_1 = ListItem()
+    TURN_2 = ListItem()

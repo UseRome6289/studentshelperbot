@@ -13,7 +13,6 @@ menu_admin_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Расписан�
     .add("Посмотреть расписание группы или преподавателя").add("Запланированные мероприятия")\
     .add("Настройки") \
 
-
 # Меню обычного пользователя
 menu_user_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Расписание").add("Профиль").add("Рассылки") \
     .add("Посмотреть расписание группы или преподавателя").add("Запланированные мероприятия")\
@@ -31,7 +30,7 @@ profile_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Меню")
 
 # Настройки
 setting_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Рассылки").add('Запланированные мероприятия'). \
-    add("Изменить информацию").add('Поменять язык').add("Меню")
+    add("Изменить информацию").add('Поменять язык').add("Отключить или включить рассылку").add("Меню")
 
 # Изменение информации о себе
 change_information_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add("Изменить имя"). \
@@ -118,7 +117,7 @@ profile_kb_en = ReplyKeyboardMarkup(resize_keyboard=True).add("Menu")
 
 # Настройки
 setting_kb_en = ReplyKeyboardMarkup(resize_keyboard=True).add("Mailing lists").add('Planned events'). \
-    add("Change information").add("Change the language").add("Menu")
+    add("Change information").add("Change the language").add("Disable or enable mailing lists").add("Menu")
 
 # Изменение информации о себе
 change_information_kb_en = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add("Change the name"). \
