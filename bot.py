@@ -7378,7 +7378,7 @@ async def register_4(message: types.message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += 'В понедельник у вас пар нет!'
+                    timetable_message += 'В понедельник у преподавателя пар нет!'
                 await message.reply(timetable_message, parse_mode="HTML")
 
             elif switch_text == "вторник":
@@ -7424,7 +7424,7 @@ async def register_4(message: types.message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += 'Во вторник у вас пар нет!'
+                    timetable_message += 'Во вторник у преподавателя пар нет!'
                 await message.reply(timetable_message, parse_mode="HTML")
 
             elif switch_text == "среда":
@@ -7470,7 +7470,7 @@ async def register_4(message: types.message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += 'В среду у вас пар нет!'
+                    timetable_message += 'В среду у преподавателя пар нет!'
                 await message.reply(timetable_message, parse_mode="HTML")
 
             elif switch_text == "четверг":
@@ -7516,7 +7516,7 @@ async def register_4(message: types.message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += 'В четверг у вас пар нет!'
+                    timetable_message += 'В четверг у преподавателя пар нет!'
                 await message.reply(timetable_message, parse_mode="HTML")
 
             elif switch_text == "пятница":
@@ -7562,7 +7562,7 @@ async def register_4(message: types.message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += 'В пятницу у вас пар нет!'
+                    timetable_message += 'В пятницу у преподавателя пар нет!'
                 await message.reply(timetable_message, parse_mode="HTML")
 
             elif switch_text == "суббота":
@@ -7608,7 +7608,7 @@ async def register_4(message: types.message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += 'В субботу у вас пар нет!'
+                    timetable_message += 'В субботу у преподавателя пар нет!'
                 await message.reply(timetable_message, parse_mode="HTML")
             elif switch_text == 'посмотреть расписание на след. неделю':
                 state = dp.current_state(user=message.from_user.id)
@@ -7686,7 +7686,7 @@ async def register_4(message: types.message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{translate(i[2])} ({translate(i[3])}) \n{translate(i[4])}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += "You don't have any couples on Monday!"
+                    timetable_message += "On Monday, the teacher has no pairs!"
                 await message.reply(timetable_message, parse_mode="HTML")
 
             elif switch_text == "tuesday":
@@ -7732,7 +7732,7 @@ async def register_4(message: types.message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{translate(i[2])} ({translate(i[3])}) \n{translate(i[4])}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += "You don't have any couples on Tuesday!"
+                    timetable_message += "On Tuesday, the teacher has no pairs!"
                 await message.reply(timetable_message, parse_mode="HTML")
 
             elif switch_text == "wednesday":
@@ -7778,7 +7778,7 @@ async def register_4(message: types.message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{translate(i[2])} ({translate(i[3])}) \n{translate(i[4])}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += "You don't have any couples on Wednesday!"
+                    timetable_message += "On Wednesday, the teacher has no pairs!"
                 await message.reply(timetable_message, parse_mode="HTML")
 
             elif switch_text == "thursday":
@@ -7824,7 +7824,7 @@ async def register_4(message: types.message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{translate(i[2])} ({translate(i[3])}) \n{translate(i[4])}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += "You don't have any couples on Thursday!"
+                    timetable_message += "On Thursday, the teacher has no pairs!"
                 await message.reply(timetable_message, parse_mode="HTML")
 
             elif switch_text == "friday":
@@ -7870,7 +7870,7 @@ async def register_4(message: types.message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{translate(i[2])} ({translate(i[3])}) \n{translate(i[4])}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += "You don't have any couples on Friday!"
+                    timetable_message += "On Friday, the teacher has no pairs!"
                 await message.reply(timetable_message, parse_mode="HTML")
 
             elif switch_text == "saturday":
@@ -7916,7 +7916,7 @@ async def register_4(message: types.message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{translate(i[2])} ({translate(i[3])}) \n{translate(i[4])}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += "You don't have any couples on Saturday!"
+                    timetable_message += "On Saturday, the teacher has no pairs!"
                 await message.reply(timetable_message, parse_mode="HTML")
             elif switch_text == "view next week's schedule":
                 state = dp.current_state(user=message.from_user.id)
@@ -8003,7 +8003,7 @@ async def schedule_1(message: types.Message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += 'В следующий понедельник у вас пар нет!'
+                    timetable_message += 'В следующий понедельник у преподавателя пар нет!'
                 await message.reply(timetable_message, parse_mode="HTML")
 
             elif switch_text == 'вторник':
@@ -8044,7 +8044,7 @@ async def schedule_1(message: types.Message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += 'Во следующий вторник у вас пар нет!'
+                    timetable_message += 'Во следующий вторник у преподавателя пар нет!'
                 await message.reply(timetable_message, parse_mode="HTML")
 
             elif switch_text == 'среда':
@@ -8085,7 +8085,7 @@ async def schedule_1(message: types.Message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += 'В следующую среду у вас пар нет!'
+                    timetable_message += 'В следующую среду у преподавателя пар нет!'
                 await message.reply(timetable_message, parse_mode="HTML")
 
             elif switch_text == 'четверг':
@@ -8126,7 +8126,7 @@ async def schedule_1(message: types.Message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += 'В следующий четверг у вас пар нет!'
+                    timetable_message += 'В следующий четверг у преподавателя пар нет!'
                 await message.reply(timetable_message, parse_mode="HTML")
 
             elif switch_text == 'пятница':
@@ -8167,7 +8167,7 @@ async def schedule_1(message: types.Message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += 'В следующую пятницу у вас пар нет!'
+                    timetable_message += 'В следующую пятницу у преподавателя пар нет!'
                 await message.reply(timetable_message, parse_mode="HTML")
 
             elif switch_text == 'суббота':
@@ -8208,7 +8208,7 @@ async def schedule_1(message: types.Message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{i[2]} ({i[3]}) \n{i[4]}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += 'В следующую субботу у вас пар нет!'
+                    timetable_message += 'В следующую субботу у преподавателя пар нет!'
                 await message.reply(timetable_message, parse_mode="HTML")
             elif switch_text == 'посмотреть расписание нынешней недели':
                 state = dp.current_state(user=message.from_user.id)
@@ -8286,7 +8286,7 @@ async def schedule_1(message: types.Message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{translate(i[2])} ({translate(i[3])}) \n{translate(i[4])}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += 'On Monday, this group has no couples!'
+                    timetable_message += 'Next Monday, the teacher has no couples!'
                 await message.reply(timetable_message, parse_mode="HTML")
 
             elif switch_text == "tuesday":
@@ -8332,7 +8332,7 @@ async def schedule_1(message: types.Message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{translate(i[2])} ({translate(i[3])}) \n{translate(i[4])}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += 'On Tuesday, this group has no couples!'
+                    timetable_message += 'Next Tuesday, the teacher has no couples!'
                 await message.reply(timetable_message, parse_mode="HTML")
 
             elif switch_text == "wednesday":
@@ -8378,7 +8378,7 @@ async def schedule_1(message: types.Message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{translate(i[2])} ({translate(i[3])}) \n{translate(i[4])}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += 'On Wednesday, this group has no pairs!'
+                    timetable_message += 'Next Wednesday, the teacher has no couples!'
                 await message.reply(timetable_message, parse_mode="HTML")
 
             elif switch_text == "thursday":
@@ -8424,7 +8424,7 @@ async def schedule_1(message: types.Message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{translate(i[2])} ({translate(i[3])}) \n{translate(i[4])}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += 'On Thursday, this group has no couples!'
+                    timetable_message += 'Next Thursday, the teacher has no couples!'
                 await message.reply(timetable_message, parse_mode="HTML")
 
             elif switch_text == "friday":
@@ -8470,7 +8470,7 @@ async def schedule_1(message: types.Message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{translate(i[2])} ({translate(i[3])}) \n{translate(i[4])}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += 'On Friday, this group has no couples!'
+                    timetable_message += 'Next Friday, the teacher has no couples!'
                 await message.reply(timetable_message, parse_mode="HTML")
 
             elif switch_text == "saturday":
@@ -8516,7 +8516,7 @@ async def schedule_1(message: types.Message):
                             else:
                                 timetable_message += f'\n{i[1]}\n{translate(i[2])} ({translate(i[3])}) \n{translate(i[4])}\n<b>{i[5]}</b>\n'
                 else:
-                    timetable_message += 'On Saturday, this group has no couples!'
+                    timetable_message += 'Next Saturday, the teacher has no couples!'
                 await message.reply(timetable_message, parse_mode="HTML")
             elif switch_text == 'view the schedule for the current week':
                 state = dp.current_state(user=message.from_user.id)
