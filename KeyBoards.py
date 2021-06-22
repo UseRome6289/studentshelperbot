@@ -10,13 +10,17 @@ greet_kb2_en = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
 # Меню с админ-панелью
 menu_admin_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Расписание").add("Админ-панель").add("Профиль") \
     .add("Рассылки") \
-    .add("Посмотреть расписание группы").add("Запланированные мероприятия").add("Настройки") \
+    .add("Посмотреть расписание группы или преподавателя").add("Запланированные мероприятия")\
+    .add("Настройки") \
     .add("Выгрузить всю базу данных")
 
 # Меню обычного пользователя
 menu_user_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Расписание").add("Профиль").add("Рассылки") \
-    .add("Посмотреть расписание другой группы").add("Запланированные мероприятия") \
+    .add("Посмотреть расписание группы или преподавателя").add("Запланированные мероприятия")\
+     \
     .add("Настройки")
+schedule_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add("Посмотреть расписание другой группы")\
+    .add("Посмотреть расписание преподавателя").add("Меню")
 
 # Рассылки
 mailing_lists_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Удалить рассылку").add("Меню")
@@ -92,14 +96,16 @@ time_kb2 = ReplyKeyboardMarkup(resize_keyboard=True).add('Без таймера'
 
 #english
 # Меню с админ-панелью
+schedule_kb_en = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add("View the group schedule")\
+    .add("View the teacher's schedule").add("Menu")
 menu_admin_kb_en = ReplyKeyboardMarkup(resize_keyboard=True).add("Schedule").add("Admin Panel").add("Profile") \
     .add("Mailing lists") \
-    .add("View the group schedule").add("Planned events").add("Settings") \
+    .add("Planned events").add("View the group schedule or teacher's schedule").add("Settings") \
     .add("Unload the entire database")
 
 # Меню обычного пользователя
 menu_user_kb_en = ReplyKeyboardMarkup(resize_keyboard=True).add("Schedule").add("Profile").add("Mailing lists") \
-    .add("View the group schedule").add("Planned events") \
+    .add("Planned events").add("View the group schedule or teacher's schedule") \
     .add("Settings")
 
 # Рассылки
