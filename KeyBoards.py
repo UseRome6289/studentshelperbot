@@ -12,14 +12,15 @@ menu_admin_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Расписан�
     .add("Рассылки") \
     .add("Посмотреть расписание группы или преподавателя").add("Запланированные мероприятия")\
     .add("Настройки") \
-    .add("Выгрузить всю базу данных")
+
 
 # Меню обычного пользователя
 menu_user_kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Расписание").add("Профиль").add("Рассылки") \
     .add("Посмотреть расписание группы или преподавателя").add("Запланированные мероприятия")\
      \
     .add("Настройки")
-schedule_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add("Посмотреть расписание другой группы")\
+schedule_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)\
+    .add("Посмотреть расписание другой группы")\
     .add("Посмотреть расписание преподавателя").add("Меню")
 
 # Рассылки
@@ -42,7 +43,8 @@ mailing_lists_kb2 = ReplyKeyboardMarkup(resize_keyboard=True).add("Меню")
 
 # Отправление рассылок из админ-панели
 admin_panel = ReplyKeyboardMarkup(resize_keyboard=True).add("Отправить рассылку") \
-    .add('Отправить рассылку всем пользователям').add("Добавить преподавателя").add("Меню")
+    .add('Отправить рассылку всем пользователям').add("Добавить преподавателя").add("Выгрузить всю базу данных")\
+    .add("Меню")
 admin_panel_teacher = ReplyKeyboardMarkup(resize_keyboard=True).add("Отправить рассылку") \
     .add("Меню")
 # Запланированные мероприятия
@@ -101,7 +103,7 @@ schedule_kb_en = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=Tru
 menu_admin_kb_en = ReplyKeyboardMarkup(resize_keyboard=True).add("Schedule").add("Admin Panel").add("Profile") \
     .add("Mailing lists") \
     .add("Planned events").add("View the group schedule or teacher's schedule").add("Settings") \
-    .add("Unload the entire database")
+
 
 # Меню обычного пользователя
 menu_user_kb_en = ReplyKeyboardMarkup(resize_keyboard=True).add("Schedule").add("Profile").add("Mailing lists") \
@@ -128,7 +130,7 @@ mailing_lists_kb2_en = ReplyKeyboardMarkup(resize_keyboard=True).add("Menu")
 
 # Отправление рассылок из админ-панели
 admin_panel_en = ReplyKeyboardMarkup(resize_keyboard=True).add("Send a newsletter") \
-    .add('Send a newsletter to all users').add("Add a teacher").add("Menu")
+    .add('Send a newsletter to all users').add("Add a teacher").add("Unload the entire database").add("Menu")
 admin_panel_teacher_en = ReplyKeyboardMarkup(resize_keyboard=True).add("Send a newsletter") \
     .add("Menu")
 # Запланированные мероприятия

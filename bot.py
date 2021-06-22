@@ -577,7 +577,6 @@ class MyThread3(Thread):
 
 
 # endregions
-
 @dp.message_handler(state='*', commands='start')
 async def process_start_command(message: types.Message):
     is_succeed = False
@@ -650,6 +649,40 @@ async def process_start_command(message: types.Message):
             await message.reply(messages.greets_msg, reply_markup=KeyBoards.select_RU_EN)
     state = dp.current_state(user=message.from_user.id)
     await state.set_state(Register.all()[0])
+
+
+@dp.message_handler(commands='help')
+async def process_start2_command(message: types.Message):
+    if message.from_user.username != None:
+        await bot.send_message(message.from_user.id, f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
+                                                     '\n - All control of the bot is done using the buttons!'
+                                                     '\n - You will receive notifications, so do not be afraid to mute the bot, '
+                                                     'but we do not advise you to do this! 🍻'
+                                                     '\n - You can put an event in scheduled events 💁'
+                                                     '\n - You can view the current schedule of the teacher or other group ✌'
+                                                     '\n - The bot has 2 languages: English and Russian. You can change the language '
+                                                     'in the settings 👌'
+                                                     '\n - Current schedule every 7 am ✨'
+                                                     '\n - Reminder of the beginning of the pair 🔥'
+                                                     '\n - If something happens and you get stuck somewhere, then help you /start'
+                                                     '\n'
+                                                     '\n'
+                                                     '\n ➖➖➖➖➖➖'
+                                                     '\n'
+                                                     '\n'
+                                                     f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
+                                                     '\n - Все управление ботом осуществляется с помощью кнопок!'
+                                                     '\n - Вам будут приходить уведомления, поэтому не бойтесь заглушить бота, '
+                                                     'но этого мы вам не советуем! :)'
+                                                     '\n - Вы можете поставить мероприятие в запланированных мероприятиях 💁'
+                                                     '\n - Вы можете посмотреть актуальное расписание преподавателя или другой группы ✌'
+                                                     '\n - В боте реализовано 2 языка: Английский и Русский. Поменять язык можно в настройках 👌'
+                                                     '\n - Актуальное расписание каждые 7 утра ✨'
+                                                     '\n - Напоминание о начале пары 🔥'
+                                                     '\n - Если что-то произойдет и вы застрянете где-то, то вам в помощь /start'
+                               )
+    else:
+        await bot.send_message(message.from_user.id, messages.greets_msg)
 
 
 # region userHandler
@@ -923,6 +956,35 @@ async def process_admin_command2(message: types.Message):
                 conn.close()
                 state = dp.current_state(user=message.from_user.id)
                 await state.reset_state()
+        elif switch_text == "выгрузить всю базу данных":
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_id FROM admins")
+            result_set = cursor.fetchall()
+            cursor.close()
+            is_succeed = False
+            for item in result_set:
+                if item[0] == message.from_user.id:
+                    is_succeed = True
+            if is_succeed:
+                conn = sqlite3.connect('db.db')
+                cursor = conn.cursor()
+                cursor.execute(f"SELECT * FROM users")
+                result_set = cursor.fetchall()
+                messag = "<b>ID, имя пользователя и имя в боте и группа:</b>\n"
+                for i in result_set:
+                    messag += str(i[0])
+                    messag += ", "
+                    messag += str(i[1])
+                    messag += ", "
+                    messag += str(i[2])
+                    messag += ", "
+                    messag += str(i[3])
+                    messag += "\n"
+                    messag += "\n"
+                await bot.send_message(message.from_user.id, messag, parse_mode="HTML")
+            else:
+                await message.reply(messages.not_admin, reply_markup=KeyBoards.menu_admin_kb)
         elif switch_text == 'отправить рассылку':
             state = dp.current_state(user=message.from_user.id)
             await state.set_state(AdminPanel.all()[1])
@@ -939,7 +1001,7 @@ async def process_admin_command2(message: types.Message):
             cursor.close()
             keyboard = ReplyKeyboardMarkup().add("Меню")
             for item in result_set:
-                a = str(item[0])+":"+str(item[1])
+                a = str(item[0]) + ":" + str(item[1])
                 keyboard.add(a)
             await message.reply(messages.select, reply_markup=keyboard)
             await dp.current_state(user=message.from_user.id).set_state(AdminPanel.all()[9])
@@ -971,6 +1033,35 @@ async def process_admin_command2(message: types.Message):
                 conn.close()
                 state = dp.current_state(user=message.from_user.id)
                 await state.reset_state()
+        elif switch_text == "unload the entire database":
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT user_id FROM admins")
+            result_set = cursor.fetchall()
+            cursor.close()
+            is_succeed = False
+            for item in result_set:
+                if item[0] == message.from_user.id:
+                    is_succeed = True
+            if is_succeed:
+                conn = sqlite3.connect('db.db')
+                cursor = conn.cursor()
+                cursor.execute(f"SELECT * FROM users")
+                result_set = cursor.fetchall()
+                messag = "<b>ID, имя пользователя и имя в боте и группа:</b>\n"
+                for i in result_set:
+                    messag += str(i[0])
+                    messag += ", "
+                    messag += str(i[1])
+                    messag += ", "
+                    messag += str(i[2])
+                    messag += ", "
+                    messag += str(i[3])
+                    messag += "\n"
+                    messag += "\n"
+                await bot.send_message(message.from_user.id, messag, parse_mode="HTML")
+            else:
+                await message.reply(messages.not_admin_en, reply_markup=KeyBoards.menu_admin_kb_en)
         elif switch_text == "add a teacher":
             conn = sqlite3.connect('db.db')
             cursor = conn.cursor()
@@ -1488,7 +1579,7 @@ async def process_admin_command1(message: types.Message):
                     if rus[0][0] == 1:
                         a = f'Рассылка от пользователя: <b>{name[0][0]}</b>\n' + '\n ➖➖➖➖➖➖ \n\n' + f'<i>{content[0][0]}</i>'
                     else:
-                        a = f'Mailing list from the user: <b>{name[0][0]}</b>\n' +'\n ➖➖➖➖➖➖ \n\n' + f'<i>{translate(content[0][0])}</i>'
+                        a = f'Mailing list from the user: <b>{name[0][0]}</b>\n' + '\n ➖➖➖➖➖➖ \n\n' + f'<i>{translate(content[0][0])}</i>'
                     if incoming_event3[message.from_user.id] == 'Без таймера':
                         pass
                     else:
@@ -2108,7 +2199,8 @@ async def process_admin_command1(message: types.Message):
                 result_set2 = cursor.fetchall()
                 if result_set2 == []:
                     await bot.send_message(a[1], f"Здравствуйте, <b>{a[0]}</b>, вас добавили в список преподавателей.\n"
-                                             f"Нажмите на /start и <b>зарегистрируйтесь</b> за преподавателя.", parse_mode= "HTML")
+                                                 f"Нажмите на /start и <b>зарегистрируйтесь</b> за преподавателя.",
+                                           parse_mode="HTML")
                     cursor.execute(
                         f"INSERT INTO admins(user_id, is_teacher, name_admin) values ({a[1]}, '{True}', '{a[0]}')")
                     conn.commit()
@@ -2212,6 +2304,7 @@ async def process_admin_command1(message: types.Message):
                 state = dp.current_state(user=message.from_user.id)
                 await state.reset_state()
 
+
 # endregion
 
 
@@ -2302,7 +2395,8 @@ async def register_1(message: types.Message):
     is_succeed = False
     conn = sqlite3.connect('db.db')
     cursor = conn.cursor()
-    cursor.execute(f"INSERT INTO users(chat_id, name, `7utra`) values ({message.from_user.id}, '{message.from_user.username}', '{0}')")
+    cursor.execute(
+        f"INSERT INTO users(chat_id, name, `7utra`) values ({message.from_user.id}, '{message.from_user.username}', '{0}')")
     conn.commit()
     conn.close()
     conn = sqlite3.connect('db.db')
@@ -2409,7 +2503,6 @@ async def register_1(message: types.Message):
     cursor.close()
     is_ru = False
     if result_set[0][0] == "True":
-
         is_ru = True
     switch_text = message.text.lower()
     if is_ru == True:
@@ -7111,7 +7204,6 @@ async def name_change(message: types.Message):
 
 @dp.message_handler(state=Teacher.TEACHER_0)
 async def register_4(message: types.message):
-
     conn = sqlite3.connect('db.db')
     cursor = conn.cursor()
     cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{message.from_user.id}'")
@@ -7295,7 +7387,6 @@ async def register_4(message: types.message):
                 await dp.current_state(user=message.from_user.id).set_state(Teacher.all()[2])
             else:
                 await bot.send_message(message.from_user.id, messages.message_error10_en)
-
 
 
 @dp.message_handler(state=Teacher.TEACHER_2)
@@ -8151,7 +8242,7 @@ async def schedule_1(message: types.Message):
                 for item in response["timetable"]:
                     if item["week"] == current_week:
                         adding.append(
-                            [item['day'], item['time'], item['subject'], item['type'],'', item['place']])
+                            [item['day'], item['time'], item['subject'], item['type'], '', item['place']])
                 flag = 0
                 for i in adding:
                     if i[0] == '5':
@@ -8192,7 +8283,7 @@ async def schedule_1(message: types.Message):
                 for item in response["timetable"]:
                     if item["week"] == current_week:
                         adding.append(
-                            [item['day'], item['time'], item['subject'], item['type'],'', item['place']])
+                            [item['day'], item['time'], item['subject'], item['type'], '', item['place']])
                 flag = 0
                 for i in adding:
                     if i[0] == '6':
@@ -8267,7 +8358,7 @@ async def schedule_1(message: types.Message):
                 for item in response["timetable"]:
                     if item["week"] == current_week:
                         adding.append(
-                            [item['day'], item['time'], item['subject'], "", item['type'],'', item['place']])
+                            [item['day'], item['time'], item['subject'], "", item['type'], '', item['place']])
                 flag = 0
                 for i in adding:
                     if i[0] == '1':
@@ -8900,35 +8991,6 @@ async def handler_message(msg: types.Message):
             await state.set_state(Change_Eu_Rus.all()[0])
         elif switch_text == "test":
             await msg.reply(f"{messages.greets_msg}")
-        elif switch_text == "выгрузить всю базу данных":
-            conn = sqlite3.connect('db.db')
-            cursor = conn.cursor()
-            cursor.execute(f"SELECT user_id FROM admins")
-            result_set = cursor.fetchall()
-            cursor.close()
-            is_succeed = False
-            for item in result_set:
-                if item[0] == msg.from_user.id:
-                    is_succeed = True
-            if is_succeed:
-                conn = sqlite3.connect('db.db')
-                cursor = conn.cursor()
-                cursor.execute(f"SELECT * FROM users")
-                result_set = cursor.fetchall()
-                message = "<b>ID, имя пользователя и имя в боте и группа:</b>\n"
-                for i in result_set:
-                    message += str(i[0])
-                    message += ", "
-                    message += str(i[1])
-                    message += ", "
-                    message += str(i[2])
-                    message += ", "
-                    message += str(i[3])
-                    message += "\n"
-                    message += "\n"
-                await bot.send_message(msg.from_user.id, message, parse_mode="HTML")
-            else:
-                await msg.reply(messages.not_admin, reply_markup=KeyBoards.menu_admin_kb)
         else:
             conn = sqlite3.connect('db.db')
             cursor = conn.cursor()
@@ -9219,40 +9281,14 @@ async def handler_message(msg: types.Message):
             state = dp.current_state(user=msg.from_user.id)
             await state.set_state(ScheduleUser.all()[0])
         elif switch_text == 'change the language':
-            await msg.reply("Are you sure you want to change the language?", reply_markup=KeyBoards.yes_or_no_keyboard2_en)
+            await msg.reply("Are you sure you want to change the language?",
+                            reply_markup=KeyBoards.yes_or_no_keyboard2_en)
             state = dp.current_state(user=msg.from_user.id)
             await state.set_state(Change_Eu_Rus.all()[0])
         elif switch_text == "test":
             await msg.reply(f"{messages.greets_msg}")
-        elif switch_text == "unload the entire database":
-            conn = sqlite3.connect('db.db')
-            cursor = conn.cursor()
-            cursor.execute(f"SELECT user_id FROM admins")
-            result_set = cursor.fetchall()
-            cursor.close()
-            is_succeed = False
-            for item in result_set:
-                if item[0] == msg.from_user.id:
-                    is_succeed = True
-            if is_succeed:
-                conn = sqlite3.connect('db.db')
-                cursor = conn.cursor()
-                cursor.execute(f"SELECT * FROM users")
-                result_set = cursor.fetchall()
-                message = "<b>ID, имя пользователя и имя в боте и группа:</b>\n"
-                for i in result_set:
-                    message += str(i[0])
-                    message += ", "
-                    message += str(i[1])
-                    message += ", "
-                    message += str(i[2])
-                    message += ", "
-                    message += str(i[3])
-                    message += "\n"
-                    message += "\n"
-                await bot.send_message(msg.from_user.id, message, parse_mode="HTML")
-            else:
-                await msg.reply(messages.not_admin_en, reply_markup=KeyBoards.menu_admin_kb_en)
+
+
         else:
             conn = sqlite3.connect('db.db')
             cursor = conn.cursor()
@@ -9266,35 +9302,6 @@ async def handler_message(msg: types.Message):
                 await bot.send_message(msg.from_user.id, messages.what)
             else:
                 await bot.send_message(msg.from_user.id, messages.what_en)
-
-
-@dp.message_handler(commands='help')
-async def process_start2_command(message: types.Message):
-    if message.from_user.username != None:
-        await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
-                            '\n - Here you can always find the current schedule 🎓'
-                            '\n - Set reminders 🍻'
-                            '\n - Mailing lists from teachers ✉'
-                            '\n - View the current schedule of another group ✌'
-                            '\n - Support developers 👌'
-                            '\n - We have our own PevCoin (currency in development) 💵'
-                            '\n'
-                            '\n  Registering? ✨'
-                            '\n'
-                            '\n ➖➖➖➖➖➖'
-                            '\n'
-                            '\n'
-                            f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
-                            '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                            '\n - Поставить напоминания 🍻'
-                            '\n - Рассылки от преподавателей ✉'
-                            '\n - Посмотреть актуальное расписание другой группы ✌'
-                            '\n - Поддержать разработчиков 👌'
-                            '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                            '\n'
-                            ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.greet_kb)
-    else:
-        await message.reply(messages.greets_msg, reply_markup=KeyBoards.greet_kb)
 
 
 @dp.message_handler(content_types=ContentType.ANY)

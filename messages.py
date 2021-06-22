@@ -1,7 +1,9 @@
 institute_message = 'Хорошо! Далее введите ваш институт! 👇'
 institute_message_en = "Good! Next, enter your institute! 👇"
-end_of_registration_message = 'Спасибо за регистрацию! 💖\nВы молодец, держите корону! 👑\nДобро пожаловать в меню! ✨'
-end_of_registration_message_en = "Thank you for registering! 💖\nWell done, hold the crown! 👑\nWelcome to the menu! ✨"
+end_of_registration_message = 'Спасибо за регистрацию! 💖\nВы молодец, держите корону! 👑\n' \
+                              'Если вам нужна помощь, нажмите /help.\nДобро пожаловать в меню! ✨'
+end_of_registration_message_en = "Thank you for registering! 💖\nWell done, hold the crown! 👑\n" \
+                                 "If you need help, click /help.\nWelcome to the menu! ✨"
 group_message = 'У вас отлично получается! 👍\nДалее выберите группу: 🎓'
 group_message_en = "You're doing great! 👍\nThen select a group: 🎓"
 pre_buy_demo_alert = '''\
@@ -99,28 +101,32 @@ event_not = "Простите, но вам нечего удалять, у ва�
 event_not_en = "Sorry, but you have nothing to delete, you have no events! 💁"
 mail_not = "Простите, но вам нечего удалять, вам еще не приходили рассылки! 💁"
 mail_not_en = "I'm sorry, but you have nothing to delete, you haven't received mailings yet! 💁"
-greets_msg = '''Welcome to StudentHelperBot!🔥\n 
-\n - Here you can always find the current schedule 🎓
-\n - Set reminders 🍻
-\n - Mailing lists from teachers ✉
-\n - View the current schedule of another group ✌
-\n - Support developers 👌
-\n - We have our own PevCoin (currency in development) 💵
-\n
-\n  Registering? ✨
-\n
-\n ➖➖➖➖➖➖
-\n
-\n
-Добро пожаловать в StudentHelperBot!🔥\n
-\n - Здесь всегда можно узнать актуальное расписание 🎓
-\n - Поставить напоминания 🍻
-\n - Рассылки от преподавателей ✉
-\n - Посмотреть актуальное расписание другой группы ✌
-\n - Поддержать разработчиков 👌
-\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵
-\n
- \n  Регистрируемся? ✨'''
+greets_msg = '''Welcome to StudentHelperBot! 🔥\n'
+                            '\n - Here you can always find the current schedule 🎓'
+                            '\n - You will receive notifications, so do not be afraid to mute the bot, '
+                            'but we do not advise you to do this! 🍻'
+                            '\n - You can put an event in scheduled events 💁'
+                            '\n - You can view the current schedule of the other group and the teacher ✌'
+                            '\n - The bot has 2 languages: English and Russian. You can change the language '
+                            'in the settings 👌'
+                            '\n - Current schedule every 7 am ✨'
+                            '\n - Reminder of the beginning of the pair 🔥'
+                            '\n - If something happens and you get stuck somewhere, then help you /start'
+                            '\n'
+                            '\n'
+                            '\n ➖➖➖➖➖➖'
+                            '\n'
+                            '\n'
+                            f'Добро пожаловать в StudentHelperBot! 🔥\n'
+                            '\n - All control of the bot is done using the buttons!'
+                            '\n - Вам будут приходить уведомления, поэтому не бойтесь заглушить бота, '
+                            'но этого мы вам не советуем! :)'
+                            '\n - Вы можете поставить мероприятие в запланированных мероприятиях 💁'
+                            '\n - Вы можете посмотреть актуальное расписание другой группы и преподавателя ✌'
+                            '\n - В боте реализовано 2 языка: Английский и Русский. Поменять язык можно в настройках 👌'
+                            '\n - Актуальное расписание каждые 7 утра ✨'
+                            '\n - Напоминание о начале пары 🔥'
+                            '\n - Если что-то произойдет и вы застрянете где-то, то вам в помощь /start'''
 
 successful_payment = '''
 Ура! 🔥\nПлатеж на сумму `{total_amount} {currency}` совершен успешно! Спасибо, что поддержали разработчиков!💖💖💖
