@@ -102,27 +102,7 @@ event_not_en = "Sorry, but you have nothing to delete, you have no events! 💁"
 mail_not = "Простите, но вам нечего удалять, вам еще не приходили рассылки! 💁"
 mail_not_en = "I'm sorry, but you have nothing to delete, you haven't received mailings yet! 💁"
 greets_msg = 'Welcome to StudentHelperBot! 🔥\n' \
-             '\n - All control of the bot is done using the buttons! 🎓'
-'\n - You will receive notifications, so do not be afraid to mute the bot, but we do not advise you to do this!' \
-' 🍻\n - You can put an event in scheduled events 💁\n - You can view the current schedule of the other group and the teacher ✌' \
-'\n - The bot has 2 languages: English and Russian. You can change the language in the settings 👌\n - Current schedule every 7 am ✨' \
-'\n - Reminder of the beginning of the pair 🔥'
-'\n - If something happens and you get stuck somewhere, then help you /start'
-'\n'
-'\n'
-'\n ➖➖➖➖➖➖'
-'\n'
-'\n'
-'Добро пожаловать в StudentHelperBot! 🔥\n'
-'\n - Все управление ботом осуществляется с помощью кнопок!'
-'\n - Вам будут приходить уведомления, поэтому не бойтесь заглушить бота, '
-'но этого мы вам не советуем! :)'
-'\n - Вы можете поставить мероприятие в запланированных мероприятиях 💁'
-'\n - Вы можете посмотреть актуальное расписание другой группы и преподавателя ✌'
-'\n - В боте реализовано 2 языка: Английский и Русский. Поменять язык можно в настройках 👌'
-'\n - Актуальное расписание каждые 7 утра ✨'
-'\n - Напоминание о начале пары 🔥'
-'\n - Если что-то произойдет и вы застрянете где-то, то вам в помощь /start'
+             '\n - All control of the bot is done using the buttons! 🎓\n - You will receive notifications, so do not be afraid to mute the bot, but we do not advise you to do this! 🍻\n - You can put an event in scheduled events 💁\n - You can view the current schedule of the other group and the teacher ✌\n - The bot has 2 languages: English and Russian. You can change the language in the settings 👌\n - Current schedule every 7 am ✨\n - Reminder of the beginning of the pair 🔥\n - If something happens and you get stuck somewhere, then help you /start\n\n\n ➖➖➖➖➖➖\n\nДобро пожаловать в StudentHelperBot! 🔥\n\n - Все управление ботом осуществляется с помощью кнопок!\n - Вам будут приходить уведомления, поэтому не бойтесь заглушить бота, но этого мы вам не советуем! :)\n - Вы можете поставить мероприятие в запланированных мероприятиях 💁\n - Вы можете посмотреть актуальное расписание другой группы и преподавателя ✌\n - В боте реализовано 2 языка: Английский и Русский. Поменять язык можно в настройках 👌\n - Актуальное расписание каждые 7 утра ✨\n - Напоминание о начале пары 🔥\n - Если что-то произойдет и вы застрянете где-то, то вам в помощь /start'
 
 successful_payment = '''
 Ура! 🔥\nПлатеж на сумму `{total_amount} {currency}` совершен успешно! Спасибо, что поддержали разработчиков!💖💖💖
