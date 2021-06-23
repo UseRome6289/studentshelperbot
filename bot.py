@@ -86,37 +86,13 @@ class MyThread(Thread):
                     if is_ru == True:
                         cursor.execute(
                             f"UPDATE `times` SET `30min`= {0} WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
-                        conn = sqlite3.connect('db.db')
-                        cursor = conn.cursor()
-                        cursor.execute(
-                            f"SELECT `7utra_on`, `mail_para_on`, `event` FROM users WHERE chat_id = '{item[0]}'")
-                        result_set = cursor.fetchall()
-                        event = False
-                        for i in result_set:
-                            if i[2] == 'True':
-                                event = True
-                        if event == True:
-                            bot2.send_message(item[0],
+                        bot2.send_message(item[0],
                                           f'{real_name[0][0]}! Мероприятие: {item[1]} состоится через пол часа')
-                        else:
-                            pass
                     else:
                         cursor.execute(
                             f"UPDATE `times` SET `30min`= {0} WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
-                        conn = sqlite3.connect('db.db')
-                        cursor = conn.cursor()
-                        cursor.execute(
-                            f"SELECT `7utra_on`, `mail_para_on`, `event` FROM users WHERE chat_id = '{item[0]}'")
-                        result_set = cursor.fetchall()
-                        event = False
-                        for i in result_set:
-                            if i[2] == 'True':
-                                event = True
-                        if event == True:
-                            bot2.send_message(item[0],
+                        bot2.send_message(item[0],
                                           f'{real_name[0][0]}! Event: {item[1]} it will take place in half an hour')
-                        else:
-                            pass
 
             cursor = conn.cursor()
             cursor.execute(f"SELECT * FROM `times` WHERE `time` <=  strftime('%s', 'now') + 300;")
@@ -135,37 +111,13 @@ class MyThread(Thread):
                     if is_ru == True:
                         cursor.execute(
                             f"UPDATE `times` SET `5min`= {0} WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
-                        conn = sqlite3.connect('db.db')
-                        cursor = conn.cursor()
-                        cursor.execute(
-                            f"SELECT `7utra_on`, `mail_para_on`, `event` FROM users WHERE chat_id = '{item[0]}'")
-                        result_set = cursor.fetchall()
-                        event = False
-                        for i in result_set:
-                            if i[2] == 'True':
-                                event = True
-                        if event == True:
-                            bot2.send_message(item[0],
+                        bot2.send_message(item[0],
                                           f'{real_name[0][0]}! Мероприятие: {item[1]} состоится через пять минут')
-                        else:
-                            pass
                     else:
                         cursor.execute(
                             f"UPDATE `times` SET `5min`= {0} WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
-                        conn = sqlite3.connect('db.db')
-                        cursor = conn.cursor()
-                        cursor.execute(
-                            f"SELECT `7utra_on`, `mail_para_on`, `event` FROM users WHERE chat_id = '{item[0]}'")
-                        result_set = cursor.fetchall()
-                        event = False
-                        for i in result_set:
-                            if i[2] == 'True':
-                                event = True
-                        if event == True:
-                            bot2.send_message(item[0],
+                        bot2.send_message(item[0],
                                           f'{real_name[0][0]}! Event: {item[1]} it will take place in five minutes')
-                        else:
-                            pass
 
             cursor = conn.cursor()
             cursor.execute(f"SELECT * FROM `times` WHERE `time` <=  strftime('%s', 'now');")
@@ -181,33 +133,9 @@ class MyThread(Thread):
                 if result_set[0][0] == "True":
                     is_ru = True
                 if is_ru == True:
-                    conn = sqlite3.connect('db.db')
-                    cursor = conn.cursor()
-                    cursor.execute(
-                        f"SELECT `7utra_on`, `mail_para_on`, `event` FROM users WHERE chat_id = '{item[0]}'")
-                    result_set = cursor.fetchall()
-                    event = False
-                    for i in result_set:
-                        if i[2] == 'True':
-                            event = True
-                    if event == True:
-                        bot2.send_message(item[0], f'{real_name[0][0]}! Ваше мероприятие: {item[1]}\nокончено')
-                    else:
-                        pass
+                    bot2.send_message(item[0], f'{real_name[0][0]}! Ваше мероприятие: {item[1]}\nокончено')
                 else:
-                    conn = sqlite3.connect('db.db')
-                    cursor = conn.cursor()
-                    cursor.execute(
-                        f"SELECT `7utra_on`, `mail_para_on`, `event` FROM users WHERE chat_id = '{item[0]}'")
-                    result_set = cursor.fetchall()
-                    event = False
-                    for i in result_set:
-                        if i[2] == 'True':
-                            event = True
-                    if event == True:
-                        bot2.send_message(item[0], f'{real_name[0][0]}! Your event: {item[1]}\nfinished')
-                    else:
-                        pass
+                    bot2.send_message(item[0], f'{real_name[0][0]}! Your event: {item[1]}\nfinished')
 
             cursor = conn.cursor()
             cursor.execute(f"SELECT * FROM `mail` WHERE `time` <=  strftime('%s', 'now') + 1800;")
@@ -226,36 +154,12 @@ class MyThread(Thread):
                     if is_ru == True:
                         cursor.execute(
                             f"UPDATE `mail` SET `30min`= {0} WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
-                        conn = sqlite3.connect('db.db')
-                        cursor = conn.cursor()
-                        cursor.execute(
-                            f"SELECT `7utra_on`, `mail_para_on`, `event` FROM users WHERE chat_id = '{item[0]}'")
-                        result_set = cursor.fetchall()
-                        event = False
-                        for i in result_set:
-                            if i[2] == 'True':
-                                event = True
-                        if event == True:
-                            bot2.send_message(item[0], f'{real_name[0][0]}! Рассылка: {item[1]} состоится через пол часа')
-                        else:
-                            pass
+                        bot2.send_message(item[0], f'{real_name[0][0]}! Рассылка: {item[1]} состоится через пол часа')
                     else:
                         cursor.execute(
                             f"UPDATE `mail` SET `30min`= {0} WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
-                        conn = sqlite3.connect('db.db')
-                        cursor = conn.cursor()
-                        cursor.execute(
-                            f"SELECT `7utra_on`, `mail_para_on`, `event` FROM users WHERE chat_id = '{item[0]}'")
-                        result_set = cursor.fetchall()
-                        event = False
-                        for i in result_set:
-                            if i[2] == 'True':
-                                event = True
-                        if event == True:
-                            bot2.send_message(item[0],
+                        bot2.send_message(item[0],
                                           f'{real_name[0][0]}! Mailing: {item[1]} it will take place in half an hour')
-                        else:
-                            pass
 
             cursor = conn.cursor()
             cursor.execute(f"SELECT * FROM `mail` WHERE `time` <=  strftime('%s', 'now') + 300;")
@@ -274,36 +178,12 @@ class MyThread(Thread):
                     if is_ru == True:
                         cursor.execute(
                             f"UPDATE `mail` SET `5min`= {0} WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
-                        conn = sqlite3.connect('db.db')
-                        cursor = conn.cursor()
-                        cursor.execute(
-                            f"SELECT `7utra_on`, `mail_para_on`, `event` FROM users WHERE chat_id = '{item[0]}'")
-                        result_set = cursor.fetchall()
-                        event = False
-                        for i in result_set:
-                            if i[2] == 'True':
-                                event = True
-                        if event == True:
-                            bot2.send_message(item[0], f'{real_name[0][0]}! Рассылка: {item[1]} состоится через пять минут')
-                        else:
-                            pass
+                        bot2.send_message(item[0], f'{real_name[0][0]}! Рассылка: {item[1]} состоится через пять минут')
                     else:
                         cursor.execute(
                             f"UPDATE `mail` SET `5min`= {0} WHERE (`chat_id` = {item[0]} AND `event1` = '{item[1]}');")
-                        conn = sqlite3.connect('db.db')
-                        cursor = conn.cursor()
-                        cursor.execute(
-                            f"SELECT `7utra_on`, `mail_para_on`, `event` FROM users WHERE chat_id = '{item[0]}'")
-                        result_set = cursor.fetchall()
-                        event = False
-                        for i in result_set:
-                            if i[2] == 'True':
-                                event = True
-                        if event == True:
-                            bot2.send_message(item[0],
+                        bot2.send_message(item[0],
                                           f'{real_name[0][0]}! Mailing: {item[1]} it will take place in five minutes')
-                        else:
-                            pass
 
             cursor = conn.cursor()
             cursor.execute(f"SELECT * FROM `mail` WHERE `time` <=  strftime('%s', 'now');")
@@ -322,33 +202,9 @@ class MyThread(Thread):
                 if result_set[0][0] == "True":
                     is_ru = True
                 if is_ru == True:
-                    conn = sqlite3.connect('db.db')
-                    cursor = conn.cursor()
-                    cursor.execute(
-                        f"SELECT `7utra_on`, `mail_para_on`, `event` FROM users WHERE chat_id = '{item[0]}'")
-                    result_set = cursor.fetchall()
-                    event = False
-                    for i in result_set:
-                        if i[2] == 'True':
-                            event = True
-                    if event == True:
-                        bot2.send_message(item[0], f'{real_name[0][0]}! Рассылка: {item[1]} закончилась')
-                    else:
-                        pass
+                    bot2.send_message(item[0], f'{real_name[0][0]}! Рассылка: {item[1]} закончилась')
                 else:
-                    conn = sqlite3.connect('db.db')
-                    cursor = conn.cursor()
-                    cursor.execute(
-                        f"SELECT `7utra_on`, `mail_para_on`, `event` FROM users WHERE chat_id = '{item[0]}'")
-                    result_set = cursor.fetchall()
-                    event = False
-                    for i in result_set:
-                        if i[2] == 'True':
-                            event = True
-                    if event == True:
-                        bot2.send_message(item[0], f'{real_name[0][0]}! Mailing: {item[1]} ended')
-                    else:
-                        pass
+                    bot2.send_message(item[0], f'{real_name[0][0]}! Mailing: {item[1]} ended')
                 conn.commit()
                 conn.close()
 
@@ -9006,66 +8862,7 @@ async def register_4(message: types.message):
                     conn.close()
                     state = dp.current_state(user=message.from_user.id)
                     await state.reset_state()
-            elif switch_text == 'выключить рассылку об уведомлении конца мероприятия':
-                conn = sqlite3.connect('db.db')
-                cursor = conn.cursor()
-                cursor.execute(f"UPDATE users SET `event` = '{False}' WHERE chat_id = '{message.from_user.id}'")
-                conn.commit()
-                conn.close()
-                await bot.send_message(message.from_user.id, "Вы успешно отключили уведомления!")
-                is_succeed = False
-                conn = sqlite3.connect('db.db')
-                cursor = conn.cursor()
-                cursor.execute(f"SELECT user_id FROM admins")
-                result_set = cursor.fetchall()
-                cursor.close()
-                for item in result_set:
-                    if item[0] == message.from_user.id:
-                        is_succeed = True
-                if is_succeed:
-                    await message.reply(messages.menu
-                                        , reply=False, reply_markup=KeyBoards.menu_admin_kb)
-                    conn.commit()
-                    conn.close()
-                    state = dp.current_state(user=message.from_user.id)
-                    await state.reset_state()
-                else:
-                    await message.reply(messages.menu
-                                        , reply=False, reply_markup=KeyBoards.menu_user_kb)
-                    conn.commit()
-                    conn.close()
-                    state = dp.current_state(user=message.from_user.id)
-                    await state.reset_state()
-            elif switch_text == 'включить рассылку об уведомлении конца мероприятия':
-                conn = sqlite3.connect('db.db')
-                cursor = conn.cursor()
-                cursor.execute(f"UPDATE users SET `event` = '{True}' WHERE chat_id = '{message.from_user.id}'")
-                conn.commit()
-                conn.close()
-                await bot.send_message(message.from_user.id, "Вы успешно включили уведомления!")
-                is_succeed = False
-                conn = sqlite3.connect('db.db')
-                cursor = conn.cursor()
-                cursor.execute(f"SELECT user_id FROM admins")
-                result_set = cursor.fetchall()
-                cursor.close()
-                for item in result_set:
-                    if item[0] == message.from_user.id:
-                        is_succeed = True
-                if is_succeed:
-                    await message.reply(messages.menu
-                                        , reply=False, reply_markup=KeyBoards.menu_admin_kb)
-                    conn.commit()
-                    conn.close()
-                    state = dp.current_state(user=message.from_user.id)
-                    await state.reset_state()
-                else:
-                    await message.reply(messages.menu
-                                        , reply=False, reply_markup=KeyBoards.menu_user_kb)
-                    conn.commit()
-                    conn.close()
-                    state = dp.current_state(user=message.from_user.id)
-                    await state.reset_state()
+
             elif switch_text == "выключить рассылку о наступлении пары":
                 conn = sqlite3.connect('db.db')
                 cursor = conn.cursor()
@@ -9215,66 +9012,7 @@ async def register_4(message: types.message):
                     conn.close()
                     state = dp.current_state(user=message.from_user.id)
                     await state.reset_state()
-            elif switch_text == "turn off the newsletter notification of the end of the event":
-                conn = sqlite3.connect('db.db')
-                cursor = conn.cursor()
-                cursor.execute(f"UPDATE users SET `event` = '{False}' WHERE chat_id = '{message.from_user.id}'")
-                conn.commit()
-                conn.close()
-                await bot.send_message(message.from_user.id, "You have successfully turned off the newsletter!")
-                is_succeed = False
-                conn = sqlite3.connect('db.db')
-                cursor = conn.cursor()
-                cursor.execute(f"SELECT user_id FROM admins")
-                result_set = cursor.fetchall()
-                cursor.close()
-                for item in result_set:
-                    if item[0] == message.from_user.id:
-                        is_succeed = True
-                if is_succeed:
-                    await message.reply(messages.menu_en
-                                        , reply=False, reply_markup=KeyBoards.menu_admin_kb_en)
-                    conn.commit()
-                    conn.close()
-                    state = dp.current_state(user=message.from_user.id)
-                    await state.reset_state()
-                else:
-                    await message.reply(messages.menu_en
-                                        , reply=False, reply_markup=KeyBoards.menu_user_kb_en)
-                    conn.commit()
-                    conn.close()
-                    state = dp.current_state(user=message.from_user.id)
-                    await state.reset_state()
-            elif switch_text == "enable the newsletter to notify the end of the event":
-                conn = sqlite3.connect('db.db')
-                cursor = conn.cursor()
-                cursor.execute(f"UPDATE users SET `event` = '{True}' WHERE chat_id = '{message.from_user.id}'")
-                conn.commit()
-                conn.close()
-                await bot.send_message(message.from_user.id, "You have successfully turned off the newsletter!")
-                is_succeed = False
-                conn = sqlite3.connect('db.db')
-                cursor = conn.cursor()
-                cursor.execute(f"SELECT user_id FROM admins")
-                result_set = cursor.fetchall()
-                cursor.close()
-                for item in result_set:
-                    if item[0] == message.from_user.id:
-                        is_succeed = True
-                if is_succeed:
-                    await message.reply(messages.menu_en
-                                        , reply=False, reply_markup=KeyBoards.menu_admin_kb_en)
-                    conn.commit()
-                    conn.close()
-                    state = dp.current_state(user=message.from_user.id)
-                    await state.reset_state()
-                else:
-                    await message.reply(messages.menu_en
-                                        , reply=False, reply_markup=KeyBoards.menu_user_kb_en)
-                    conn.commit()
-                    conn.close()
-                    state = dp.current_state(user=message.from_user.id)
-                    await state.reset_state()
+
             elif switch_text == "turn off the newsletter about the occurrence of a couple":
                 conn = sqlite3.connect('db.db')
                 cursor = conn.cursor()
@@ -9709,7 +9447,7 @@ async def handler_message(msg: types.Message):
         elif switch_text == 'отключить или включить рассылку':
             conn = sqlite3.connect('db.db')
             cursor = conn.cursor()
-            cursor.execute(f"SELECT `7utra_on`, `mail_para_on`, `event` FROM users WHERE chat_id = '{msg.from_user.id}'")
+            cursor.execute(f"SELECT `7utra_on`, `mail_para_on` FROM users WHERE chat_id = '{msg.from_user.id}'")
             result_set = cursor.fetchall()
             utra_on = False
             mail = False
@@ -9720,8 +9458,7 @@ async def handler_message(msg: types.Message):
                     utra_on = True
                 if i[1] == 'True':
                     mail = True
-                if i[2] == 'True':
-                    event = True
+
             if utra_on == True:
                 keyboard.add("Выключить рассылку в 7 утра")
             else:
@@ -9730,10 +9467,7 @@ async def handler_message(msg: types.Message):
                 keyboard.add("Выключить рассылку о наступлении пары")
             else:
                 keyboard.add("Включить рассылку о наступлении пары")
-            if event == True:
-                keyboard.add("Выключить рассылку об уведомлении конца мероприятия")
-            else:
-                keyboard.add("Включить рассылку об уведомлении конца мероприятия")
+
             await msg.reply("Нажмите кнопку, чтобы включить или отключить рассылку", reply_markup=keyboard)
             state = dp.current_state(user=msg.from_user.id)
             await state.set_state(Turn_on_off.all()[0])
@@ -9891,7 +9625,7 @@ async def handler_message(msg: types.Message):
         elif switch_text == 'disable or enable mailing lists':
             conn = sqlite3.connect('db.db')
             cursor = conn.cursor()
-            cursor.execute(f"SELECT `7utra_on`, `mail_para_on`, `event` FROM users WHERE chat_id = '{msg.from_user.id}'")
+            cursor.execute(f"SELECT `7utra_on`, `mail_para_on` FROM users WHERE chat_id = '{msg.from_user.id}'")
             result_set = cursor.fetchall()
             utra_on = False
             mail = False
@@ -9902,8 +9636,6 @@ async def handler_message(msg: types.Message):
                     utra_on = True
                 if i[1] == 'True':
                     mail = True
-                if i[2] == 'True':
-                    event = True
             if utra_on == True:
                 keyboard.add("Turn off the newsletter at 7 am")
             else:
@@ -9912,10 +9644,6 @@ async def handler_message(msg: types.Message):
                 keyboard.add("Turn off the newsletter about the occurrence of a couple")
             else:
                 keyboard.add("Turn on the newsletter about the occurrence of a couple")
-            if event == True:
-                keyboard.add("Turn off the newsletter notification of the end of the event")
-            else:
-                keyboard.add("Enable the newsletter to notify the end of the event")
             await msg.reply("Click the button to enable or disable the newsletter", reply_markup=keyboard)
             state = dp.current_state(user=msg.from_user.id)
             await state.set_state(Turn_on_off.all()[0])
