@@ -15,7 +15,7 @@ from aiogram.dispatcher import Dispatcher
 from aiogram.types import ContentType, ReplyKeyboardMarkup, ParseMode
 from aiogram.utils import executor
 from aiogram.utils.markdown import text
-from google_trans_new import google_translator
+from textblob import TextBlob
 
 import KeyBoards
 import messages
@@ -33,7 +33,7 @@ async def shutdown(dispatcher: Dispatcher):
     await dispatcher.storage.wait_closed()
 
 
-translator = google_translator()
+
 bot2 = telebot.TeleBot(__name__)
 bot2.config['api_key'] = TOKEN
 bot = Bot(token=TOKEN)
@@ -55,8 +55,9 @@ def only_letters(tested_string):
 
 
 def translate(translate_text):
-    translate_text = translator.translate(translate_text, lang_src='ru', lang_tgt='en')
-    return translate_text
+    blob = TextBlob(translate_text)
+    a = blob.translate(from_lang='ru', to='en')
+    return a
 
 
 class MyThread(Thread):
@@ -529,72 +530,73 @@ class MyThread3(Thread):
                         data = res.json()
                     except Exception:
                         pass
-                    try:
-                        listik = []
-                        res = requests.get("http://api.openweathermap.org/data/2.5/forecast",
-                                           params={'id': city_id, 'units': 'metric', 'lang': 'ru', 'APPID': appid})
-                        kaka = res.json()
-                        for t in kaka['list']:
-                            q = t['dt_txt'].split(" ")
-                            if q[1] == '03:00:00':
-                                q[1] = "03:00"
-                            if q[1] == '21:00:00':
-                                q[1] = "21:00"
-                            if q[1] == '18:00:00':
-                                q[1] = "18:00"
-                            if q[1] == '15:00:00':
-                                q[1] = "15:00"
-                            if q[1] == '12:00:00':
-                                q[1] = "12:00"
-                            if q[1] == '9:00:00':
-                                q[1] = "09:00"
-                            if q[1] == '09:00:00':
-                                q[1] = "09:00"
-                            if q[1] == '06:00:00':
-                                q[1] = "06:00"
-                            if q[1] == '6:00:00':
-                                q[1] = "06:00"
 
-                            listik.append(q[1])
-                            listik.append('{0:+3.0f}°'.format(t['main']['temp']))
-                            listik.append(t['weather'][0]['description'])
-                            if q[1] == "15:00":
-                                break
-                        conn = sqlite3.connect('db.db')
-                        cursor = conn.cursor()
-                        cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{l[0]}'")
-                        result_set = cursor.fetchall()
-                        is_ru = False
-                        if result_set[0][0] == "True":
-                            is_ru = True
-                        if is_ru == True:
-                            mes = ''
-                            j = 0
-                            for s in listik:
-                                if j == 0:
-                                    mes += "В "
-                                mes += s
-                                j += 1
-                                if j != 3:
-                                    mes += ", "
-                                if j == 3:
-                                    mes += "\n"
-                                    j = 0
-                        else:
-                            mes = ''
-                            j = 0
-                            for s in listik:
-                                if j == 0:
-                                    mes += "В "
+                    listik = []
+                    res = requests.get("http://api.openweathermap.org/data/2.5/forecast",
+                                       params={'id': city_id, 'units': 'metric', 'lang': 'ru', 'APPID': appid})
+                    kaka = res.json()
+                    for t in kaka['list']:
+                        q = t['dt_txt'].split(" ")
+                        if q[1] == '03:00:00':
+                            q[1] = "03:00"
+                        if q[1] == '21:00:00':
+                            q[1] = "21:00"
+                        if q[1] == '18:00:00':
+                            q[1] = "18:00"
+                        if q[1] == '15:00:00':
+                            q[1] = "15:00"
+                        if q[1] == '12:00:00':
+                            q[1] = "12:00"
+                        if q[1] == '9:00:00':
+                            q[1] = "09:00"
+                        if q[1] == '09:00:00':
+                            q[1] = "09:00"
+                        if q[1] == '06:00:00':
+                            q[1] = "06:00"
+                        if q[1] == '6:00:00':
+                            q[1] = "06:00"
+
+                        listik.append(q[1])
+                        listik.append('{0:+3.0f}°'.format(t['main']['temp']))
+                        listik.append(t['weather'][0]['description'])
+                        if q[1] == "15:00":
+                            break
+                    conn = sqlite3.connect('db.db')
+                    cursor = conn.cursor()
+                    cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{l[0]}'")
+                    result_set = cursor.fetchall()
+                    is_ru = False
+                    if result_set[0][0] == "True":
+                        is_ru = True
+                    mes = ''
+                    if is_ru == True:
+                        j = 0
+                        for s in listik:
+                            if j == 0:
+                                mes += "В "
+                            mes += s
+                            j += 1
+                            if j != 3:
+                                mes += ", "
+                            if j == 3:
+                                mes += "\n"
+                                j = 0
+                    else:
+                        j = 0
+                        for s in listik:
+                            if j == 0:
+                                mes += "In "
+                            try:
                                 mes += translate(s)
-                                j += 1
-                                if j != 3:
-                                    mes += ", "
-                                if j == 3:
-                                    mes += "\n"
-                                    j = 0
-                    except Exception:
-                        pass
+                            except:
+                                mes += s
+                            j += 1
+                            if j != 3:
+                                mes += ", "
+                            if j == 3:
+                                mes += "\n"
+                                j = 0
+
                     conn = sqlite3.connect('db.db')
                     cursor = conn.cursor()
                     cursor.execute(f"SELECT chat_id, real_name FROM users WHERE chat_id = '{l[0]}'")
@@ -746,50 +748,58 @@ async def process_start_command(message: types.Message):
     if message.from_user.username != None:
         if is_succeed == True:
             await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.select_RU_EN)
+                                                     '\n - All control of the bot is done using the buttons!'
+                                                     '\n - You will receive notifications, so do not be afraid to mute the bot, '
+                                                     'but we do not advise you to do this! 🍻'
+                                                     '\n - You can put an event in scheduled events 💁'
+                                                     '\n - You can view the current schedule of the teacher or other group ✌'
+                                                     '\n - The bot has 2 languages: English and Russian. You can change the language '
+                                                     'in the settings 👌'
+                                                     '\n - Current schedule every 7 am ✨'
+                                                     '\n - Reminder of the beginning of the pair 🔥'
+                                                     '\n - If something happens and you get stuck somewhere, then help you /start'
+                                                     '\n'
+                                                     '\n'
+                                                     '\n ➖➖➖➖➖➖'
+                                                     '\n'
+                                                     '\n'
+                                                     f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
+                                                     '\n - Все управление ботом осуществляется с помощью кнопок'
+                                                     '\n - Вам будут приходить уведомления, поэтому не бойтесь заглушить бота, '
+                                                     'но этого мы вам не советуем! :)'
+                                                     '\n - Вы можете поставить мероприятие в запланированных мероприятиях 💁'
+                                                     '\n - Вы можете посмотреть актуальное расписание преподавателя или другой группы ✌'
+                                                     '\n - В боте реализовано 2 языка: Английский и Русский. Поменять язык можно в настройках 👌'
+                                                     '\n - Актуальное расписание каждые 7 утра ✨'
+                                                     '\n - Напоминание о начале пары 🔥'
+                                                     '\n - Если что-то произойдет и вы застрянете где-то, то вам в помощь /start', reply_markup=KeyBoards.select_RU_EN)
         else:
             await message.reply(f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Here you can always find the current schedule 🎓'
-                                '\n - Set reminders 🍻'
-                                '\n - Mailing lists from teachers ✉'
-                                '\n - View the current schedule of another group ✌'
-                                '\n - Support developers 👌'
-                                '\n - We have our own PevCoin (currency in development) 💵'
-                                '\n'
-                                '\n  Registering? ✨'
-                                '\n'
-                                '\n ➖➖➖➖➖➖'
-                                '\n'
-                                '\n'
-                                f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
-                                '\n - Здесь всегда можно узнать актуальное расписание 🎓'
-                                '\n - Поставить напоминания 🍻'
-                                '\n - Рассылки от преподавателей ✉'
-                                '\n - Посмотреть актуальное расписание другой группы ✌'
-                                '\n - Поддержать разработчиков 👌'
-                                '\n - У нас есть свои PevCoin\'ы (валюта в разработке) 💵'
-                                '\n'
-                                ' \n  Регистрируемся? ✨', reply_markup=KeyBoards.select_RU_EN)
+                                                     '\n - All control of the bot is done using the buttons!'
+                                                     '\n - You will receive notifications, so do not be afraid to mute the bot, '
+                                                     'but we do not advise you to do this! 🍻'
+                                                     '\n - You can put an event in scheduled events 💁'
+                                                     '\n - You can view the current schedule of the teacher or other group ✌'
+                                                     '\n - The bot has 2 languages: English and Russian. You can change the language '
+                                                     'in the settings 👌'
+                                                     '\n - Current schedule every 7 am ✨'
+                                                     '\n - Reminder of the beginning of the pair 🔥'
+                                                     '\n - If something happens and you get stuck somewhere, then help you /start'
+                                                     '\n'
+                                                     '\n'
+                                                     '\n ➖➖➖➖➖➖'
+                                                     '\n'
+                                                     '\n'
+                                                     f'Добро пожаловать в StudentHelperBot, {message.from_user.username}!🔥\n'
+                                                     '\n - Все управление ботом осуществляется с помощью кнопок'
+                                                     '\n - Вам будут приходить уведомления, поэтому не бойтесь заглушить бота, '
+                                                     'но этого мы вам не советуем! :)'
+                                                     '\n - Вы можете поставить мероприятие в запланированных мероприятиях 💁'
+                                                     '\n - Вы можете посмотреть актуальное расписание преподавателя или другой группы ✌'
+                                                     '\n - В боте реализовано 2 языка: Английский и Русский. Поменять язык можно в настройках 👌'
+                                                     '\n - Актуальное расписание каждые 7 утра ✨'
+                                                     '\n - Напоминание о начале пары 🔥'
+                                                     '\n - Если что-то произойдет и вы застрянете где-то, то вам в помощь /start', reply_markup=KeyBoards.select_RU_EN)
     else:
         if is_succeed == True:
             await message.reply(messages.greets_msg, reply_markup=KeyBoards.select_RU_EN)
@@ -799,7 +809,7 @@ async def process_start_command(message: types.Message):
     await state.set_state(Register.all()[0])
 
 
-@dp.message_handler(commands='help')
+@dp.message_handler(state='*', commands='help')
 async def process_start2_command(message: types.Message):
     if message.from_user.username != None:
         await bot.send_message(message.from_user.id, f'Welcome to StudentHelperBot, {message.from_user.username}!🔥\n'
@@ -2770,9 +2780,14 @@ async def register_2(message: types.Message):
                         if item['institute'] == inst:
                             keyboard.add(item['name'])
                             incoming_inst.append(item['name'])
-                    await message.reply(messages.group_message, reply_markup=keyboard)
-                    state = dp.current_state(user=message.from_user.id)
-                    await state.set_state(Register.all()[4])
+                    if incoming_inst == []:
+                        await bot.send_message(message.from_user.id, "Простите, но бот не может найти группы этого института.\nВозможно, что вы пользуетесь ботом летом, когда меняется расписание.\nЕсли это произошло не летом, то просим обратиться в поддержку.\nСпасибо!")
+                        state = dp.current_state(user=message.from_user.id)
+                        await state.set_state(Register.all()[3])
+                    else:
+                        await message.reply(messages.group_message, reply_markup=keyboard)
+                        state = dp.current_state(user=message.from_user.id)
+                        await state.set_state(Register.all()[4])
                 else:
                     await bot.send_message(message.from_user.id, messages.message_error)
         except KeyError:
@@ -2795,9 +2810,15 @@ async def register_2(message: types.Message):
                         if item['institute'] == inst:
                             keyboard.add(item['name'])
                             incoming_inst.append(item['name'])
-                    await message.reply(messages.group_message_en, reply_markup=keyboard)
-                    state = dp.current_state(user=message.from_user.id)
-                    await state.set_state(Register.all()[4])
+                    if incoming_inst == []:
+                        await bot.send_message(message.from_user.id,
+                                               "I'm sorry, but the bot can't find the groups of this institute.\nIt is possible that you use the bot in the summer, when the schedule changes.\nIf this did not happen in the summer, then please contact support.\nThanks!")
+                        state = dp.current_state(user=message.from_user.id)
+                        await state.set_state(Register.all()[3])
+                    else:
+                        await message.reply(messages.group_message, reply_markup=keyboard)
+                        state = dp.current_state(user=message.from_user.id)
+                        await state.set_state(Register.all()[4])
                 else:
                     await bot.send_message(message.from_user.id, messages.message_error_en)
         except KeyError:
@@ -9478,6 +9499,40 @@ async def handler_message(msg: types.Message):
             await state.set_state(Change_Eu_Rus.all()[0])
         elif switch_text == "test":
             await msg.reply(f"{messages.greets_msg}")
+        elif switch_text == "профиль":
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT chat_id, is_teacher FROM users")
+            result_set = cursor.fetchall()
+            is_teacher = False
+            for item in result_set:
+                if item[0] == msg.from_user.id:
+                    if item[1] == 'True':
+                        is_teacher = True
+            if is_teacher:
+                conn = sqlite3.connect('db.db')
+                cursor = conn.cursor()
+                cursor.execute(f"SELECT chat_id, real_name FROM users")
+                result_set = cursor.fetchall()
+                for i in result_set:
+                    if i[0] == msg.from_user.id:
+                        await bot.send_message(msg.from_user.id, f"Ваша фамилия: <b>{i[1]}</b>\n"
+                                               , parse_mode="HTML")
+                conn.commit()
+                conn.close()
+            else:
+                conn = sqlite3.connect('db.db')
+                cursor = conn.cursor()
+                cursor.execute(f"SELECT chat_id, real_name, school, user_group FROM users")
+                result_set = cursor.fetchall()
+                for i in result_set:
+                    if i[0] == msg.from_user.id:
+                        await bot.send_message(msg.from_user.id, f"Ваше имя: <b>{i[1]}</b>\n"
+                                                                 f"Ваш институт: <i><b>{translate(i[2])}</b></i> 🎓\n"
+                                                                 f"Ваша группа: <i><b>{i[3]}</b></i> 🎓"
+                                               , parse_mode="HTML")
+                conn.commit()
+                conn.close()
         else:
             conn = sqlite3.connect('db.db')
             cursor = conn.cursor()
