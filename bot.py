@@ -615,9 +615,12 @@ class MyThread3(Thread):
                     adding = []
                     for item in response["timetable"]:
                         if item["week"] == current_week:
-                            adding.append(
-                                [item['day'], item['time'], item['subject'], item['type'], item['teacher'],
-                                 item['place']])
+                            try:
+                                adding.append(
+                                    [item['day'], item['time'], item['subject'], item['type'], item['teacher'],
+                                     item['place']])
+                            except:
+                                pass
                     flag = 0
                     for p in adding:
                         if p[0] == a:
