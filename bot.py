@@ -16,7 +16,7 @@ from aiogram.types import ContentType, ReplyKeyboardMarkup, ParseMode
 from aiogram.utils import executor
 from aiogram.utils.markdown import text
 from textblob import TextBlob
-
+from googletrans import Translator
 import KeyBoards
 import messages
 from config import TOKEN
@@ -55,9 +55,13 @@ def only_letters(tested_string):
 
 
 def translate(translate_text):
-    blob = TextBlob(translate_text)
-    a = blob.translate(from_lang='ru', to='en')
-    return a
+    if translate_text == '' or translate_text == ' ':
+        pass
+    else:
+        translator = Translator()
+        translation = translator.translate(translate_text, dest='en')
+        return translation.text
+    return translate_text
 
 
 class MyThread(Thread):
@@ -617,7 +621,7 @@ class MyThread3(Thread):
                         if item["week"] == current_week:
                             try:
                                 adding.append(
-                                    [item['day'], item['time'], item['subject'], item['type'], item['teacher'],
+                                    [item['day'], item['time'], item['subject'], item['type'], "",
                                      item['place']])
                             except:
                                 pass
