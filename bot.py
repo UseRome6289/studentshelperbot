@@ -732,6 +732,346 @@ class MyThread3(Thread):
                                 else:
                                     pass
 
+@dp.message_handler(state='*', commands='schedule')
+async def process_command(message: types.Message):
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT user_group FROM users WHERE chat_id = '{message.from_user.id}'")
+    result_set = cursor.fetchall()
+    cursor.execute(f"SELECT is_teacher FROM users WHERE chat_id = '{message.from_user.id}'")
+    res_set = cursor.fetchall()
+    conn.commit()
+    conn.close()
+    if result_set[0][0] == None:
+        if res_set == 'True':
+            await bot.send_message(message.from_user.id, 'Простите, но бот не может найти ваc. Это бывает от того, что вы не зарегистрировались до конца.\nЕсли это не так, то просим вас перезарегистрироваться с помощью /start')
+        else:
+            await bot.send_message(message.from_user.id, 'Простите, но бот не может найти вашу группу. Это бывает от того, что вы не зарегистрировались до конца.\nЕсли это не так, то просим вас перезарегистрироваться с помощью /start')
+    else:
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{message.from_user.id}'")
+        result_set = cursor.fetchall()
+        conn.commit()
+        conn.close()
+        if result_set[0][0] == 'True':
+            await dp.current_state(user=message.from_user.id).set_state(CheckSchedule.all()[0])
+            await message.reply(messages.day_of_the_week, reply_markup=KeyBoards.day_of_the_week_kb)
+        else:
+            await dp.current_state(user=message.from_user.id).set_state(CheckSchedule.all()[0])
+            await message.reply(messages.day_of_the_week_en, reply_markup=KeyBoards.day_of_the_week_kb_en)
+@dp.message_handler(state='*', commands='events')
+async def process_command(message: types.Message):
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{message.from_user.id}'")
+    result_set = cursor.fetchall()
+    conn.commit()
+    conn.close()
+    if result_set[0][0] == 'True':
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT * FROM times")
+        result_set = cursor.fetchall()
+        a = "Ваши мероприятия: \n"
+        for item in result_set:
+            if item[0] == message.from_user.id:
+                local_time = time.ctime(item[2])
+                local_time = local_time.split(' ')
+                # день недели
+                if local_time[0] == "Mon":
+                    local_time[0] = "Понедельник"
+                if local_time[0] == "Tue":
+                    local_time[0] = "Вторник"
+                if local_time[0] == "Wed":
+                    local_time[0] = "Среда"
+                if local_time[0] == "Thu":
+                    local_time[0] = "Четверг"
+                if local_time[0] == "Fri":
+                    local_time[0] = "Пятница"
+                if local_time[0] == "Sat":
+                    local_time[0] = "Суббота"
+                if local_time[0] == "Sun":
+                    local_time[0] = "Воскресенье"
+                # месяц
+                if local_time[1] == "Jun":
+                    local_time[1] = "Января"
+                if local_time[1] == "Feb":
+                    local_time[1] = "Февраля"
+                if local_time[1] == "Mar":
+                    local_time[1] = "Марта"
+                if local_time[1] == "Apr":
+                    local_time[1] = "Апреля"
+                if local_time[1] == "May":
+                    local_time[1] = "Мая"
+                if local_time[1] == "June":
+                    local_time[1] = "Июня"
+                if local_time[1] == "July":
+                    local_time[1] = "Июля"
+                if local_time[1] == "Aug":
+                    local_time[1] = "Августа"
+                if local_time[1] == "Sept":
+                    local_time[1] = "Сентября"
+                if local_time[1] == "Oct":
+                    local_time[1] = "Октября"
+                if local_time[1] == "Nov":
+                    local_time[1] = "Ноября"
+                if local_time[1] == "Dec":
+                    local_time[1] = "Декабря"
+                if local_time[2] == '':
+                    list = local_time[4].split(':')
+                    k = int(list[0]) + 7
+                    if k > 24:
+                        k = k - 24
+                    elif k == 24:
+                        k = "0"
+                    a = a + f" - <b>{item[1]}</b>" + '\n' + \
+                        f'Это мероприятие заканчивается {local_time[3]} {local_time[1]} ' \
+                        f'({local_time[0]}) {local_time[5]} года в {k}:{list[1]}\n'
+
+                else:
+                    list = local_time[3].split(':')
+                    k = int(list[0]) + 7
+                    if k > 24:
+                        k = k - 24
+                    elif k == 24:
+                        k = "0"
+                    a = a + f" - <b>{item[1]}</b>" + '\n' + \
+                        f'Это мероприятие заканчивается {local_time[2]} {local_time[1]} ' \
+                        f'({local_time[0]}) {local_time[4]} года в {k}:{list[1]}\n'
+        if a == "Ваши мероприятия: \n":
+            a = 'У вас нет мероприятий!'
+        await bot.send_message(message.from_user.id, a, parse_mode="HTML")
+    else:
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT * FROM times")
+        result_set = cursor.fetchall()
+        a = "Your events: \n"
+        for item in result_set:
+            if item[0] == message.from_user.id:
+                local_time = time.ctime(item[2])
+                local_time = local_time.split(' ')
+                # день недели
+                if local_time[2] == '':
+                    list = local_time[4].split(':')
+                    k = int(list[0]) + 7
+                    if k > 24:
+                        k = k - 24
+                    elif k == 24:
+                        k = "0"
+                    a = a + f" - <b>{item[1]}</b>" + '\n' + \
+                        f'This event ends {local_time[3]} {local_time[1]} ' \
+                        f'({local_time[0]}) {local_time[5]} years in {k}:{list[1]}\n'
+
+                else:
+                    list = local_time[3].split(':')
+                    k = int(list[0]) + 7
+                    if k > 24:
+                        k = k - 24
+                    elif k == 24:
+                        k = "0"
+                    a = a + f" - <b>{item[1]}</b>" + '\n' + \
+                        f'This event ends {local_time[2]} {local_time[1]} ' \
+                        f'({local_time[0]}) {local_time[4]} years in {k}:{list[1]}\n'
+        if a == "Your events: \n":
+            a = "You don't have any events!"
+        await bot.send_message(message.from_user.id , a, parse_mode="HTML")
+
+
+@dp.message_handler(state='*', commands='mail')
+async def process_command(message: types.Message):
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{message.from_user.id}'")
+    result_set = cursor.fetchall()
+    conn.commit()
+    conn.close()
+    if result_set[0][0] == 'True':
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT * FROM mail")
+        result_set = cursor.fetchall()
+        a = "Ваши рассылки: \n"
+        for item in result_set:
+            if item[0] == message.from_user.id:
+                local_time = time.ctime(item[2])
+                local_time = local_time.split(' ')
+                # день недели
+                if local_time[0] == "Mon":
+                    local_time[0] = "Понедельник"
+                if local_time[0] == "Tue":
+                    local_time[0] = "Вторник"
+                if local_time[0] == "Wed":
+                    local_time[0] = "Среда"
+                if local_time[0] == "Thu":
+                    local_time[0] = "Четверг"
+                if local_time[0] == "Fri":
+                    local_time[0] = "Пятница"
+                if local_time[0] == "Sat":
+                    local_time[0] = "Суббота"
+                if local_time[0] == "Sun":
+                    local_time[0] = "Воскресенье"
+                # месяц
+                if local_time[1] == "Jun":
+                    local_time[1] = "Января"
+                if local_time[1] == "Feb":
+                    local_time[1] = "Февраля"
+                if local_time[1] == "Mar":
+                    local_time[1] = "Марта"
+                if local_time[1] == "Apr":
+                    local_time[1] = "Апреля"
+                if local_time[1] == "May":
+                    local_time[1] = "Мая"
+                if local_time[1] == "June":
+                    local_time[1] = "Июня"
+                if local_time[1] == "July":
+                    local_time[1] = "Июля"
+                if local_time[1] == "Aug":
+                    local_time[1] = "Августа"
+                if local_time[1] == "Sept":
+                    local_time[1] = "Сентября"
+                if local_time[1] == "Oct":
+                    local_time[1] = "Октября"
+                if local_time[1] == "Nov":
+                    local_time[1] = "Ноября"
+                if local_time[1] == "Dec":
+                    local_time[1] = "Декабря"
+
+                if local_time[2] == '':
+                    list = local_time[4].split(':')
+                    k = int(list[0]) + 7
+                    if k > 24:
+                        k = k - 24
+                    elif k == 24:
+                        k = "0"
+                    a = a + f" - <b>{item[1]}</b>" + '\n' + \
+                        f'Эта рассылка заканчивается {local_time[3]} {local_time[1]} ' \
+                        f'({local_time[0]}) {local_time[5]} года в {k}:{list[1]}' + '\n'
+                else:
+                    list = local_time[3].split(':')
+                    k = int(list[0]) + 7
+                    if k > 24:
+                        k = k - 24
+                    elif k == 24:
+                        k = "0"
+                    a = a + f" - <b>{item[1]}</b>" + '\n' + \
+                        f'Эта рассылка заканчивается {local_time[2]} {local_time[1]} ' \
+                        f'({local_time[0]}) {local_time[4]} года в {k}:{list[1]}' + '\n'
+        if a == "Ваши рассылки: \n":
+            a = 'Вам еще не приходили рассылки!'
+        await bot.send_message(message.from_user.id, a, parse_mode="HTML")
+    else:
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT * FROM mail")
+        result_set = cursor.fetchall()
+        a = "Your mailing lists: \n"
+        for item in result_set:
+            if item[0] == message.from_user.id:
+                local_time = time.ctime(item[2])
+                local_time = local_time.split(' ')
+                if local_time[2] == '':
+                    list = local_time[4].split(':')
+                    k = int(list[0]) + 7
+                    if k > 24:
+                        k = k - 24
+                    elif k == 24:
+                        k = "0"
+                    a = a + f" - <b>{item[1]}</b>" + '\n' + \
+                        f'This newsletter is ending {local_time[3]} {local_time[1]} ' \
+                        f'({local_time[0]}) {local_time[5]} years in {k}:{list[1]}' + '\n'
+                else:
+                    list = local_time[3].split(':')
+                    k = int(list[0]) + 7
+                    if k > 24:
+                        k = k - 24
+                    elif k == 24:
+                        k = "0"
+                    a = a + f" - <b>{item[1]}</b>" + '\n' + \
+                        f'This newsletter is ending {local_time[2]} {local_time[1]} ' \
+                        f'({local_time[0]}) {local_time[4]} years in {k}:{list[1]}' + '\n'
+        if a == "Your mailing lists: \n":
+            a = "You haven't received any mailings yet!"
+        await bot.send_message(message.from_user.id , a, parse_mode="HTML")
+
+
+@dp.message_handler(state='*', commands='profile')
+async def process_command(message: types.Message):
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{message.from_user.id}'")
+    result_set = cursor.fetchall()
+    conn.commit()
+    conn.close()
+    if result_set[0][0] == 'True':
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT chat_id, is_teacher FROM users")
+        result_set = cursor.fetchall()
+        is_teacher = False
+        for item in result_set:
+            if item[0] == message.from_user.id:
+                if item[1] == 'True':
+                    is_teacher = True
+        if is_teacher:
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT chat_id, real_name FROM users")
+            result_set = cursor.fetchall()
+            for i in result_set:
+                if i[0] == message.from_user.id:
+                    await bot.send_message(message.from_user.id, f"Ваша фамилия: <b>{i[1]}</b>\n"
+                                           , parse_mode="HTML")
+            conn.commit()
+            conn.close()
+        else:
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT chat_id, real_name, school, user_group FROM users")
+            result_set = cursor.fetchall()
+            for i in result_set:
+                if i[0] == message.from_user.id:
+                    await bot.send_message(message.from_user.id, f"Ваше имя: <b>{i[1]}</b>\n"
+                                                             f"Ваш институт: <i><b>{i[2]}</b></i> 🎓\n"
+                                                             f"Ваша группа: <i><b>{i[3]}</b></i> 🎓"
+                                           , parse_mode="HTML")
+            conn.commit()
+            conn.close()
+    else:
+        conn = sqlite3.connect('db.db')
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT chat_id, is_teacher FROM users")
+        result_set = cursor.fetchall()
+        is_teacher = False
+        for item in result_set:
+            if item[0] == message.from_user.id:
+                if item[1] == 'True':
+                    is_teacher = True
+        if is_teacher:
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT chat_id, real_name FROM users")
+            result_set = cursor.fetchall()
+            for i in result_set:
+                if i[0] == message.from_user.id:
+                    await bot.send_message(message.from_user.id, f"Your last name: <b>{i[1]}</b>\n"
+                                           , parse_mode="HTML")
+            conn.commit()
+            conn.close()
+        else:
+            conn = sqlite3.connect('db.db')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT chat_id, real_name, school, user_group FROM users")
+            result_set = cursor.fetchall()
+            for i in result_set:
+                if i[0] == message.from_user.id:
+                    await bot.send_message(message.from_user.id, f"Your name: <b>{i[1]}</b>\n"
+                                                             f"Your institute: <i><b>{translate(i[2])}</b></i> 🎓\n"
+                                                             f"Your group: <i><b>{i[3]}</b></i> 🎓"
+                                           , parse_mode="HTML")
+            conn.commit()
+            conn.close()
 
 # endregions
 @dp.message_handler(state='*', commands='start')
@@ -9873,12 +10213,6 @@ async def handler_message(msg: types.Message):
                 await bot.send_message(msg.from_user.id, messages.what)
             else:
                 await bot.send_message(msg.from_user.id, messages.what_en)
-
-
-@dp.message_handler(content_types=ContentType.ANY)
-async def unknown_message(msg: types.Message):
-    message_text = text(messages.what)
-    await msg.reply(message_text, parse_mode=ParseMode.MARKDOWN)
 
 
 if __name__ == "__main__":
