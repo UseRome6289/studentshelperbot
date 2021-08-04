@@ -1073,6 +1073,43 @@ async def process_command(message: types.Message):
             conn.commit()
             conn.close()
 
+
+@dp.message_handler(state='*', commands = 'group')
+async def process_start(message: types.Message):
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{message.from_user.id}'")
+    result_set = cursor.fetchall()
+    conn.commit()
+    conn.close()
+    if result_set[0][0] == 'True':
+        await message.reply(messages.choose_inst, reply_markup=KeyBoards.institute_kb)
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state(ScheduleUser.all()[0])
+    else:
+        await message.reply(messages.choose_inst_en, reply_markup=KeyBoards.institute_kb)
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state(ScheduleUser.all()[0])
+
+
+@dp.message_handler(state='*', commands = 'teacher')
+async def process_start(message: types.Message):
+    conn = sqlite3.connect('db.db')
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT ru FROM users WHERE chat_id = '{message.from_user.id}'")
+    result_set = cursor.fetchall()
+    conn.commit()
+    conn.close()
+    if result_set[0][0] == 'True':
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state(Teacher.all()[0])
+        await message.reply("Введите фамилию преподавателя:")
+    else:
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state(Teacher.all()[0])
+        await message.reply("View the teacher's schedule")
+
+
 # endregions
 @dp.message_handler(state='*', commands='start')
 async def process_start_command(message: types.Message):
